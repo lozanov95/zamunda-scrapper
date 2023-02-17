@@ -80,6 +80,7 @@ class ZamundaClient:
         self.loginURL = "https://zamunda.net/login.php"
         self.moviesURL = "https://zamunda.net/catalogs/movies&t=movie"
         self.cfg = Config.load_from_json_file(cfg_file_name)
+        self.movies = []
 
     def _login(self, browser: Browser) -> Page:
         page: Page = browser.new_page()
@@ -90,61 +91,70 @@ class ZamundaClient:
 
         return page
 
-    def _does_movie_exists_already(self, movies: List[Movie], title: str) -> bool:
+    def _get_scraped_movie(self, movies: List[Movie], title: str) -> Optional[Movie]:
         for movie in movies:
             if movie.title == title:
-                return True
+                return movie
 
-        return False
+        return
+
+    def _scrape_movie(self, catalog_row: ElementHandle) -> Optional[Movie]:
+        title = self._extract_movie_title(catalog_row)
+        description = self._extract_movie_description_data(catalog_row=catalog_row)
+        is_bg_audio = self._is_bg_audio_available(catalog_row=catalog_row)
+        is_bg_subs = self._is_bg_subs_available(catalog_row=catalog_row)
+        genres = self._extract_movie_genres(catalog_row=catalog_row)
+        rating = self._extract_imdb_rating(catalog_row=catalog_row)
+
+        if description is None or title == "" or len(genres) == 0:
+            print(f"failed to parse the movie {title}")
+            return
+
+        existing_movie = self._get_scraped_movie(self.movies, title)
+        if existing_movie is not None:
+            print(f"{title} is already in the list of movies")
+            if is_bg_audio:
+                existing_movie.bg_audio = is_bg_audio
+            if is_bg_subs:
+                existing_movie.bg_subs = is_bg_subs
+
+            return
+
+        return Movie(
+            title=title,
+            genres=genres,
+            year=description.year,
+            bg_audio=is_bg_audio,
+            bg_subs=is_bg_subs,
+            description=description.description,
+            actors=description.actors,
+            country=description.country,
+            rating=rating,
+        )
 
     def _browse_torrent_pages(self, page: Page):
-        movies = []
         try:
             page.goto(self.moviesURL)
             while True:
                 print(f"opened page {page.url}")
+                time.sleep(0.5)
                 catalog_rows = page.query_selector_all(Selectors.CATALOG_ROWS)
                 for i in range(2, len(catalog_rows)):
-                    title = self._extract_movie_title(catalog_rows[i])
-                    if self._does_movie_exists_already(movies, title):
-                        print(f"{title} is already in the list of movies")
-                        continue
+                    movie = self._scrape_movie(catalog_row=catalog_rows[i])
 
-                    description = self._extract_movie_description_data(
-                        catalog_row=catalog_rows[i]
-                    )
-                    is_bg_audio = self._is_bg_audio_available(
-                        catalog_row=catalog_rows[i]
-                    )
-                    is_bg_subs = self._is_bg_subs_available(catalog_row=catalog_rows[i])
-                    genres = self._extract_movie_genres(catalog_row=catalog_rows[i])
-                    rating = self._extract_imdb_rating(catalog_row=catalog_rows[i])
-
-                    if description is None or title == "" or len(genres) == 0:
-                        print(f"failed to parse the movie {title}")
-                        continue
-
-                    movies.append(
-                        Movie(
-                            title=title,
-                            genres=genres,
-                            year=description.year,
-                            bg_audio=is_bg_audio,
-                            bg_subs=is_bg_subs,
-                            description=description.description,
-                            actors=description.actors,
-                            country=description.country,
-                            rating=rating,
-                        )
-                    )
-                time.sleep(1)
+                    if movie is not None:
+                        print(f"added movie {movie.title}")
+                        self.movies.append(movie)
                 page.click(Selectors.NEXT_PAGE)
+                
         except TimeoutError:
-            print("no more pages available")
+            print("Operation timed out. Possibly there are no more movie pages.")
+        except KeyboardInterrupt:
+            print("The script was cancelled. Saving the scraped data and exiting.")
         except Exception as e:
             print(e)
         finally:
-            return movies
+            return self.movies
 
     def _extract_movie_description_data(
         self, catalog_row: ElementHandle
