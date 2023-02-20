@@ -6,6 +6,7 @@ import time
 from typing import List, Dict, Optional
 from re import compile
 import re
+from multiprocessing import Pool, cpu_count
 
 from playwright.sync_api import (
     sync_playwright,
@@ -20,6 +21,7 @@ from playwright.sync_api import (
 class Config:
     username: str
     password: str
+    headless: bool = True
 
     @classmethod
     def load_from_json_file(self, file_name: str):
@@ -56,6 +58,7 @@ class Selectors:
     AUDIO_ICONS: str = "center > img"
     GENRES_SELECTOR: str = "b > u"
     IMDB_RATING: float = ".imdtextrating"
+    LAST_PAGE_ANCHOR = "font.red:nth-child(1) > a:nth-child(13)"
 
 
 @dataclass
@@ -75,12 +78,43 @@ class Regexes:
     )
 
 
+@dataclass
+class ScrapePayload:
+    start_page: int
+    end_page: int
+
+
 class ZamundaClient:
     def __init__(self, cfg_file_name: str = "config.json") -> None:
         self.loginURL = "https://zamunda.net/login.php"
         self.moviesURL = "https://zamunda.net/catalogs/movies&t=movie"
         self.cfg = Config.load_from_json_file(cfg_file_name)
-        self.movies = []
+
+    def _get_script_instances(self) -> int:
+        """Calculates how many script instances can be ran. It usually leaves 1 core free to the system."""
+        cpus = cpu_count()
+        if cpus < 3:
+            return cpus
+
+        return cpus - 1
+
+    def _get_scrape_payload(self, cpus: int):
+        with sync_playwright() as p:
+            browser = p.firefox.launch()
+            context = browser.new_context()
+            page = self._login(browser=context)
+            page.goto(self.moviesURL)
+            last_page = int(
+                page.query_selector(Selectors.LAST_PAGE_ANCHOR)
+                .get_attribute("href")
+                .rsplit("=")[-1]
+            )
+            pages_proccess = int(last_page / cpus)
+
+            return [
+                ScrapePayload(i * pages_proccess, (i + 1) * pages_proccess)
+                for i in range(cpus)
+            ]
 
     def _login(self, browser: Browser) -> Page:
         page: Page = browser.new_page()
@@ -98,7 +132,9 @@ class ZamundaClient:
 
         return
 
-    def _scrape_movie(self, catalog_row: ElementHandle) -> Optional[Movie]:
+    def _scrape_movie(
+        self, catalog_row: ElementHandle, movies: List
+    ) -> Optional[Movie]:
         title = self._extract_movie_title(catalog_row)
         description = self._extract_movie_description_data(catalog_row=catalog_row)
         is_bg_audio = self._is_bg_audio_available(catalog_row=catalog_row)
@@ -110,7 +146,7 @@ class ZamundaClient:
             print(f"failed to parse the movie {title}")
             return
 
-        existing_movie = self._get_scraped_movie(self.movies, title)
+        existing_movie = self._get_scraped_movie(movies, title)
         if existing_movie is not None:
             print(f"{title} is already in the list of movies")
             if is_bg_audio:
@@ -132,21 +168,26 @@ class ZamundaClient:
             rating=rating,
         )
 
-    def _browse_torrent_pages(self, page: Page):
+    def _browse_torrent_pages(self, page: Page, scrape_payload: ScrapePayload):
+        movies = []
         try:
-            page.goto(self.moviesURL)
+            page.goto(f"{self.moviesURL}&page={scrape_payload.start_page}")
             while True:
                 print(f"opened page {page.url}")
                 time.sleep(0.5)
                 catalog_rows = page.query_selector_all(Selectors.CATALOG_ROWS)
                 for i in range(2, len(catalog_rows)):
-                    movie = self._scrape_movie(catalog_row=catalog_rows[i])
+                    movie = self._scrape_movie(
+                        catalog_row=catalog_rows[i], movies=movies
+                    )
 
                     if movie is not None:
                         print(f"added movie {movie.title}")
-                        self.movies.append(movie)
+                        movies.append(movie)
+                if page.url.endswith(f"={scrape_payload.end_page}"):
+                    break
                 page.click(Selectors.NEXT_PAGE)
-                
+
         except TimeoutError:
             print("Operation timed out. Possibly there are no more movie pages.")
         except KeyboardInterrupt:
@@ -154,7 +195,7 @@ class ZamundaClient:
         except Exception as e:
             print(e)
         finally:
-            return self.movies
+            return movies
 
     def _extract_movie_description_data(
         self, catalog_row: ElementHandle
@@ -217,15 +258,23 @@ class ZamundaClient:
 
         return float(rating.text_content())
 
-    def main(self):
+    def start_scraping_pages(self, scrape_payload: ScrapePayload):
         with sync_playwright() as p:
-            browser = p.firefox.launch(headless=False)
-            # browser = p.chromium.launch(headless=False)
+            browser = p.firefox.launch(headless=self.cfg.headless)
             context = browser.new_context()
             page = self._login(browser=context)
-            movies = self._browse_torrent_pages(page=page)
-            with open("movies.json", "w", encoding="utf-8") as f:
-                json.dump(movies, f, default=lambda o: asdict(o))
+            return self._browse_torrent_pages(page=page, scrape_payload=scrape_payload)
+
+    def main(self):
+        cpus = self._get_script_instances()
+        with Pool(processes=cpus) as pool:
+            res = pool.map(self.start_scraping_pages, self._get_scrape_payload(cpus))
+
+        data = []
+        [data.extend(r) for r in res]
+
+        with open("movies.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, default=lambda o: asdict(o))
 
 
 if __name__ == "__main__":
