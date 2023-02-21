@@ -34,7 +34,7 @@ func Scrape() {
 	}
 
 	go func(pagesChan chan int, movieChan chan *Movie) {
-		for i := 0; i < pages; i++ {
+		for i := 0; i <= pages; i++ {
 			pagesChan <- i
 		}
 
