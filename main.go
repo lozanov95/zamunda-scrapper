@@ -75,7 +75,7 @@ func main() {
 		Scrape()
 	}
 
-	data, err := os.ReadFile("movies.bak.json")
+	data, err := os.ReadFile("movies.json")
 	if err != nil {
 		log.Fatal(err)
 	}
