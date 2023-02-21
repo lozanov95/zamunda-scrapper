@@ -8,13 +8,15 @@ import (
 )
 
 type MovieDB struct {
-	movies   *[]*Movie
-	titles   *[]string
-	movieMap *map[string][]*Movie
+	movies    *[]*Movie
+	titles    *map[string][]*Movie
+	actors    *map[string][]*Movie
+	directors *map[string][]*Movie
+	countries *map[string][]*Movie
+	movieMap  *map[string][]*Movie
 }
 
 func NewMovieDB() *MovieDB {
-	// db := MovieDB{}
 	movies := []*Movie{}
 	movieBytes, err := os.ReadFile("movies.json")
 	if err != nil {
@@ -26,20 +28,37 @@ func NewMovieDB() *MovieDB {
 		log.Fatal(err)
 	}
 
-	movieMap := make(map[string][]*Movie)
+	titles := make(map[string][]*Movie)
 	for _, movie := range movies {
-		movieMap[movie.Title] = append(movieMap[movie.Title], movie)
+		titles[movie.Title] = append(titles[movie.Title], movie)
 	}
 
-	titles := []string{}
-	for m := range movieMap {
-		titles = append(titles, m)
+	actors := make(map[string][]*Movie)
+	directors := make(map[string][]*Movie)
+	countries := make(map[string][]*Movie)
+	genres := make(map[string][]*Movie)
+	for _, movies := range titles {
+		for _, m := range movies[0].Actors {
+			AppendToSliceInMap(&actors, m, movies[0])
+		}
+		for _, m := range movies[0].Director {
+			AppendToSliceInMap(&directors, m, movies[0])
+
+		}
+		for _, m := range movies[0].Country {
+			AppendToSliceInMap(&countries, m, movies[0])
+		}
+		for _, m := range movies[0].Genres {
+			AppendToSliceInMap(&genres, m, movies[0])
+		}
 	}
 
 	return &MovieDB{
-		movies:   &movies,
-		titles:   &titles,
-		movieMap: &movieMap,
+		movies:    &movies,
+		movieMap:  &titles,
+		actors:    &actors,
+		directors: &directors,
+		countries: &countries,
 	}
 }
 
@@ -48,21 +67,17 @@ func (db *MovieDB) GetMovies(start, end int) []*Movie {
 	return (*db.movies)[start:end]
 }
 
-func (db *MovieDB) GetTitles(start, end int) []string {
-	start, end = ValidateIndexes(db.titles, start, end)
-	return (*db.titles)[start:end]
+func (db *MovieDB) GetTitles(start, end int) []*string {
+	var titles []*string
+	for title := range *db.titles {
+		titles = append(titles, &title)
+	}
+	start, end = ValidateIndexes(&titles, start, end)
+	return titles[start:end]
 }
 
 func (db *MovieDB) GetMoviesForActor(name string) []*Movie {
-	var result []*Movie
-	for _, m := range *db.movieMap {
-		if IsStringInSlice(m[0].Actors, name) {
-			log.Println(m[0].Title)
-			result = append(result, m[0])
-		}
-	}
-
-	return result
+	return (*db.actors)[name]
 }
 
 func SortByRating(movies []*Movie) {

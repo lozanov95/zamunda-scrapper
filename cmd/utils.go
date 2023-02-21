@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ValidateIndexes[C []string | []*Movie](c *C, start, end int) (int, int) {
+func ValidateIndexes[C string | Movie](c *[]*C, start, end int) (int, int) {
 	if start < 0 {
 		start = 0
 	}
