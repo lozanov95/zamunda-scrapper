@@ -34,7 +34,7 @@ const (
 	MOVIE_DESCRIPTION   = "td > #description"
 	MOVIE_TITLE         = ".colheadd"
 	AUDIO_ICONS         = "center > img"
-	GENRES_SELECTOR     = "b > u > a"
+	GENRES_SELECTOR     = "tbody > tr > td > b > u > a"
 	IMDB_RATING         = ".imdtextrating"
 	LAST_PAGE_ANCHOR    = "font.red:nth-child(1) > a:nth-child(13)"
 	SIZE_SELECTOR       = "tbody > tr:nth-child(2) > td:nth-child(5)"
