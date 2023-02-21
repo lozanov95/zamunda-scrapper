@@ -20,6 +20,27 @@ import (
 	"golang.org/x/text/encoding/charmap"
 )
 
+type ExtractedMovieDescriptionResult struct {
+	Director    []string `json:"director"`
+	Actors      []string `json:"actors"`
+	Country     []string `json:"country"`
+	Year        int      `json:"year"`
+	Description string   `json:"description"`
+}
+
+const (
+	NEXT_PAGE           = ".gotonext"
+	CATALOG_ROWS        = "table.test > tbody > tr"
+	MOVIE_DESCRIPTION   = "td > #description"
+	MOVIE_TITLE         = ".colheadd"
+	AUDIO_ICONS         = "center > img"
+	GENRES_SELECTOR     = "b > u > a"
+	IMDB_RATING         = ".imdtextrating"
+	LAST_PAGE_ANCHOR    = "font.red:nth-child(1) > a:nth-child(13)"
+	SIZE_SELECTOR       = "tbody > tr:nth-child(2) > td:nth-child(5)"
+	MOVIE_LINK_SELECTOR = ".colheadd > .notranslate"
+)
+
 func Scrape() {
 	start := time.Now()
 
