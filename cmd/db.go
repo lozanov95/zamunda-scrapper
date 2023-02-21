@@ -9,8 +9,8 @@ import (
 
 type MovieDB struct {
 	movies   *[]*Movie
-	titles   *[]*string
-	movieMap *map[*string][]*Movie
+	titles   *[]string
+	movieMap *map[string][]*Movie
 }
 
 func NewMovieDB() *MovieDB {
@@ -26,12 +26,12 @@ func NewMovieDB() *MovieDB {
 		log.Fatal(err)
 	}
 
-	movieMap := make(map[*string][]*Movie)
+	movieMap := make(map[string][]*Movie)
 	for _, movie := range movies {
-		movieMap[&movie.Title] = append(movieMap[&movie.Title], movie)
+		movieMap[movie.Title] = append(movieMap[movie.Title], movie)
 	}
 
-	titles := []*string{}
+	titles := []string{}
 	for m := range movieMap {
 		titles = append(titles, m)
 	}
@@ -48,9 +48,21 @@ func (db *MovieDB) GetMovies(start, end int) []*Movie {
 	return (*db.movies)[start:end]
 }
 
-func (db *MovieDB) GetTitles(start, end int) []*string {
+func (db *MovieDB) GetTitles(start, end int) []string {
 	start, end = ValidateIndexes(db.titles, start, end)
 	return (*db.titles)[start:end]
+}
+
+func (db *MovieDB) GetMoviesForActor(name string) []*Movie {
+	var result []*Movie
+	for _, m := range *db.movieMap {
+		if IsStringInSlice(m[0].Actors, name) {
+			log.Println(m[0].Title)
+			result = append(result, m[0])
+		}
+	}
+
+	return result
 }
 
 func SortByRating(movies []*Movie) {
