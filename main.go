@@ -23,6 +23,7 @@ import (
 type Config struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Workers  int    `json:"workers"`
 }
 
 type ExtractedMovieDescriptionResult struct {
@@ -38,17 +39,20 @@ type Movie struct {
 	Genres []string `json:"genres"`
 	*ExtractedMovieDescriptionResult
 	*IconsResult
+
+	// The IMDB rating of the movie
 	Rating float64 `json:"rating"`
 }
 
 type IconsResult struct {
+	// Does the movie have a BG AUDIO
 	BG_AUDIO bool `json:"bg_audio"`
-	BG_SUBS  bool `json:"bg_subs"`
+
+	// Does the movie have a BG SUBS
+	BG_SUBS bool `json:"bg_subs"`
 }
 
 const (
-	WORKERS = 12
-
 	NEXT_PAGE         = ".gotonext"
 	CATALOG_ROWS      = "table.test > tbody > tr"
 	MOVIE_DESCRIPTION = "td > #description"
@@ -72,18 +76,17 @@ func main() {
 	start := time.Now()
 
 	cfg := NewConfigFromJSON()
-	// pages := GetPagesCount()
+	pages := GetPagesCount()
 
 	pagesChan := make(chan int)
 	movieChan := make(chan *Movie, 100)
 
-	for i := 0; i < WORKERS; i++ {
+	for i := 0; i < cfg.Workers; i++ {
 		go StartWorker(cfg, pagesChan, movieChan)
 	}
 
 	go func(pagesChan chan int, movieChan chan *Movie) {
-
-		for i := 0; i < 100; i++ {
+		for i := 0; i < pages; i++ {
 			pagesChan <- i
 		}
 
@@ -141,6 +144,7 @@ func NewZamundaClient(cfg *Config) *http.Client {
 	return &client
 }
 
+// Start a golan worker
 func StartWorker(cfg *Config, pages chan int, results chan *Movie) {
 	client := NewZamundaClient(cfg)
 	for p := range pages {
@@ -164,6 +168,7 @@ func DecodeWindows1251(r io.Reader) *bytes.Reader {
 	return utf8Reader
 }
 
+// Gets the first group from the regex submatch results as a string
 func GetRegexGroup(re *regexp.Regexp, s string) string {
 	match := re.FindStringSubmatch(s)
 	if len(match) > 1 {
@@ -173,6 +178,7 @@ func GetRegexGroup(re *regexp.Regexp, s string) string {
 	return ""
 }
 
+// Parses the movie description for the given selection
 func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	desc := s.Find(MOVIE_DESCRIPTION)
 	text := desc.Text()
@@ -191,11 +197,13 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	}
 }
 
+// Parses the movie genres for the given selection
 func ParseGenres(s *goquery.Selection) []string {
 	genresNode := s.Find(GENRES_SELECTOR)
 	return GetTextFromSelectionNodes(genresNode)
 }
 
+// Parses the IMDB rating for the given selection
 func ParseIMDBRating(s *goquery.Selection) float64 {
 	rating := s.Find(IMDB_RATING)
 	result, err := strconv.ParseFloat(rating.Text(), 64)
@@ -207,6 +215,7 @@ func ParseIMDBRating(s *goquery.Selection) float64 {
 	return result
 }
 
+// Parses if there are BG audio and/or subs for the given selection
 func ParseIconResults(s *goquery.Selection) *IconsResult {
 	var ir IconsResult
 	icons := s.Find(AUDIO_ICONS)
@@ -223,6 +232,7 @@ func ParseIconResults(s *goquery.Selection) *IconsResult {
 	return &ir
 }
 
+// Parses the movie title from the selection
 func ParseTitle(s *goquery.Selection) string {
 	return s.Find(MOVIE_TITLE).First().Text()
 }
@@ -236,6 +246,7 @@ func GetTextFromSelectionNodes(s *goquery.Selection) []string {
 	return resultArr
 }
 
+// Returns the number of movie pages
 func GetPagesCount() int {
 	client := NewZamundaClient(NewConfigFromJSON())
 	resp, err := client.Get("https://zamunda.net/catalogs/movies&t=movie")

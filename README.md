@@ -1,7 +1,9 @@
 Create a config.json file and enter the following config variables
 
-| Variable | Description                                                                 |
-| -------- | --------------------------------------------------------------------------- |
-| username | your ZAMUNDA.NET username                                                   |
-| password | your ZAMUNDA.NET password                                                   |
-| headless | true / false - Should the playwright browser instances run in headless mode |
+| Variable | Description                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| username | Your ZAMUNDA.NET username                                                                                                       |
+| password | Your ZAMUNDA.NET password                                                                                                       |
+| workers  | The number of parallel executions that will scrape results. More workers mean that there will be less downtime due to timeouts. |
+
+12 workers took 17m51s to complete
