@@ -1,11 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"fmt"
-	"log"
-	"os"
 	"regexp"
 )
 
@@ -67,6 +63,8 @@ var (
 
 var (
 	scrape = flag.Bool("scrape", false, "Start scraping the movies")
+	serve  = flag.Bool("serve", false, "Serve the backend")
+	port   = flag.Int("port", 80, "The port of the server")
 )
 
 func main() {
@@ -74,22 +72,8 @@ func main() {
 	if *scrape {
 		Scrape()
 	}
-
-	data, err := os.ReadFile("movies.json")
-	if err != nil {
-		log.Fatal(err)
+	if *serve {
+		srv := NewServer(*port)
+		srv.ListenAndServe()
 	}
-
-	var movies []*Movie
-	err = json.Unmarshal(data, &movies)
-	if err != nil {
-		log.Fatal()
-	}
-
-	mm := make(map[string][]*Movie)
-	for _, movie := range movies {
-		mm[movie.Title] = append(mm[movie.Title], movie)
-	}
-	fmt.Println("All Movies", len(movies))
-	fmt.Println("Unique movies:", len(mm))
 }

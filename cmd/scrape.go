@@ -55,7 +55,6 @@ func Scrape() {
 	}
 
 	os.WriteFile("movies.json", jsonRes, fs.FileMode(os.O_CREATE))
-
 }
 
 // Loads the variables from a config and them as a Config struct
