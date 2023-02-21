@@ -218,6 +218,17 @@ func GetPagesCount() int {
 	return pages
 }
 
+// Parses the torrent link
+func ParseLink(s *goquery.Selection) string {
+	linkNode := s.Find(MOVIE_LINK_SELECTOR).First()
+	link, _ := linkNode.Attr("href")
+	return link
+}
+
+func ParseSize(s *goquery.Selection) string {
+	return s.Find(SIZE_SELECTOR).First().Text()
+}
+
 func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 	resp, err := client.Get(fmt.Sprintf("https://zamunda.net/catalogs/movies&t=movie&page=%d", page))
 	if err != nil {
@@ -241,12 +252,18 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 	catalog_rows := doc.Find(CATALOG_ROWS)
 
 	catalog_rows.Each(func(i int, s *goquery.Selection) {
+		title := ParseTitle(s)
+		if title == "" {
+			return
+		}
+
 		desc := ParseDescription(s)
 		genres := ParseGenres(s)
 		rating := ParseIMDBRating(s)
 		ir := ParseIconResults(s)
-		title := ParseTitle(s)
+		link := ParseLink(s)
+		size := ParseSize(s)
 
-		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, IconsResult: ir, Title: title}
+		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, IconsResult: ir, Title: title, Link: link, Size: size}
 	})
 }

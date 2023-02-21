@@ -1,7 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
+	"fmt"
+	"log"
+	"os"
 	"regexp"
 )
 
@@ -27,6 +31,8 @@ type Movie struct {
 
 	// The IMDB rating of the movie
 	Rating float64 `json:"rating"`
+	Size   string  `json:"size"`
+	Link   string  `json:"link"`
 }
 
 type IconsResult struct {
@@ -38,14 +44,16 @@ type IconsResult struct {
 }
 
 const (
-	NEXT_PAGE         = ".gotonext"
-	CATALOG_ROWS      = "table.test > tbody > tr"
-	MOVIE_DESCRIPTION = "td > #description"
-	MOVIE_TITLE       = ".colheadd"
-	AUDIO_ICONS       = "center > img"
-	GENRES_SELECTOR   = "b > u"
-	IMDB_RATING       = ".imdtextrating"
-	LAST_PAGE_ANCHOR  = "font.red:nth-child(1) > a:nth-child(13)"
+	NEXT_PAGE           = ".gotonext"
+	CATALOG_ROWS        = "table.test > tbody > tr"
+	MOVIE_DESCRIPTION   = "td > #description"
+	MOVIE_TITLE         = ".colheadd"
+	AUDIO_ICONS         = "center > img"
+	GENRES_SELECTOR     = "b > u"
+	IMDB_RATING         = ".imdtextrating"
+	LAST_PAGE_ANCHOR    = "font.red:nth-child(1) > a:nth-child(13)"
+	SIZE_SELECTOR       = "tbody > tr:nth-child(2) > td:nth-child(5)"
+	MOVIE_LINK_SELECTOR = ".colheadd > .notranslate"
 )
 
 var (
@@ -66,4 +74,22 @@ func main() {
 	if *scrape {
 		Scrape()
 	}
+
+	data, err := os.ReadFile("movies.bak.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var movies []*Movie
+	err = json.Unmarshal(data, &movies)
+	if err != nil {
+		log.Fatal()
+	}
+
+	mm := make(map[string][]*Movie)
+	for _, movie := range movies {
+		mm[movie.Title] = append(mm[movie.Title], movie)
+	}
+	fmt.Println("All Movies", len(movies))
+	fmt.Println("Unique movies:", len(mm))
 }
