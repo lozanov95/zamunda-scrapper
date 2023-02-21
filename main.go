@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/text/encoding/charmap"
@@ -46,6 +47,8 @@ type IconsResult struct {
 }
 
 const (
+	WORKERS = 12
+
 	NEXT_PAGE         = ".gotonext"
 	CATALOG_ROWS      = "table.test > tbody > tr"
 	MOVIE_DESCRIPTION = "td > #description"
@@ -62,65 +65,39 @@ var (
 	RX_COUNTRY     = regexp.MustCompile(" Държава[: ]+([А-я ,-]+)")
 	RX_YEAR        = regexp.MustCompile(`Година[: ]+(\d{4})`)
 	RX_DESCRIPTION = regexp.MustCompile("(?s)Резюме[: ]+([^#]+)")
+	RX_LAST_PAGE   = regexp.MustCompile(`page=(\d{1,10})`)
 )
 
 func main() {
+	start := time.Now()
+
 	cfg := NewConfigFromJSON()
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	client := http.Client{
-		Jar: jar,
+	// pages := GetPagesCount()
+
+	pagesChan := make(chan int)
+	movieChan := make(chan *Movie, 100)
+
+	for i := 0; i < WORKERS; i++ {
+		go StartWorker(cfg, pagesChan, movieChan)
 	}
 
-	loginInfo := url.Values{}
-	loginInfo.Set("username", cfg.Username)
-	loginInfo.Set("password", cfg.Password)
+	go func(pagesChan chan int, movieChan chan *Movie) {
 
-	_, err = client.PostForm("https://zamunda.net/takelogin.php", loginInfo)
-	if err != nil {
-		log.Fatal(err)
-	}
+		for i := 0; i < 100; i++ {
+			pagesChan <- i
+		}
+
+		close(pagesChan)
+		fmt.Println("Total time:", time.Since(start))
+		time.Sleep(10 * time.Second)
+		close(movieChan)
+	}(pagesChan, movieChan)
 
 	var movies []*Movie
-
-	for i := 0; i < 5; i++ {
-		resp, err := client.Get(fmt.Sprintf("https://zamunda.net/catalogs/movies&t=movie&page=%d", i))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		decodedReader := DecodeWindows1251(resp.Body)
-
-		doc, err := goquery.NewDocumentFromReader(decodedReader)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if doc.Find(MOVIE_DESCRIPTION).Length() == 0 {
-			fmt.Println("retry")
-		}
-		fmt.Println(doc.Find(MOVIE_DESCRIPTION).Length())
-
-		catalog_rows := doc.Find(CATALOG_ROWS)
-
-		catalog_rows.Each(func(i int, s *goquery.Selection) {
-			desc := ParseDescription(s)
-			genres := ParseGenres(s)
-			rating := ParseIMDBRating(s)
-			ir := ParseIconResults(s)
-			title := ParseTitle(s)
-
-			movies = append(movies, &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, IconsResult: ir, Title: title})
-		})
-
-		str, err := doc.Html()
-		if err != nil {
-			log.Fatal(err)
-		}
-		os.WriteFile(fmt.Sprintf("./pages/index%d.html", i), []byte(str), fs.FileMode(os.O_CREATE))
+	for m := range movieChan {
+		movies = append(movies, m)
 	}
+
 	jsonRes, err := json.Marshal(movies)
 	if err != nil {
 		log.Fatal(err)
@@ -142,6 +119,35 @@ func NewConfigFromJSON() *Config {
 		log.Fatalf("Failed to unmarshal data %s", err)
 	}
 	return &cfg
+}
+
+func NewZamundaClient(cfg *Config) *http.Client {
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	client := http.Client{
+		Jar: jar,
+	}
+
+	loginInfo := url.Values{}
+	loginInfo.Set("username", cfg.Username)
+	loginInfo.Set("password", cfg.Password)
+
+	_, err = client.PostForm("https://zamunda.net/takelogin.php", loginInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &client
+}
+
+func StartWorker(cfg *Config, pages chan int, results chan *Movie) {
+	client := NewZamundaClient(cfg)
+	for p := range pages {
+		ScrapeMoviePage(client, p, results)
+		log.Println("scraped page", p)
+		time.Sleep(300 * time.Millisecond)
+	}
 }
 
 // Gets a windows1251 encoded interface and returns a utf8 reader
@@ -230,6 +236,29 @@ func GetTextFromSelectionNodes(s *goquery.Selection) []string {
 	return resultArr
 }
 
+func GetPagesCount() int {
+	client := NewZamundaClient(NewConfigFromJSON())
+	resp, err := client.Get("https://zamunda.net/catalogs/movies&t=movie")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	decodedReader := DecodeWindows1251(resp.Body)
+
+	doc, err := goquery.NewDocumentFromReader(decodedReader)
+	if err != nil {
+		log.Fatal(err)
+	}
+	lpa := doc.Find(LAST_PAGE_ANCHOR)
+	val, _ := lpa.Attr("href")
+	pages, err := strconv.Atoi(GetRegexGroup(RX_LAST_PAGE, val))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return pages
+}
+
 func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 	resp, err := client.Get(fmt.Sprintf("https://zamunda.net/catalogs/movies&t=movie&page=%d", page))
 	if err != nil {
@@ -244,9 +273,11 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 	}
 
 	if doc.Find(MOVIE_DESCRIPTION).Length() == 0 {
-		fmt.Println("retry")
+		log.Println("retrying page", page)
+		time.Sleep(1 * time.Second)
+		ScrapeMoviePage(client, page, movieChan)
+		return
 	}
-	fmt.Println(doc.Find(MOVIE_DESCRIPTION).Length())
 
 	catalog_rows := doc.Find(CATALOG_ROWS)
 
