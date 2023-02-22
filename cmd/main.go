@@ -14,7 +14,6 @@ type Movie struct {
 	Title  string   `json:"title"`
 	Genres []string `json:"genres"`
 	*ExtractedMovieDescriptionResult
-	*IconsResult
 
 	// The IMDB rating of the movie
 	Rating   float64   `json:"rating"`
@@ -24,6 +23,7 @@ type Movie struct {
 type Torrent struct {
 	Link string `json:"link"`
 	Size string `json:"size"`
+	*IconsResult
 }
 
 type IconsResult struct {

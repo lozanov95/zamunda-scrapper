@@ -83,12 +83,6 @@ func Scrape() {
 			continue
 		}
 
-		if !existingMovie.BG_AUDIO && m.BG_AUDIO {
-			existingMovie.BG_AUDIO = m.BG_AUDIO
-		}
-		if !existingMovie.BG_SUBS && m.BG_SUBS {
-			existingMovie.BG_SUBS = m.BG_SUBS
-		}
 		existingMovie.Torrents = append(existingMovie.Torrents, m.Torrents...)
 	}
 
@@ -323,8 +317,8 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 		ir := ParseIconResults(s)
 		link := ParseLink(s)
 		size := ParseSize(s)
-		torrent := Torrent{Link: link, Size: size}
+		torrent := Torrent{Link: link, Size: size, IconsResult: ir}
 
-		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, IconsResult: ir, Title: title, Torrents: []Torrent{torrent}}
+		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, Title: title, Torrents: []Torrent{torrent}}
 	})
 }
