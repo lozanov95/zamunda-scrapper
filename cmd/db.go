@@ -21,7 +21,6 @@ const (
 )
 
 func NewMovieDB() *MovieDB {
-	// movies := make(map[string]*Movie)
 	movieBytes, err := os.ReadFile("movies.json")
 	if err != nil {
 		log.Fatal(err)
