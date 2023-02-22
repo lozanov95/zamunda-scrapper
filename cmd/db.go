@@ -15,6 +15,10 @@ type MovieDB struct {
 	genres    *map[string][]*Movie
 }
 
+const (
+	PAGE_SIZE = 100
+)
+
 func NewMovieDB() *MovieDB {
 	movies := make(map[string]*Movie)
 	movieBytes, err := os.ReadFile("movies.json")
@@ -56,10 +60,20 @@ func NewMovieDB() *MovieDB {
 	}
 }
 
-func (db *MovieDB) GetMovies(start, end int) []*Movie {
+func (db *MovieDB) GetMovies(contains string, start int) []*Movie {
 	var movies []*Movie
-	for _, movie := range *db.movies {
-		movies = append(movies, movie)
+	end := start + PAGE_SIZE
+
+	if contains == "" {
+		for _, movie := range *db.movies {
+			movies = append(movies, movie)
+		}
+	} else {
+		for _, movie := range *db.movies {
+			if StringContainsInsensitive(movie.Title, contains) {
+				movies = append(movies, movie)
+			}
+		}
 	}
 
 	start, end = ValidateIndexes(&movies, start, end)
@@ -84,7 +98,8 @@ func (db *MovieDB) GetMoviesForGenre(name string) []*Movie {
 
 func (db *MovieDB) GetActors(contains string, startIndex int) []string {
 	actors := GetMapKeysContainingSubstring(db.directors, contains)
-
+	end := startIndex + PAGE_SIZE
+	ValidateIndexes[string](&actors, startIndex, end)
 	if startIndex >= len(actors) {
 		return actors
 	}
@@ -99,6 +114,16 @@ func (db *MovieDB) GetDirectors(contains string, startIndex int) []string {
 	}
 
 	return directors[startIndex:]
+}
+
+func (db *MovieDB) GetSortedMovies(contains string, startIndex int) []*Movie {
+	movies := db.GetMovies(contains, 0)
+	sortedMovies := make([]*Movie, len(movies))
+	copy(sortedMovies, movies)
+	SortByRating(sortedMovies)
+
+	start, end := ValidateIndexes(&sortedMovies, startIndex, startIndex+PAGE_SIZE)
+	return sortedMovies[start:end]
 }
 
 func GetMapKeysContainingSubstring(m *map[string][]*Movie, str string) []string {

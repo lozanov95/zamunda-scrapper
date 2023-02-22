@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math"
 	"net/http"
 	"strconv"
 )
@@ -23,7 +22,12 @@ func NewServer(port int) *Server {
 	})
 
 	srv.mux.HandleFunc("/movies", func(w http.ResponseWriter, r *http.Request) {
-		res, err := json.Marshal(srv.db.GetMovies(0, 100))
+		query := r.URL.Query()
+		idx, err := strconv.Atoi(query.Get("start"))
+		if err != nil {
+			idx = 0
+		}
+		res, err := json.Marshal(srv.db.GetMovies(query.Get("contains"), idx))
 		if err != nil {
 			log.Println(err)
 			return
@@ -62,11 +66,13 @@ func NewServer(port int) *Server {
 	})
 
 	srv.mux.HandleFunc("/movies/top", func(w http.ResponseWriter, r *http.Request) {
-		sortedMovies := make([]*Movie, len(*srv.db.movies)-1)
-		movies := srv.db.GetMovies(0, math.MaxInt)
-		copy(sortedMovies, movies)
-		SortByRating(sortedMovies)
-		res, err := json.Marshal(sortedMovies[0:100])
+		query := r.URL.Query()
+		idx, err := strconv.Atoi(query.Get("start"))
+		if err != nil {
+			idx = 0
+		}
+
+		res, err := json.Marshal(srv.db.GetSortedMovies(query.Get("contains"), idx))
 		if err != nil {
 			log.Println(err)
 			return

@@ -9,11 +9,14 @@ import (
 	"golang.org/x/text/language"
 )
 
-func ValidateIndexes[C string | Movie](c *[]*C, start, end int) (int, int) {
-	if start < 0 {
+func ValidateIndexes[C string | *Movie](c *[]C, start, end int) (int, int) {
+	if len(*c) == 0 {
+		return 0, 0
+	}
+	if start < 0 || start > len(*c)-1 {
 		start = 0
 	}
-	if end >= len(*c) {
+	if end >= len(*c) || end < 0 {
 		end = len(*c) - 1
 	}
 
