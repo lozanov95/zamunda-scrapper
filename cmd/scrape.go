@@ -21,12 +21,21 @@ import (
 )
 
 type ExtractedMovieDescriptionResult struct {
-	Director    []string `json:"director"`
+	Directors   []string `json:"directors"`
 	Actors      []string `json:"actors"`
-	Country     []string `json:"country"`
+	Countries   []string `json:"countries"`
 	Year        int      `json:"year"`
 	Description string   `json:"description"`
 }
+
+var (
+	RX_DIRECTOR    = regexp.MustCompile("Режисьор[: ]+([А-я ,-]+)")
+	RX_ACTORS      = regexp.MustCompile("В ролите[: ]+([А-я ,-]+)(и др| и други)")
+	RX_COUNTRY     = regexp.MustCompile(" Държава[: ]+([А-я ,-]+)")
+	RX_YEAR        = regexp.MustCompile(`Година[: ]+(\d{4})`)
+	RX_DESCRIPTION = regexp.MustCompile("(?s)Резюме[: ]+([^#]+)")
+	RX_LAST_PAGE   = regexp.MustCompile(`page=(\d{1,10})`)
+)
 
 const (
 	NEXT_PAGE           = ".gotonext"
@@ -150,16 +159,26 @@ func GetRegexGroup(re *regexp.Regexp, s string) string {
 func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	desc := s.Find(MOVIE_DESCRIPTION)
 	text := desc.Text()
-	director := strings.Split(GetRegexGroup(RX_DIRECTOR, text), ", ")
-	actors := strings.Split(GetRegexGroup(RX_ACTORS, text), ", ")
-	country := strings.Split(GetRegexGroup(RX_COUNTRY, text), ", ")
+	directors := strings.Split(GetRegexGroup(RX_DIRECTOR, text), ",")
+	actors := strings.Split(GetRegexGroup(RX_ACTORS, text), ",")
+	countries := strings.Split(GetRegexGroup(RX_COUNTRY, text), ",")
 	description := GetRegexGroup(RX_DESCRIPTION, text)
 	year, _ := strconv.Atoi(GetRegexGroup(RX_YEAR, text))
 
+	for i, director := range directors {
+		directors[i] = strings.Trim(director, " ")
+	}
+	for i, actor := range actors {
+		actors[i] = strings.Trim(actor, " ")
+	}
+	for i, country := range countries {
+		countries[i] = strings.Trim(country, " ")
+	}
+
 	return &ExtractedMovieDescriptionResult{
-		Director:    director,
+		Directors:   directors,
 		Actors:      actors,
-		Country:     country,
+		Countries:   countries,
 		Year:        year,
 		Description: description,
 	}

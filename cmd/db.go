@@ -41,11 +41,11 @@ func NewMovieDB() *MovieDB {
 		for _, m := range movies[0].Actors {
 			AppendToSliceInMap(&actors, m, movies[0])
 		}
-		for _, m := range movies[0].Director {
+		for _, m := range movies[0].Directors {
 			AppendToSliceInMap(&directors, m, movies[0])
 
 		}
-		for _, m := range movies[0].Country {
+		for _, m := range movies[0].Countries {
 			AppendToSliceInMap(&countries, m, movies[0])
 		}
 		for _, m := range movies[0].Genres {
@@ -78,6 +78,15 @@ func (db *MovieDB) GetTitles(start, end int) []*string {
 
 func (db *MovieDB) GetMoviesForActor(name string) []*Movie {
 	return (*db.actors)[name]
+}
+
+func (db *MovieDB) GetActors(start, end int) []string {
+	var actors []string
+	for actor := range *db.actors {
+		actors = append(actors, actor)
+	}
+
+	return actors[start:end]
 }
 
 func SortByRating(movies []*Movie) {

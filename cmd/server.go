@@ -28,6 +28,16 @@ func NewServer(port int) *Server {
 		}
 		SendJson(w, res)
 	})
+
+	srv.mux.HandleFunc("/actors", func(w http.ResponseWriter, r *http.Request) {
+		res, err := json.Marshal(srv.db.GetActors(0, 100))
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		SendJson(w, res)
+	})
+
 	srv.mux.HandleFunc("/movies/top", func(w http.ResponseWriter, r *http.Request) {
 		sortedMovies := make([]*Movie, len(*srv.db.movies))
 		copy(sortedMovies, *srv.db.movies)
