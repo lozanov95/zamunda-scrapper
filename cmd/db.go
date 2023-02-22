@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"sort"
-	"strings"
 )
 
 type MovieDB struct {
@@ -84,7 +83,7 @@ func (db *MovieDB) GetMoviesForActor(name string) []*Movie {
 func (db *MovieDB) GetActors(contains string, startIndex int) []string {
 	var actors []string
 	for actor := range *db.actors {
-		if strings.Contains(actor, contains) {
+		if StringContainsInsensitive(actor, contains) {
 			actors = append(actors, actor)
 		}
 	}
