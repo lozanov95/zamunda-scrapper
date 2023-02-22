@@ -92,7 +92,13 @@ func Scrape() {
 		existingMovie.Torrents = append(existingMovie.Torrents, m.Torrents...)
 	}
 
-	jsonRes, err := json.Marshal(movies)
+	mList := []*Movie{}
+
+	for _, movie := range movies {
+		mList = append(mList, movie)
+	}
+
+	jsonRes, err := json.Marshal(mList)
 	if err != nil {
 		log.Fatal(err)
 	}
