@@ -74,9 +74,22 @@ func Scrape() {
 		close(movieChan)
 	}(pagesChan, movieChan)
 
-	var movies []*Movie
+	movies := make(map[string]*Movie)
+
 	for m := range movieChan {
-		movies = append(movies, m)
+		existingMovie := movies[m.Title]
+		if existingMovie == nil {
+			movies[m.Title] = m
+			continue
+		}
+
+		if !existingMovie.BG_AUDIO && m.BG_AUDIO {
+			existingMovie.BG_AUDIO = m.BG_AUDIO
+		}
+		if !existingMovie.BG_SUBS && m.BG_SUBS {
+			existingMovie.BG_SUBS = m.BG_SUBS
+		}
+		existingMovie.Torrents = append(existingMovie.Torrents, m.Torrents...)
 	}
 
 	jsonRes, err := json.Marshal(movies)
@@ -223,7 +236,7 @@ func ParseIconResults(s *goquery.Selection) *IconsResult {
 
 // Parses the movie title from the selection
 func ParseTitle(s *goquery.Selection) string {
-	return s.Find(MOVIE_TITLE).First().Text()
+	return strings.TrimSpace(s.Find(MOVIE_TITLE).First().Text())
 }
 
 func GetTextFromSelectionNodes(s *goquery.Selection) []string {
@@ -304,7 +317,8 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 		ir := ParseIconResults(s)
 		link := ParseLink(s)
 		size := ParseSize(s)
+		torrent := Torrent{Link: link, Size: size}
 
-		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, IconsResult: ir, Title: title, Link: link, Size: size}
+		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, IconsResult: ir, Title: title, Torrents: []Torrent{torrent}}
 	})
 }

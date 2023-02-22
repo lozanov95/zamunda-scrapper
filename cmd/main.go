@@ -17,9 +17,13 @@ type Movie struct {
 	*IconsResult
 
 	// The IMDB rating of the movie
-	Rating float64 `json:"rating"`
-	Size   string  `json:"size"`
-	Link   string  `json:"link"`
+	Rating   float64   `json:"rating"`
+	Torrents []Torrent `json:"torrents"`
+}
+
+type Torrent struct {
+	Link string `json:"link"`
+	Size string `json:"size"`
 }
 
 type IconsResult struct {
