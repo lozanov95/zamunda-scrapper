@@ -81,18 +81,33 @@ func (db *MovieDB) GetMoviesForActor(name string) []*Movie {
 }
 
 func (db *MovieDB) GetActors(contains string, startIndex int) []string {
-	var actors []string
-	for actor := range *db.actors {
-		if StringContainsInsensitive(actor, contains) {
-			actors = append(actors, actor)
-		}
-	}
+	actors := GetMapKeysContainingSubstring(db.directors, contains)
 
 	if startIndex >= len(actors) {
 		return actors
 	}
 
 	return actors[startIndex:]
+}
+
+func (db *MovieDB) GetDirectors(contains string, startIndex int) []string {
+	directors := GetMapKeysContainingSubstring(db.directors, contains)
+	if startIndex >= len(directors) {
+		return directors
+	}
+
+	return directors[startIndex:]
+}
+
+func GetMapKeysContainingSubstring(m *map[string][]*Movie, str string) []string {
+	var result []string
+	for key := range *m {
+		if StringContainsInsensitive(key, str) {
+			result = append(result, key)
+		}
+	}
+
+	return result
 }
 
 func SortByRating(movies []*Movie) {

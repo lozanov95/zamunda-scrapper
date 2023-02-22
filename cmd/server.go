@@ -44,6 +44,20 @@ func NewServer(port int) *Server {
 		}
 		SendJson(w, res)
 	})
+	srv.mux.HandleFunc("/directors", func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		idx, err := strconv.Atoi(query.Get("start"))
+		if err != nil {
+			idx = 0
+		}
+
+		res, err := json.Marshal(srv.db.GetDirectors(query.Get("contains"), idx))
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		SendJson(w, res)
+	})
 
 	srv.mux.HandleFunc("/movies/top", func(w http.ResponseWriter, r *http.Request) {
 		sortedMovies := make([]*Movie, len(*srv.db.movies))
