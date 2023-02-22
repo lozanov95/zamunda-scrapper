@@ -30,7 +30,7 @@ type ExtractedMovieDescriptionResult struct {
 
 var (
 	RX_DIRECTOR    = regexp.MustCompile("Режисьор[: ]+([А-я ,-]+)")
-	RX_ACTORS      = regexp.MustCompile("В ролите[: ]+([А-я ,-]+)(и др| и други)")
+	RX_ACTORS      = regexp.MustCompile("В ролите[: ]+(['А-я ,-]+)")
 	RX_COUNTRY     = regexp.MustCompile(" Държава[: ]+([А-я ,-]+)")
 	RX_YEAR        = regexp.MustCompile(`Година[: ]+(\d{4})`)
 	RX_DESCRIPTION = regexp.MustCompile("(?s)Резюме[: ]+([^#]+)")
@@ -169,7 +169,8 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 		directors[i] = strings.Trim(director, " ")
 	}
 	for i, actor := range actors {
-		actors[i] = strings.Trim(actor, " ")
+		newActor, _, _ := strings.Cut(actor, "и др")
+		actors[i] = strings.Trim(newActor, " ")
 	}
 	for i, country := range countries {
 		countries[i] = strings.Trim(country, " ")
