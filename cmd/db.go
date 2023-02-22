@@ -8,8 +8,7 @@ import (
 )
 
 type MovieDB struct {
-	movies *[]*Movie
-	// movies     *map[string]*Movie
+	movies    *[]*Movie
 	actors    *map[string][]*Movie
 	directors *map[string][]*Movie
 	countries *map[string][]*Movie
