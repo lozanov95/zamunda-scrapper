@@ -13,7 +13,6 @@ type MovieDB struct {
 	actors    *map[string][]*Movie
 	directors *map[string][]*Movie
 	countries *map[string][]*Movie
-	movieMap  *map[string][]*Movie
 }
 
 func NewMovieDB() *MovieDB {
@@ -55,7 +54,7 @@ func NewMovieDB() *MovieDB {
 
 	return &MovieDB{
 		movies:    &movies,
-		movieMap:  &titles,
+		titles:    &titles,
 		actors:    &actors,
 		directors: &directors,
 		countries: &countries,
