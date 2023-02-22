@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"strings"
 )
 
 type MovieDB struct {
@@ -80,13 +81,19 @@ func (db *MovieDB) GetMoviesForActor(name string) []*Movie {
 	return (*db.actors)[name]
 }
 
-func (db *MovieDB) GetActors(start, end int) []string {
+func (db *MovieDB) GetActors(contains string, startIndex int) []string {
 	var actors []string
 	for actor := range *db.actors {
-		actors = append(actors, actor)
+		if strings.Contains(actor, contains) {
+			actors = append(actors, actor)
+		}
 	}
 
-	return actors[start:end]
+	if startIndex >= len(actors) {
+		return actors
+	}
+
+	return actors[startIndex:]
 }
 
 func SortByRating(movies []*Movie) {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Server struct {
@@ -30,7 +31,13 @@ func NewServer(port int) *Server {
 	})
 
 	srv.mux.HandleFunc("/actors", func(w http.ResponseWriter, r *http.Request) {
-		res, err := json.Marshal(srv.db.GetActors(0, 100))
+		query := r.URL.Query()
+		idx, err := strconv.Atoi(query.Get("start"))
+		if err != nil {
+			idx = 0
+		}
+
+		res, err := json.Marshal(srv.db.GetActors(query.Get("contains"), idx))
 		if err != nil {
 			log.Println(err)
 			return
