@@ -166,14 +166,15 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	year, _ := strconv.Atoi(GetRegexGroup(RX_YEAR, text))
 
 	for i, director := range directors {
-		directors[i] = strings.Trim(director, " ")
+		directors[i] = ConvertToTitleCase(strings.Trim(director, " "))
 	}
 	for i, actor := range actors {
 		newActor, _, _ := strings.Cut(actor, "и др")
-		actors[i] = strings.Trim(newActor, " ")
+		actors[i] = ConvertToTitleCase(strings.Trim(newActor, " "))
+
 	}
 	for i, country := range countries {
-		countries[i] = strings.Trim(country, " ")
+		countries[i] = ConvertToTitleCase(strings.Trim(country, " "))
 	}
 
 	return &ExtractedMovieDescriptionResult{

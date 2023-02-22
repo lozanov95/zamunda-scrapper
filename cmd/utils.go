@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func ValidateIndexes[C string | Movie](c *[]*C, start, end int) (int, int) {
@@ -44,4 +47,9 @@ func StringContainsInsensitive(s, substr string) bool {
 	lowSubstr := strings.ToLower(substr)
 
 	return strings.Contains(lowS, lowSubstr)
+}
+
+func ConvertToTitleCase(s string) string {
+	caser := cases.Title(language.Bulgarian)
+	return caser.String(s)
 }
