@@ -345,8 +345,6 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 		torrent := Torrent{Link: link, Size: size, IconsResult: ir}
 		previewLink := ParsePreviewLink(s)
 
-		fmt.Println(previewLink)
-
 		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, Title: title, Torrents: []Torrent{torrent}, PreviewLink: previewLink}
 	})
 }
