@@ -1,6 +1,9 @@
-FROM python:3.11
-WORKDIR /app
-COPY ["requirements.txt","main.py","./"]
-RUN pip install -r requirements.txt
-RUN playwright install && playwright install-deps
-CMD ["bash"]
+FROM golang:1.19
+WORKDIR /usr/src/app
+COPY ./go.mod ./go.sum ./
+RUN go mod download && go mod verify
+COPY ./config.json ./movies.json ./
+COPY ./cmd/ ./cmd/
+RUN go build -v -o /usr/local/bin/zamunda ./...
+
+CMD ["zamunda","-serve"]
