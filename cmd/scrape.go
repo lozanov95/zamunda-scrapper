@@ -50,10 +50,9 @@ const (
 	MOVIE_LINK_SELECTOR = ".colheadd > .notranslate"
 )
 
-func Scrape() {
+func Scrape(cfg *Config) {
 	start := time.Now()
 
-	cfg := NewConfigFromJSON()
 	pages := GetPagesCount()
 
 	pagesChan := make(chan int)

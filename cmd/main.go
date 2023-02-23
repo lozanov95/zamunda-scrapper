@@ -8,6 +8,7 @@ type Config struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Workers  int    `json:"workers"`
+	PageSize int    `json:"pageSize"`
 }
 
 type Movie struct {
@@ -42,11 +43,13 @@ var (
 
 func main() {
 	flag.Parse()
+	cfg := NewConfigFromJSON()
+
 	if *scrape {
-		Scrape()
+		Scrape(cfg)
 	}
 	if *serve {
-		srv := NewServer(*port)
+		srv := NewServer(*port, cfg)
 		srv.ListenAndServe()
 	}
 }

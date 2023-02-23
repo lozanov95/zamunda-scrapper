@@ -13,13 +13,14 @@ type MovieDB struct {
 	directors *map[string][]*Movie
 	countries *map[string][]*Movie
 	genres    *map[string][]*Movie
+	pageSize  int
 }
 
-const (
-	PAGE_SIZE = 100
-)
+// const (
+// 	PAGE_SIZE = 100
+// )
 
-func NewMovieDB() *MovieDB {
+func NewMovieDB(pageSize int) *MovieDB {
 	movieBytes, err := os.ReadFile("movies.json")
 	if err != nil {
 		log.Fatal(err)
@@ -52,18 +53,23 @@ func NewMovieDB() *MovieDB {
 		}
 	}
 
+	if pageSize == 0 || pageSize > 100 {
+		pageSize = 100
+	}
+
 	return &MovieDB{
 		movies:    &movies,
 		actors:    &actors,
 		directors: &directors,
 		countries: &countries,
 		genres:    &genres,
+		pageSize:  pageSize,
 	}
 }
 
 func (db *MovieDB) GetMovies(contains string, page int) []*Movie {
-	start := page * PAGE_SIZE
-	end := start + PAGE_SIZE
+	start := page * db.pageSize
+	end := start + db.pageSize
 
 	if contains != "" {
 		var movies []*Movie
@@ -98,8 +104,8 @@ func (db *MovieDB) GetMoviesForGenre(name string, page int) []*Movie {
 
 func (db *MovieDB) GetActors(contains string, page int) []string {
 	actors := GetMapKeysContainingSubstring(db.directors, contains)
-	start := page * PAGE_SIZE
-	end := start + PAGE_SIZE
+	start := page * db.pageSize
+	end := start + db.pageSize
 
 	start, end = ValidateIndexes(&actors, start, end)
 	return actors[start:end]
@@ -107,8 +113,8 @@ func (db *MovieDB) GetActors(contains string, page int) []string {
 
 func (db *MovieDB) GetDirectors(contains string, page int) []string {
 	directors := GetMapKeysContainingSubstring(db.directors, contains)
-	start := page * PAGE_SIZE
-	end := start + PAGE_SIZE
+	start := page * db.pageSize
+	end := start + db.pageSize
 
 	start, end = ValidateIndexes(&directors, start, end)
 	return directors[start:end]
@@ -120,8 +126,8 @@ func (db *MovieDB) GetSortedMovies(contains string, page int) []*Movie {
 	copy(sortedMovies, movies)
 	SortByRating(sortedMovies)
 
-	start := page * PAGE_SIZE
-	end := start + PAGE_SIZE
+	start := page * db.pageSize
+	end := start + db.pageSize
 
 	start, end = ValidateIndexes(&sortedMovies, start, end)
 	return sortedMovies[start:end]

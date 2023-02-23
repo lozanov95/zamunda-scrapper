@@ -12,10 +12,11 @@ type Server struct {
 	mux  *http.ServeMux
 	db   *MovieDB
 	Port int
+	cfg  *Config
 }
 
-func NewServer(port int) *Server {
-	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB()}
+func NewServer(port int, cfg *Config) *Server {
+	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg}
 
 	srv.mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "ok")
