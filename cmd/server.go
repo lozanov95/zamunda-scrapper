@@ -18,9 +18,7 @@ type Server struct {
 func NewServer(port int, cfg *Config) *Server {
 	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg}
 
-	srv.mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "ok")
-	})
+	srv.mux.Handle("/", http.FileServer(http.Dir("./ui")))
 
 	srv.mux.HandleFunc("/movies", func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query()
