@@ -58,17 +58,17 @@ function Movie({ movie }: { movie: MovieType }) {
   }
 
   return (
-    <div>
+    <div className='container'>
       <div>{movie.title}</div>
-      <div>{movie.genres?.join(", ")}</div>
-      <div>{movie.directors?.join(", ")}</div>
-      <div>{movie.actors?.join(", ")}</div>
-      <div>{movie.countries?.join(", ")}</div>
-      <div>{movie.year}</div>
-      <div>{movie.description}</div>
-      <div>{movie.rating} star</div>
-      <button onClick={ToggleTorrent}>Toggle torrents</button>
-      <div>
+      <div>Жанр: {movie.genres?.join(", ")}</div>
+      <div>Режисьор: {movie.directors?.join(", ")}</div>
+      <div>Актьори: {movie.actors?.join(", ")}</div>
+      {movie.countries?.length > 0 && <div>Държави: {movie.countries?.join(", ")}</div>}
+      {movie.year > 0 && <div>Година: {movie.year}</div>}
+      <div>Резюме: {movie.description}</div>
+      {movie.rating > 0 && <div>Рейтинг: {movie.rating} &#9733;</div>}
+      <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+      <div className='flex-col'>
         {displayTorrents && movie.torrents?.map((torrent, idx) => {
           return <Torrent torrent={torrent} key={idx} />
         })}
@@ -80,12 +80,12 @@ function Movie({ movie }: { movie: MovieType }) {
 
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
-    <div>
-      <div>{torrent.bg_audio}</div>
-      <div>{torrent.bg_subs}</div>
-      <div>{torrent.link}</div>
+    <div className='flex-row'>
+      <div>{torrent.bg_audio ? "БГ Аудио" : ""}</div>
+      <div>{torrent.bg_subs ? "БГ Субтитри" : ""}</div>
+      <div><a href={"https://zamunda.net" + torrent.link} target="_blank">Link</a></div>
       <div>{torrent.size}</div>
-    </div>
+    </div >
   )
 }
 
