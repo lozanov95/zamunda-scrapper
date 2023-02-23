@@ -54,8 +54,7 @@ const (
 func Scrape(cfg *Config) {
 	start := time.Now()
 
-	// pages := GetPagesCount()
-	pages := 5
+	pages := GetPagesCount()
 
 	pagesChan := make(chan int)
 	movieChan := make(chan *Movie, 100)
