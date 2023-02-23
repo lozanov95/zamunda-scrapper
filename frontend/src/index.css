@@ -75,7 +75,9 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-.container {
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   margin: 2rem;
   padding: 15px;
   border-radius: 12px;
@@ -111,4 +113,8 @@ button {
 }
 .text-header {
   font-weight: bold;
+}
+.img-preview {
+  width: 400px;
+  height: 600px;
 }
