@@ -16,10 +16,6 @@ type MovieDB struct {
 	pageSize  int
 }
 
-// const (
-// 	PAGE_SIZE = 100
-// )
-
 func NewMovieDB(pageSize int) *MovieDB {
 	movieBytes, err := os.ReadFile("movies.json")
 	if err != nil {
