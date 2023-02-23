@@ -36,7 +36,7 @@ function App() {
   }, [])
 
   return (
-    <div className="flex-cont flex-col">
+    <div className="grid-cont">
       {movies?.map((movie: MovieType, idx) => {
         return <Movie movie={movie} key={idx} />
       })}
@@ -52,11 +52,17 @@ function Movie({ movie }: { movie: MovieType }) {
   }
 
   return (
-    <div className='grid-container'>
-      <div className='left'>
-        <img className='img-preview' src={"https://zamunda.net" + movie.previewLink}></img>
+    <div className='grid-cont grid-cols-2 bg-2'>
+      <div>
+        <img className='img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
+        <div className='col'>
+          <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+          {displayTorrents && movie.torrents?.map((torrent, idx) => {
+            return <Torrent torrent={torrent} key={idx} />
+          })}
+        </div>
       </div>
-      <div className='right'>
+      <div>
         <div className='title'>{movie.title}</div>
         <TextField header='Жанр' text={movie.genres?.join(", ")} />
         <TextField header='Режисьор' text={movie.directors?.join(", ")} />
@@ -65,14 +71,6 @@ function Movie({ movie }: { movie: MovieType }) {
         {movie.rating > 0 && <TextField header='Рейтинг' text={movie.rating.toString()} />}
         <TextField header='Година' text={movie.year.toString()} />
         <TextField header='Резюме' text={movie.description} />
-        <div>
-          <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-          <div className='flex-col'>
-            {displayTorrents && movie.torrents?.map((torrent, idx) => {
-              return <Torrent torrent={torrent} key={idx} />
-            })}
-          </div>
-        </div>
       </div>
     </div>
   )
@@ -80,11 +78,11 @@ function Movie({ movie }: { movie: MovieType }) {
 
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
-    <div className='flex-row'>
+    <div className='grid-cont grid-cols-4'>
       <div>{torrent.bg_audio ? "БГ Аудио" : ""}</div>
-      <div>{torrent.bg_subs ? "БГ Субтитри" : ""}</div>
-      <div><a href={"https://zamunda.net" + torrent.link} target="_blank">Link</a></div>
+      <div>{torrent.bg_subs ? "Субтитри" : ""}</div>
       <div>{torrent.size}</div>
+      <div><a href={"https://zamunda.net" + torrent.link} target="_blank">Link</a></div>
     </div >
   )
 }
