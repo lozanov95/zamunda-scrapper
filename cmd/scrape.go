@@ -184,6 +184,16 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	description := GetRegexGroup(RX_DESCRIPTION, text)
 	year, _ := strconv.Atoi(GetRegexGroup(RX_YEAR, text))
 
+	if directors[0] == "" {
+		directors = []string{}
+	}
+	if actors[0] == "" {
+		actors = []string{}
+	}
+	if countries[0] == "" {
+		countries = []string{}
+	}
+
 	for i, director := range directors {
 		directors[i] = ConvertToTitleCase(strings.Trim(director, " "))
 	}
@@ -208,7 +218,12 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 // Parses the movie genres for the given selection
 func ParseGenres(s *goquery.Selection) []string {
 	genresNode := s.Find(GENRES_SELECTOR)
-	return GetTextFromSelectionNodes(genresNode)
+	genres := GetTextFromSelectionNodes(genresNode)
+	if genres == nil {
+		return []string{}
+	}
+
+	return genres
 }
 
 // Parses the IMDB rating for the given selection
