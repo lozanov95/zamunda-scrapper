@@ -53,7 +53,7 @@ func NewMovieDB(pageSize int) *MovieDB {
 		}
 	}
 
-	if pageSize == 0 || pageSize > 100 {
+	if pageSize <= 0 || pageSize > 100 {
 		pageSize = 100
 	}
 
