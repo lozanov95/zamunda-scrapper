@@ -38,22 +38,24 @@ var (
 )
 
 const (
-	NEXT_PAGE           = ".gotonext"
-	CATALOG_ROWS        = "table.test > tbody > tr"
-	MOVIE_DESCRIPTION   = "td > #description"
-	MOVIE_TITLE         = ".colheadd"
-	AUDIO_ICONS         = "center > img"
-	GENRES_SELECTOR     = "tbody > tr > td > b > u > a"
-	IMDB_RATING         = ".imdtextrating"
-	LAST_PAGE_ANCHOR    = "font.red:nth-child(1) > a:nth-child(13)"
-	SIZE_SELECTOR       = "tbody > tr:nth-child(2) > td:nth-child(5)"
-	MOVIE_LINK_SELECTOR = ".colheadd > .notranslate"
+	NEXT_PAGE              = ".gotonext"
+	CATALOG_ROWS           = "table.test > tbody > tr"
+	MOVIE_DESCRIPTION      = "td > #description"
+	MOVIE_TITLE            = ".colheadd"
+	AUDIO_ICONS            = "center > img"
+	GENRES_SELECTOR        = "tbody > tr > td > b > u > a"
+	IMDB_RATING            = ".imdtextrating"
+	LAST_PAGE_ANCHOR       = "font.red:nth-child(1) > a:nth-child(13)"
+	SIZE_SELECTOR          = "tbody > tr:nth-child(2) > td:nth-child(5)"
+	MOVIE_LINK_SELECTOR    = ".colheadd > .notranslate"
+	PREVIEW_IMAGE_SELECTOR = "td > a > img"
 )
 
 func Scrape(cfg *Config) {
 	start := time.Now()
 
-	pages := GetPagesCount()
+	// pages := GetPagesCount()
+	pages := 5
 
 	pagesChan := make(chan int)
 	movieChan := make(chan *Movie, 100)
@@ -287,6 +289,11 @@ func ParseSize(s *goquery.Selection) string {
 	return s.Find(SIZE_SELECTOR).First().Text()
 }
 
+func ParsePreviewLink(s *goquery.Selection) string {
+	link, _ := s.Find(PREVIEW_IMAGE_SELECTOR).Attr("src")
+	return link
+}
+
 func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 	resp, err := client.Get(fmt.Sprintf("https://zamunda.net/catalogs/movies&t=movie&page=%d", page))
 	if err != nil {
@@ -322,7 +329,10 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 		link := ParseLink(s)
 		size := ParseSize(s)
 		torrent := Torrent{Link: link, Size: size, IconsResult: ir}
+		previewLink := ParsePreviewLink(s)
 
-		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, Title: title, Torrents: []Torrent{torrent}}
+		fmt.Println(previewLink)
+
+		movieChan <- &Movie{ExtractedMovieDescriptionResult: desc, Genres: genres, Rating: rating, Title: title, Torrents: []Torrent{torrent}, PreviewLink: previewLink}
 	})
 }
