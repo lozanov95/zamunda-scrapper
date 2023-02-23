@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
-// type ExtractedMovieDescriptionResult struct {
-// 	Directors   []string `json:"directors"`
-// 	Actors      []string `json:"actors"`
-// 	Countries   []string `json:"countries"`
-// 	Year        int      `json:"year"`
-// 	Description string   `json:"description"`
-// }
 
 type MovieType = {
   title: string,
@@ -42,7 +35,7 @@ function App() {
   }, [])
 
   return (
-    <div className="App">
+    <div className="flex-cont flex-col">
       {movies?.map((movie: MovieType, idx) => {
         return <Movie movie={movie} key={idx} />
       })}
@@ -59,19 +52,21 @@ function Movie({ movie }: { movie: MovieType }) {
 
   return (
     <div className='container'>
-      <div>{movie.title}</div>
-      <div>Жанр: {movie.genres?.join(", ")}</div>
-      <div>Режисьор: {movie.directors?.join(", ")}</div>
-      <div>Актьори: {movie.actors?.join(", ")}</div>
-      {movie.countries?.length > 0 && <div>Държави: {movie.countries?.join(", ")}</div>}
-      {movie.year > 0 && <div>Година: {movie.year}</div>}
-      <div>Резюме: {movie.description}</div>
-      {movie.rating > 0 && <div>Рейтинг: {movie.rating} &#9733;</div>}
-      <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-      <div className='flex-col'>
-        {displayTorrents && movie.torrents?.map((torrent, idx) => {
-          return <Torrent torrent={torrent} key={idx} />
-        })}
+      <div className='title'>{movie.title}</div>
+      <TextField header='Жанр' text={movie.genres?.join(", ")} />
+      <TextField header='Режисьор' text={movie.directors?.join(", ")} />
+      <TextField header='Актьори' text={movie.actors?.join(", ")} />
+      <TextField header='Държавa' text={movie.countries?.join(", ")} />
+      {movie.rating > 0 && <TextField header='Рейтинг' text={movie.rating.toString()} />}
+      <TextField header='Година' text={movie.year.toString()} />
+      <TextField header='Резюме' text={movie.description} />
+      <div>
+        <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+        <div className='flex-col'>
+          {displayTorrents && movie.torrents?.map((torrent, idx) => {
+            return <Torrent torrent={torrent} key={idx} />
+          })}
+        </div>
       </div>
 
     </div>
@@ -86,6 +81,16 @@ function Torrent({ torrent }: { torrent: TorrentType }) {
       <div><a href={"https://zamunda.net" + torrent.link} target="_blank">Link</a></div>
       <div>{torrent.size}</div>
     </div >
+  )
+}
+
+function TextField({ header, text }: { header: string, text?: string }) {
+
+  return (
+    <div>
+      <span className='text-header'>{header}: </span>
+      <span>{text}</span>
+    </div>
   )
 }
 
