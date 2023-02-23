@@ -110,6 +110,11 @@ func NewConfigFromJSON() *Config {
 	if err != nil {
 		log.Fatalf("Failed to unmarshal data %s", err)
 	}
+
+	if cfg.PageSize <= 0 || cfg.PageSize > 100 {
+		cfg.PageSize = 100
+	}
+
 	return &cfg
 }
 

@@ -48,11 +48,6 @@ func NewMovieDB(pageSize int) *MovieDB {
 			AppendToSliceInMap(&genres, genre, movie)
 		}
 	}
-
-	if pageSize <= 0 || pageSize > 100 {
-		pageSize = 100
-	}
-
 	return &MovieDB{
 		movies:    &movies,
 		actors:    &actors,
