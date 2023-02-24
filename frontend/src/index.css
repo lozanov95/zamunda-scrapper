@@ -90,11 +90,11 @@ button:focus-visible {
 .grid-cols-2 {
   grid-template-columns: repeat(2, 1fr);
 }
-.grid-cols-auto {
-  grid-template-columns: repeat(auto-fill, 1fr);
+.bg-3 {
+  background-color: var(--thertiary-color);
 }
 .bg-2 {
-  background-color: var(--thertiary-color);
+  background-color: var(--secondary-color);
 }
 .title {
   font-size: larger;

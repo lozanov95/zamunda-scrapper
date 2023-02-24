@@ -4,7 +4,7 @@ import './App.css'
 
 type MovieType = {
   title: string,
-  genres: string[] | null,
+  genres: string[],
   directors: string[],
   actors: string[],
   countries: string[],
@@ -52,9 +52,12 @@ function Movie({ movie }: { movie: MovieType }) {
   }
 
   return (
-    <div className='grid-cont grid-cols-2 bg-2'>
+    <div className='grid-cont grid-cols-2 bg-3'>
       <div>
-        <img className='img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
+        {movie.previewLink.startsWith("http") ?
+          <img className='img-cover' src={movie.previewLink}></img> :
+          <img className='img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
+        }
         <div className='col'>
           <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
           {displayTorrents && movie.torrents?.map((torrent, idx) => {
@@ -78,22 +81,28 @@ function Movie({ movie }: { movie: MovieType }) {
 
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
-    <div className='grid-cont grid-cols-4'>
-      <div>{torrent.bg_audio ? "БГ Аудио" : ""}</div>
-      <div>{torrent.bg_subs ? "Субтитри" : ""}</div>
-      <div>{torrent.size}</div>
-      <div><a href={"https://zamunda.net" + torrent.link} target="_blank">Link</a></div>
+    <div className='grid-cont bg-2'>
+      {torrent.bg_subs && <TextField header="БГ Суб" text='Да' />}
+      {torrent.bg_audio && <TextField header="БГ Аудио" text='Да' />}
+      <TextField header='Размер' text={torrent.size} />
+      <div><span className='text-header'>Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
     </div >
   )
 }
 
-function TextField({ header, text }: { header: string, text?: string }) {
+function TextField({ header, text }: { header: string, text: string }) {
 
   return (
-    <div>
-      <span className='text-header'>{header}: </span>
-      <span>{text}</span>
-    </div>
+    <>
+      {text?.length > 0 ?
+        <div>
+          <span className='text-header'>{header}: </span>
+          <span>{text}</span>
+        </div> :
+        <></>
+      }
+    </>
+
   )
 }
 
