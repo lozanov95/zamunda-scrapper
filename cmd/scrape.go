@@ -28,6 +28,14 @@ type ExtractedMovieDescriptionResult struct {
 	Description string   `json:"description"`
 }
 
+type Scrapper struct {
+	LoginURL       string
+	PageURL        string
+	Pages          int
+	cfg            *Config
+	OutputFileName string
+}
+
 var (
 	RX_DIRECTOR    = regexp.MustCompile("Режисьор[: ]+([А-я ,-]+)")
 	RX_ACTORS      = regexp.MustCompile("В ролите[: ]+(['А-я ,-]+)")
@@ -51,20 +59,18 @@ const (
 	PREVIEW_IMAGE_SELECTOR = "td > a > img"
 )
 
-func Scrape(cfg *Config) {
+func (s *Scrapper) Scrape() {
 	start := time.Now()
-
-	pages := GetPagesCount()
 
 	pagesChan := make(chan int)
 	movieChan := make(chan *Movie, 100)
 
-	for i := 0; i < cfg.Workers; i++ {
-		go StartWorker(cfg, pagesChan, movieChan)
+	for i := 0; i < s.cfg.Workers; i++ {
+		go s.StartWorker(pagesChan, movieChan)
 	}
 
 	go func(pagesChan chan int, movieChan chan *Movie) {
-		for i := 0; i <= pages; i++ {
+		for i := 0; i <= s.Pages; i++ {
 			pagesChan <- i
 		}
 
@@ -97,14 +103,26 @@ func Scrape(cfg *Config) {
 		log.Fatal(err)
 	}
 
-	os.WriteFile("movies.json", jsonRes, fs.FileMode(os.O_CREATE))
+	os.WriteFile(s.OutputFileName, jsonRes, fs.FileMode(os.O_CREATE))
+}
+
+func NewScrapper(cfg *Config) *Scrapper {
+	s := Scrapper{
+		LoginURL:       "https://zamunda.net/takelogin.php",
+		PageURL:        "https://zamunda.net/catalogs/movies&t=movie",
+		OutputFileName: "movies.json",
+		cfg:            cfg,
+	}
+	s.Pages = s.GetPagesCount()
+
+	return &s
 }
 
 // Loads the variables from a config and them as a Config struct
-func NewConfigFromJSON() *Config {
-	f, err := os.ReadFile("config.json")
+func NewConfigFromJSON(fileName string) *Config {
+	f, err := os.ReadFile(fileName)
 	if err != nil {
-		log.Fatalf("Failed to read config %s", err)
+		log.Fatal(err)
 	}
 	var cfg Config
 	err = json.Unmarshal(f, &cfg)
@@ -119,7 +137,7 @@ func NewConfigFromJSON() *Config {
 	return &cfg
 }
 
-func NewZamundaClient(cfg *Config) *http.Client {
+func (s *Scrapper) NewZamundaClient() *http.Client {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		log.Fatal(err)
@@ -129,21 +147,21 @@ func NewZamundaClient(cfg *Config) *http.Client {
 	}
 
 	loginInfo := url.Values{}
-	loginInfo.Set("username", cfg.Username)
-	loginInfo.Set("password", cfg.Password)
+	loginInfo.Set("username", s.cfg.Username)
+	loginInfo.Set("password", s.cfg.Password)
 
-	_, err = client.PostForm("https://zamunda.net/takelogin.php", loginInfo)
+	_, err = client.PostForm(s.LoginURL, loginInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return &client
 }
 
-// Start a golan worker
-func StartWorker(cfg *Config, pages chan int, results chan *Movie) {
-	client := NewZamundaClient(cfg)
+// Start a golang worker
+func (s *Scrapper) StartWorker(pages chan int, results chan *Movie) {
+	client := s.NewZamundaClient()
 	for p := range pages {
-		ScrapeMoviePage(client, p, results)
+		s.ScrapeMoviePage(client, p, results)
 		log.Println("scraped page", p)
 		time.Sleep(500 * time.Millisecond)
 	}
@@ -269,9 +287,9 @@ func GetTextFromSelectionNodes(s *goquery.Selection) []string {
 }
 
 // Returns the number of movie pages
-func GetPagesCount() int {
-	client := NewZamundaClient(NewConfigFromJSON())
-	resp, err := client.Get("https://zamunda.net/catalogs/movies&t=movie")
+func (s *Scrapper) GetPagesCount() int {
+	client := s.NewZamundaClient()
+	resp, err := client.Get(s.PageURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -308,8 +326,8 @@ func ParsePreviewLink(s *goquery.Selection) string {
 	return link
 }
 
-func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
-	resp, err := client.Get(fmt.Sprintf("https://zamunda.net/catalogs/movies&t=movie&page=%d", page))
+func (s *Scrapper) ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
+	resp, err := client.Get(fmt.Sprintf("%s&page=%d", s.PageURL, page))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -324,7 +342,7 @@ func ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
 	if doc.Find(MOVIE_DESCRIPTION).Length() == 0 {
 		log.Println("retrying page", page)
 		time.Sleep(1 * time.Second)
-		ScrapeMoviePage(client, page, movieChan)
+		s.ScrapeMoviePage(client, page, movieChan)
 		return
 	}
 

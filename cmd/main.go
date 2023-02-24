@@ -43,10 +43,11 @@ var (
 
 func main() {
 	flag.Parse()
-	cfg := NewConfigFromJSON()
+	cfg := NewConfigFromJSON("config.json")
 
 	if *scrape {
-		Scrape(cfg)
+		s := NewScrapper(cfg)
+		s.Scrape()
 	}
 	if *serve {
 		srv := NewServer(*port, cfg)
