@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -59,6 +60,10 @@ const (
 	PREVIEW_IMAGE_SELECTOR = "td > a > img"
 )
 
+var (
+	ErrThrottledRequest = errors.New("the request is throttled, please retry")
+)
+
 func (s *Scrapper) Scrape() {
 	start := time.Now()
 
@@ -88,7 +93,18 @@ func (s *Scrapper) Scrape() {
 			movies[m.Title] = m
 			continue
 		}
-
+		if len(existingMovie.Directors) < len(m.Directors) {
+			existingMovie.Directors = m.Directors
+		}
+		if len(existingMovie.Actors) < len(m.Actors) {
+			existingMovie.Actors = m.Actors
+		}
+		if len(existingMovie.Countries) < len(m.Countries) {
+			existingMovie.Countries = m.Countries
+		}
+		if len(existingMovie.Genres) < len(m.Genres) {
+			existingMovie.Genres = m.Genres
+		}
 		existingMovie.Torrents = append(existingMovie.Torrents, m.Torrents...)
 	}
 
@@ -201,13 +217,13 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	description := GetRegexGroup(RX_DESCRIPTION, text)
 	year, _ := strconv.Atoi(GetRegexGroup(RX_YEAR, text))
 
-	if directors[0] == "" {
+	if len(directors[0]) < 2 {
 		directors = []string{}
 	}
-	if actors[0] == "" {
+	if len(actors[0]) < 2 {
 		actors = []string{}
 	}
-	if countries[0] == "" {
+	if len(countries[0]) < 2 {
 		countries = []string{}
 	}
 
@@ -326,12 +342,7 @@ func ParsePreviewLink(s *goquery.Selection) string {
 	return link
 }
 
-func (s *Scrapper) ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
-	resp, err := client.Get(fmt.Sprintf("%s&page=%d", s.PageURL, page))
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func (s *Scrapper) GetCatalogRows(client *http.Client, resp *http.Response) (*goquery.Selection, error) {
 	decodedReader := DecodeWindows1251(resp.Body)
 
 	doc, err := goquery.NewDocumentFromReader(decodedReader)
@@ -340,13 +351,25 @@ func (s *Scrapper) ScrapeMoviePage(client *http.Client, page int, movieChan chan
 	}
 
 	if doc.Find(MOVIE_DESCRIPTION).Length() == 0 {
-		log.Println("retrying page", page)
+		return nil, ErrThrottledRequest
+	}
+
+	return doc.Find(CATALOG_ROWS), nil
+}
+
+func (s *Scrapper) ScrapeMoviePage(client *http.Client, page int, movieChan chan *Movie) {
+	resp, err := client.Get(fmt.Sprintf("%s&page=%d", s.PageURL, page))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	catalog_rows, err := s.GetCatalogRows(client, resp)
+	if err != nil {
+		log.Println(err, "retrying page", page)
 		time.Sleep(1 * time.Second)
 		s.ScrapeMoviePage(client, page, movieChan)
 		return
 	}
-
-	catalog_rows := doc.Find(CATALOG_ROWS)
 
 	catalog_rows.Each(func(i int, s *goquery.Selection) {
 		title := ParseTitle(s)

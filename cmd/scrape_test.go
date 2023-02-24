@@ -1,14 +1,16 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestScrape(t *testing.T) {
 	cfg := NewConfigFromJSON("config_test.json")
-	cfg.Workers = 5
+	cfg.Workers = 1
 
-	scrapper := NewScrapper(cfg)
-	scrapper.Pages = 1
-	scrapper.PageURL = "https://zamunda.net/catalogs/movies?letter=&t=movie&search=inheritance&field=name&comb=yes"
-	scrapper.OutputFileName = "test_movies.json"
-	scrapper.Scrape()
+	s := NewScrapper(cfg)
+	s.PageURL = "https://zamunda.net/catalogs/movies?search=Zombies+of+Mass+Destruction"
+	s.Pages = 1
+	s.OutputFileName = "test_movies.json"
+	s.Scrape()
 }
