@@ -290,7 +290,8 @@ func ParseIconResults(s *goquery.Selection) *IconsResult {
 
 // Parses the movie title from the selection
 func ParseTitle(s *goquery.Selection) string {
-	return strings.TrimSpace(s.Find(MOVIE_TITLE).First().Text())
+	title := strings.TrimSpace(s.Find(MOVIE_TITLE).First().Text())
+	return ConvertToTitleCase(strings.ReplaceAll(strings.ReplaceAll(title, ",", ""), ".", ""))
 }
 
 func GetTextFromSelectionNodes(s *goquery.Selection) []string {
