@@ -256,6 +256,9 @@ func ParseGenres(s *goquery.Selection) []string {
 		return []string{}
 	}
 
+	for i := 0; i < len(genres); i++ {
+		genres[i] = strings.ToLower(genres[i])
+	}
 	return genres
 }
 
@@ -297,6 +300,9 @@ func ParseTitle(s *goquery.Selection) string {
 func GetTextFromSelectionNodes(s *goquery.Selection) []string {
 	var resultArr []string
 	s.Each(func(i int, innerS *goquery.Selection) {
+		if innerS.Text() == "" {
+			return
+		}
 		resultArr = append(resultArr, innerS.Text())
 	})
 
