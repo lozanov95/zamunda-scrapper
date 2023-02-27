@@ -140,7 +140,7 @@ func (db *MovieDB) GetSortedMovies(contains string, page int) []*Movie {
 func (db *MovieDB) GetGenres() []string {
 	var genres []string
 
-	for genre, _ := range *db.genres {
+	for genre := range *db.genres {
 		genres = append(genres, genre)
 	}
 
