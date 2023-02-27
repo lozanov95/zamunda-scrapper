@@ -33,7 +33,7 @@ func SendJson(w http.ResponseWriter, data []byte) {
 
 func IsStringInSlice(collection []string, s string) bool {
 	for _, str := range collection {
-		if strings.Contains(str, s) {
+		if StringContainsInsensitive(str, s) {
 			return true
 		}
 	}
@@ -61,7 +61,8 @@ func ConvertToTitleCase(s string) string {
 func DoesMovieSatisfiesConditions(params url.Values, movie *Movie) bool {
 	if ValidateFromYear(&params, movie) &&
 		ValidateTitle(&params, movie) &&
-		ValidateMinRating(&params, movie) {
+		ValidateMinRating(&params, movie) &&
+		ValidateGenres(&params, movie) {
 		return true
 	}
 
@@ -79,31 +80,49 @@ func ValidateTitle(params *url.Values, m *Movie) bool {
 
 func ValidateFromYear(params *url.Values, m *Movie) bool {
 	fromYear := params.Get("fromYear")
-	if fromYear != "" {
-		year, err := strconv.Atoi(fromYear)
-		if err != nil {
-			log.Println(err)
-			return false
-		}
-		if m.Year < year {
-			return false
-		}
+	if fromYear == "" {
+		return true
 	}
+
+	year, err := strconv.Atoi(fromYear)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	if m.Year < year {
+		return false
+	}
+
 	return true
 }
 
 func ValidateMinRating(params *url.Values, m *Movie) bool {
 	minRating := params.Get("minRating")
-	if minRating != "" {
-		rating, err := strconv.ParseFloat(minRating, 32)
-		if err != nil {
-			log.Println(err)
-			return false
-		}
-		if m.Rating < rating {
+	if minRating == "" {
+		return true
+	}
+
+	rating, err := strconv.ParseFloat(minRating, 32)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	if m.Rating < rating {
+		return false
+	}
+
+	return true
+}
+
+func ValidateGenres(params *url.Values, m *Movie) bool {
+	genres := params.Get("genres")
+	if genres == "" {
+		return true
+	}
+	for _, genre := range strings.Split(genres, ",") {
+		if !IsStringInSlice(m.Genres, genre) {
 			return false
 		}
 	}
-
 	return true
 }
