@@ -107,7 +107,7 @@ func (db *MovieDB) GetMoviesForGenre(name string, page int) []*Movie {
 }
 
 func (db *MovieDB) GetActors(contains string, page int) []string {
-	actors := GetMapKeysContainingSubstring(db.directors, contains)
+	actors := GetMapKeysContainingSubstring(db.actors, contains)
 	start := page * db.pageSize
 	end := start + db.pageSize
 
