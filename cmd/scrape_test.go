@@ -10,7 +10,7 @@ func TestScrape(t *testing.T) {
 
 	s := NewScrapper(cfg)
 	s.PageURL = "https://zamunda.net/catalogs/movies?search=Zombies+of+Mass+Destruction"
-	s.Pages = 1
+	s.Pages = 0
 	s.OutputFileName = "test_movies.json"
 	s.Scrape()
 }
