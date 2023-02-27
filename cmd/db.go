@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"net/url"
 	"os"
 	"sort"
 )
@@ -59,23 +60,18 @@ func NewMovieDB(pageSize int) *MovieDB {
 	}
 }
 
-func (db *MovieDB) GetMovies(contains string, page int) []*Movie {
+func (db *MovieDB) GetMovies(queries url.Values, page int) []*Movie {
 	start := page * db.pageSize
 	end := start + db.pageSize
 
-	if contains != "" {
-		var movies []*Movie
-		for _, movie := range *db.movies {
-			if StringContainsInsensitive(movie.Title, contains) {
-				movies = append(movies, movie)
-			}
+	var movies []*Movie
+	for _, movie := range *db.movies {
+		if DoesMovieSatisfiesConditions(queries, movie) {
+			movies = append(movies, movie)
 		}
-		start, end = ValidateIndexes(&movies, start, end)
-		return movies[start:end]
 	}
-
-	start, end = ValidateIndexes(db.movies, start, end)
-	return (*db.movies)[start:end]
+	start, end = ValidateIndexes(&movies, start, end)
+	return movies[start:end]
 }
 
 func (db *MovieDB) GetMoviesForActor(name string, page int) []*Movie {
@@ -124,8 +120,8 @@ func (db *MovieDB) GetDirectors(contains string, page int) []string {
 	return directors[start:end]
 }
 
-func (db *MovieDB) GetSortedMovies(contains string, page int) []*Movie {
-	movies := db.GetMovies(contains, 0)
+func (db *MovieDB) GetSortedMovies(queries url.Values, page int) []*Movie {
+	movies := db.GetMovies(queries, 0)
 	sortedMovies := make([]*Movie, len(movies))
 	copy(sortedMovies, movies)
 	SortByRating(sortedMovies)

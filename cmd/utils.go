@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"net/url"
+	"strconv"
 	"strings"
 
 	"golang.org/x/text/cases"
@@ -52,4 +55,55 @@ func StringContainsInsensitive(s, substr string) bool {
 func ConvertToTitleCase(s string) string {
 	caser := cases.Title(language.Bulgarian)
 	return caser.String(s)
+}
+
+// Checks if the movie validates all of the given query conditions
+func DoesMovieSatisfiesConditions(params url.Values, movie *Movie) bool {
+	if ValidateFromYear(&params, movie) &&
+		ValidateTitle(&params, movie) &&
+		ValidateMinRating(&params, movie) {
+		return true
+	}
+
+	return false
+}
+
+func ValidateTitle(params *url.Values, m *Movie) bool {
+	contains := params.Get("contains")
+	if contains != "" && !StringContainsInsensitive(m.Title, contains) {
+		return false
+	}
+
+	return true
+}
+
+func ValidateFromYear(params *url.Values, m *Movie) bool {
+	fromYear := params.Get("fromYear")
+	if fromYear != "" {
+		year, err := strconv.Atoi(fromYear)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
+		if m.Year < year {
+			return false
+		}
+	}
+	return true
+}
+
+func ValidateMinRating(params *url.Values, m *Movie) bool {
+	minRating := params.Get("minRating")
+	if minRating != "" {
+		rating, err := strconv.ParseFloat(minRating, 32)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
+		if m.Rating < rating {
+			return false
+		}
+	}
+
+	return true
 }
