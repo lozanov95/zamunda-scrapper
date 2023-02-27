@@ -48,6 +48,7 @@ func NewMovieDB(pageSize int) *MovieDB {
 			AppendToSliceInMap(&genres, genre, movie)
 		}
 	}
+
 	return &MovieDB{
 		movies:    &movies,
 		actors:    &actors,
@@ -90,7 +91,19 @@ func (db *MovieDB) GetMoviesForDirector(name string, page int) []*Movie {
 }
 
 func (db *MovieDB) GetMoviesForGenre(name string, page int) []*Movie {
-	return (*db.genres)[name]
+	name = ConvertToTitleCase(name)
+	movies := (*db.genres)[name]
+	var mv []*Movie
+	for _, m := range movies {
+		for _, t := range m.Torrents {
+			if t.BG_AUDIO && m.Year > 2010 {
+				mv = append(mv, m)
+				break
+			}
+		}
+	}
+
+	return mv
 }
 
 func (db *MovieDB) GetActors(contains string, page int) []string {
@@ -122,6 +135,16 @@ func (db *MovieDB) GetSortedMovies(contains string, page int) []*Movie {
 
 	start, end = ValidateIndexes(&sortedMovies, start, end)
 	return sortedMovies[start:end]
+}
+
+func (db *MovieDB) GetGenres() []string {
+	var genres []string
+
+	for genre, _ := range *db.genres {
+		genres = append(genres, genre)
+	}
+
+	return genres
 }
 
 func GetMapKeysContainingSubstring(m *map[string][]*Movie, str string) []string {

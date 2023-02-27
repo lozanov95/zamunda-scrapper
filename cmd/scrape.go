@@ -257,7 +257,7 @@ func ParseGenres(s *goquery.Selection) []string {
 	}
 
 	for i := 0; i < len(genres); i++ {
-		genres[i] = strings.ToLower(genres[i])
+		genres[i] = ConvertToTitleCase(genres[i])
 	}
 	return genres
 }
