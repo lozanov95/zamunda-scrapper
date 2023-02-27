@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 type Server struct {
@@ -20,19 +19,6 @@ func NewServer(port int, cfg *Config) *Server {
 	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg}
 
 	srv.mux.Handle("/", http.FileServer(http.Dir("./ui")))
-
-	srv.mux.HandleFunc("/movies/genre", func(w http.ResponseWriter, r *http.Request) {
-		query := r.URL.Query()
-		movies := srv.db.GetMoviesForGenre(strings.TrimSpace(query.Get("genre")), 0)
-		SortByRating(movies)
-		res, err := json.Marshal(movies[:1000])
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		SendJson(w, res)
-	})
 
 	srv.mux.HandleFunc("/movies", func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query()
