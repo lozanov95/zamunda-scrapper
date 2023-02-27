@@ -23,7 +23,7 @@ type TorrentType = {
 }
 
 function App() {
-  const [movies, setMovies] = useState([])
+  const [movies, setMovies] = useState<MovieType[]>([])
 
   useEffect(() => {
     fetch("http://localhost/movies").then((data) => {
@@ -36,11 +36,13 @@ function App() {
   }, [])
 
   return (
-    <div className="grid-cont">
-      {movies?.map((movie: MovieType, idx) => {
-        return <Movie movie={movie} key={idx} />
-      })}
-    </div>
+    movies.length === 0 ? <div>Loading movies...</div> :
+      <div className="grid-cont">
+        {movies?.map((movie: MovieType, idx) => {
+          return <Movie movie={movie} key={idx} />
+        })
+        }
+      </div>
   )
 }
 
@@ -63,6 +65,7 @@ function Movie({ movie }: { movie: MovieType }) {
           {displayTorrents && movie.torrents?.map((torrent, idx) => {
             return <Torrent torrent={torrent} key={idx} />
           })}
+          {displayTorrents && <button onClick={ToggleTorrent}>Скрий торентите</button>}
         </div>
       </div>
       <div>
@@ -71,7 +74,7 @@ function Movie({ movie }: { movie: MovieType }) {
         <TextField header='Режисьор' text={movie.directors?.join(", ")} />
         <TextField header='Актьори' text={movie.actors?.join(", ")} />
         <TextField header='Държавa' text={movie.countries?.join(", ")} />
-        {movie.rating > 0 && <TextField header='Рейтинг' text={movie.rating.toString()} />}
+        {movie.rating > 0 && <TextField header='Рейтинг' text={movie.rating.toString() + '/10'} />}
         <TextField header='Година' text={movie.year.toString()} />
         <TextField header='Резюме' text={movie.description} />
       </div>
@@ -102,7 +105,6 @@ function TextField({ header, text }: { header: string, text: string }) {
         <></>
       }
     </>
-
   )
 }
 
