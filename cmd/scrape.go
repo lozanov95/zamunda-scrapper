@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -69,19 +70,20 @@ func (s *Scrapper) Scrape() {
 
 	pagesChan := make(chan int)
 	movieChan := make(chan *Movie, 100)
-
+	var wg sync.WaitGroup
 	for i := 0; i < s.cfg.Workers; i++ {
-		go s.StartWorker(pagesChan, movieChan)
+		go s.StartWorker(&wg, pagesChan, movieChan)
 	}
 
 	go func(pagesChan chan int, movieChan chan *Movie) {
 		for i := 0; i <= s.Pages; i++ {
+			wg.Add(1)
 			pagesChan <- i
 		}
 
 		close(pagesChan)
+		wg.Wait()
 		fmt.Println("Total time:", time.Since(start))
-		time.Sleep(10 * time.Second)
 		close(movieChan)
 	}(pagesChan, movieChan)
 
@@ -174,12 +176,13 @@ func (s *Scrapper) NewZamundaClient() *http.Client {
 }
 
 // Start a golang worker
-func (s *Scrapper) StartWorker(pages chan int, results chan *Movie) {
+func (s *Scrapper) StartWorker(wg *sync.WaitGroup, pages chan int, results chan *Movie) {
 	client := s.NewZamundaClient()
 	for p := range pages {
 		s.ScrapeMoviePage(client, p, results)
 		log.Println("scraped page", p)
 		time.Sleep(500 * time.Millisecond)
+		wg.Done()
 	}
 }
 
