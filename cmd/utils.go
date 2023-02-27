@@ -17,7 +17,7 @@ func ValidateIndexes[C string | *Movie](c *[]C, start, end int) (int, int) {
 		start = 0
 	}
 	if end >= len(*c) || end < 0 {
-		end = len(*c) - 1
+		end = len(*c)
 	}
 
 	return start, end
@@ -46,10 +46,7 @@ func AppendToSliceInMap[T Movie](newM *map[string][]*T, key string, t *T) {
 
 // Returns if the substring is contained in the string. Ignores case.
 func StringContainsInsensitive(s, substr string) bool {
-	lowS := strings.ToLower(s)
-	lowSubstr := strings.ToLower(substr)
-
-	return strings.Contains(lowS, lowSubstr)
+	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
 }
 
 func ConvertToTitleCase(s string) string {
