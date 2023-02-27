@@ -62,7 +62,9 @@ func DoesMovieSatisfiesConditions(params url.Values, movie *Movie) bool {
 	if ValidateFromYear(&params, movie) &&
 		ValidateTitle(&params, movie) &&
 		ValidateMinRating(&params, movie) &&
-		ValidateGenres(&params, movie) {
+		ValidateGenres(&params, movie) &&
+		ValidateDirectors(&params, movie) &&
+		ValidateActors(&params, movie) {
 		return true
 	}
 
@@ -121,6 +123,32 @@ func ValidateGenres(params *url.Values, m *Movie) bool {
 	}
 	for _, genre := range strings.Split(genres, ",") {
 		if !IsStringInSlice(m.Genres, genre) {
+			return false
+		}
+	}
+	return true
+}
+
+func ValidateActors(params *url.Values, m *Movie) bool {
+	actors := params.Get("actors")
+	if actors == "" {
+		return true
+	}
+	for _, actor := range strings.Split(actors, ",") {
+		if !IsStringInSlice(m.Actors, actor) {
+			return false
+		}
+	}
+	return true
+}
+
+func ValidateDirectors(params *url.Values, m *Movie) bool {
+	directors := params.Get("directors")
+	if directors == "" {
+		return true
+	}
+	for _, director := range strings.Split(directors, ",") {
+		if !IsStringInSlice(m.Directors, director) {
 			return false
 		}
 	}
