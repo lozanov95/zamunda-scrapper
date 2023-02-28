@@ -51,7 +51,7 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`http://localhost/movies?contains=${title}&fromYear=${filters.fromYear}&minRating=${filters.minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
+    fetch(`http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
       { signal: controller.signal })
       .then((data) => {
         return data.json()
@@ -62,7 +62,7 @@ function App() {
       })
 
     return () => { controller.abort() }
-  }, [selectedGenres, minRating, fromYear, title])
+  }, [selectedGenres, minRating, fromYear, title, actor])
 
   return (
     <>
