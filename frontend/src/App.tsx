@@ -36,13 +36,20 @@ function App() {
   }, [])
 
   return (
-    movies.length === 0 ? <div>Loading movies...</div> :
-      <div className="grid-cont">
-        {movies?.map((movie: MovieType, idx) => {
-          return <Movie movie={movie} key={idx} />
-        })
+    <>
+      <FilterPanel />
+      <div className='movies'>
+        {
+          movies.length === 0 ? <div>Loading movies...</div> :
+            <div className="grid-cont">
+              {movies?.map((movie: MovieType, idx) => {
+                return <Movie movie={movie} key={idx} />
+              })
+              }
+            </div>
         }
       </div>
+    </>
   )
 }
 
@@ -105,6 +112,79 @@ function TextField({ header, text }: { header: string, text: string }) {
         <></>
       }
     </>
+  )
+}
+
+function FilterPanel() {
+  const [genres, setGenres] = useState<string[]>([])
+  const [actor, setActor] = useState<string>("")
+  const [minRating, setMinRating] = useState<number>(0)
+  const [fromYear, setFromYear] = useState<number>(0)
+  const [availableActors, setAvailableActors] = useState([])
+
+  useEffect(() => {
+    fetch("http://localhost/genres").then((data) => {
+      return data.json()
+    }).then((newMovies) => {
+      setGenres(newMovies)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch(`http://localhost/actors?contains=${actor}&fromYear=${fromYear}&minRating=${minRating}`, { signal: controller.signal })
+      .then((data) => {
+        return data.json()
+      }).then((actors) => {
+        setAvailableActors(actors ?? [])
+      }).catch((err) => {
+        console.log(err)
+      })
+
+    return () => controller.abort()
+  }, [actor])
+
+  function HandleActorTextChange(e: any) {
+    setActor(e.target.value)
+  }
+
+  return (
+    <div className='filter grid-cont'>
+      <label className='text-header'>Жанрове (комбинирано)</label>
+      <div className='grid-cont grid-cols-2'>
+        {genres.map((val, idx) => {
+          return (
+            <label className='text-header'>
+              {val}
+              <input type="checkbox" key={idx} value={val} />
+            </label>
+          )
+        })}
+      </div>
+      <div className='grid-cont'>
+        <label className='text-header'>
+          След година
+        </label>
+        <input type="number" value={fromYear} onChange={(e) => setFromYear(parseInt(e.target.value))} max={new Date().getFullYear()} min="1900" />
+      </div>
+      <div className='grid-cont'>
+        <label className='text-header'>
+          Минимален рейтинг
+          <input type="number" value={minRating} onChange={(e) => setMinRating(parseFloat(e.target.value))} max="10" min="0" />
+        </label>
+      </div>
+      <div className='grid-cont'>
+        <label className='text-header'>
+          С участието на
+        </label>
+        <input type="text" value={actor} onChange={HandleActorTextChange} />
+        {availableActors.length > 0 && availableActors.map((actor) => {
+          return <li>{actor}</li>
+        })}
+      </div>
+    </div>
   )
 }
 
