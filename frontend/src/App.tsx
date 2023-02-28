@@ -63,7 +63,7 @@ function App() {
 
   return (
     <>
-      <FilterPanel filters={filters} />
+      <FilterSection filters={filters} />
       <MoviesSection movies={movies} />
     </>
   )
@@ -147,7 +147,7 @@ function TextField({ header, text }: { header: string, text: string }) {
   )
 }
 
-function FilterPanel({ filters }: { filters: Filters }) {
+function FilterSection({ filters }: { filters: Filters }) {
   const [genres, setGenres] = useState<string[]>([])
 
   useEffect(() => {
