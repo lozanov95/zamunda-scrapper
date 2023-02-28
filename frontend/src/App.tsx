@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, MutableRefObject, createRef, useMemo, RefObject } from 'react'
 import './App.css'
 
 
@@ -44,6 +44,7 @@ function App() {
   const [minRating, setMinRating] = useState<number>(0)
   const [fromYear, setFromYear] = useState<number>(0)
   const [availableActors, setAvailableActors] = useState([])
+  const [page, setPage] = useState<number>(0)
 
   const filters = {
     selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
@@ -51,6 +52,7 @@ function App() {
   }
 
   useEffect(() => {
+    setPage(0)
     const controller = new AbortController();
     fetch(`http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
       { signal: controller.signal })
@@ -66,11 +68,31 @@ function App() {
     return () => { controller.abort() }
   }, [selectedGenres, minRating, fromYear, title, actor])
 
+  useEffect(() => {
+    if (page == 0) {
+      return
+    }
+
+    const controller = new AbortController();
+    fetch(`http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}&page=${page}`,
+      { signal: controller.signal })
+      .then((data) => {
+        return data.json()
+      }).then(({ value, count }) => {
+        setMovies((v) => [...v, ...value])
+        setMovieCount(count)
+      }).catch((err) => {
+        console.log(err)
+      })
+
+    return () => { controller.abort() }
+  }, [page])
+
   return (
     <>
       <HeaderSection title={title} setTitle={setTitle} />
       <FilterSection filters={filters} />
-      <MoviesSection movies={movies} movieCount={movieCount} />
+      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} />
     </>
   )
 }
@@ -83,7 +105,7 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
   )
 }
 
-function MoviesSection({ movies, movieCount }: { movies: MovieType[], movieCount: number }) {
+function MoviesSection({ movies, movieCount, setPage }: { movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>> }) {
   const msg = `There ${movieCount == 1 ? "is" : "are"} ${movieCount} ${movieCount == 1 ? "movie" : "movies"} that satisfy this filter.`
 
   return (
@@ -96,6 +118,7 @@ function MoviesSection({ movies, movieCount }: { movies: MovieType[], movieCount
             return <Movie movie={movie} key={idx} />
           })}
       </div>
+      <TriggerOnVisible setPage={setPage} />
     </div>
   )
 }
@@ -243,4 +266,34 @@ function FilterSection({ filters }: { filters: Filters }) {
   )
 }
 
+function TriggerOnVisible({ setPage }: { setPage: React.Dispatch<React.SetStateAction<number>> }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const isVisible = useOnScreen(ref, '600px')
+
+  useEffect(() => {
+    if (isVisible) {
+      setPage((p) => p + 1)
+    }
+  }, [isVisible])
+
+  return (
+    <div ref={ref}>1</div>
+  )
+}
+
+function useOnScreen(ref: any, rootMargin: string) {
+  const [isIntersecting, setIntersecting] = useState(false)
+
+  const observer = useMemo(() => new IntersectionObserver(
+    ([entry]) => setIntersecting(entry.isIntersecting)
+    , { rootMargin }), [ref])
+
+
+  useEffect(() => {
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+
+  return isIntersecting
+}
 export default App
