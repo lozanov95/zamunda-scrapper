@@ -50,13 +50,15 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`http://localhost/movies?fromYear=${filters.fromYear}&minRating=${filters.minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`, { signal: controller.signal }).then((data) => {
-      return data.json()
-    }).then((newMovies) => {
-      setMovies(newMovies)
-    }).catch((err) => {
-      console.log(err)
-    })
+    fetch(`http://localhost/movies?fromYear=${filters.fromYear}&minRating=${filters.minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
+      { signal: controller.signal })
+      .then((data) => {
+        return data.json()
+      }).then((newMovies) => {
+        setMovies(newMovies)
+      }).catch((err) => {
+        console.log(err)
+      })
 
     return () => { controller.abort() }
   }, [selectedGenres, minRating, fromYear])
@@ -72,15 +74,13 @@ function App() {
 function MoviesSection({ movies }: { movies: MovieType[] }) {
   return (
     <div className='movies'>
-      {
-        movies?.length === 0 ? <div>Loading movies...</div> :
-          <div className="grid-cont bg-2">
-            {movies?.map((movie: MovieType, idx) => {
-              return <Movie movie={movie} key={idx} />
-            })
-            }
-          </div>
-      }
+      <div className="grid-cont bg-2">
+        {movies?.length == 0 ?
+          "No movies." :
+          movies?.map((movie: MovieType, idx) => {
+            return <Movie movie={movie} key={idx} />
+          })}
+      </div>
     </div>
   )
 }
