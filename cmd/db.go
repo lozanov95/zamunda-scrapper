@@ -76,7 +76,7 @@ func NewMovieDB(pageSize int) *MovieDB {
 	}
 }
 
-func (db *MovieDB) GetMovies(queries url.Values, page int) []*Movie {
+func (db *MovieDB) GetMovies(queries url.Values, page int) ([]*Movie, int) {
 	start := page * db.pageSize
 	end := start + db.pageSize
 
@@ -87,7 +87,7 @@ func (db *MovieDB) GetMovies(queries url.Values, page int) []*Movie {
 		}
 	}
 	start, end = ValidateIndexes(&movies, start, end, db.pageSize)
-	return movies[start:end]
+	return movies[start:end], len(movies)
 }
 
 func (db *MovieDB) GetActors(params *url.Values, page int) []string {
@@ -132,7 +132,7 @@ func (db *MovieDB) GetDirectors(params *url.Values, page int) []string {
 }
 
 func (db *MovieDB) GetSortedMovies(queries url.Values, page int) []*Movie {
-	movies := db.GetMovies(queries, 0)
+	movies, _ := db.GetMovies(queries, 0)
 	sortedMovies := make([]*Movie, len(movies))
 	copy(sortedMovies, movies)
 	SortByRating(sortedMovies)

@@ -15,6 +15,11 @@ type Server struct {
 	cfg  *Config
 }
 
+type GetMoviesResponse struct {
+	Value []*Movie `json:"value"`
+	Count int      `json:"count"`
+}
+
 func NewServer(port int, cfg *Config) *Server {
 	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg}
 
@@ -27,11 +32,13 @@ func NewServer(port int, cfg *Config) *Server {
 			page = 0
 		}
 
-		res, err := json.Marshal(srv.db.GetMovies(query, page))
+		movies, count := srv.db.GetMovies(query, page)
+		res, err := json.Marshal(GetMoviesResponse{Value: movies, Count: count})
 		if err != nil {
 			log.Println(err)
 			return
 		}
+
 		SendJson(w, res)
 	})
 

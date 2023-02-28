@@ -38,6 +38,7 @@ type Filters = {
 function App() {
   const [title, setTitle] = useState<string>("")
   const [movies, setMovies] = useState<MovieType[]>([])
+  const [movieCount, setMovieCount] = useState<number>(0)
   const [selectedGenres, setSelectedGenres] = useState<string[]>([])
   const [actor, setActor] = useState<string>("")
   const [minRating, setMinRating] = useState<number>(0)
@@ -55,8 +56,9 @@ function App() {
       { signal: controller.signal })
       .then((data) => {
         return data.json()
-      }).then((newMovies) => {
-        setMovies(newMovies)
+      }).then(({ value, count }) => {
+        setMovies(value)
+        setMovieCount(count)
       }).catch((err) => {
         console.log(err)
       })
@@ -68,7 +70,7 @@ function App() {
     <>
       <HeaderSection title={title} setTitle={setTitle} />
       <FilterSection filters={filters} />
-      <MoviesSection movies={movies} />
+      <MoviesSection movies={movies} movieCount={movieCount} />
     </>
   )
 }
@@ -81,10 +83,13 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
   )
 }
 
-function MoviesSection({ movies }: { movies: MovieType[] }) {
+function MoviesSection({ movies, movieCount }: { movies: MovieType[], movieCount: number }) {
+  const msg = `There ${movieCount == 1 ? "is" : "are"} ${movieCount} ${movieCount == 1 ? "movie" : "movies"} that satisfy this filter.`
+
   return (
     <div className='movies'>
       <div className="grid-cont bg-2">
+        <div className='text-header'>{msg}</div>
         {movies?.length == 0 ?
           "No movies." :
           movies?.map((movie: MovieType, idx) => {
