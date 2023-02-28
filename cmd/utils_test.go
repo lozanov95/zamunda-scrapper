@@ -63,3 +63,26 @@ func TestDoesMovieSatisfiesConditions(t *testing.T) {
 		t.Fatal("The movie shouldn't satisfy the rating condition")
 	}
 }
+
+func TestValidateIndexes(t *testing.T) {
+	pageSize := 20
+	coll := make([]string, 35)
+
+	start, end := ValidateIndexes(&coll, 40, 60, pageSize)
+	startExp, endExp := 35, 35
+	if start != startExp || end != endExp {
+		t.Fatalf("Expected start:%d, end:%d, but got start:%d, end:%d", startExp, endExp, start, end)
+	}
+
+	start, end = ValidateIndexes(&coll, -1, 100, pageSize)
+	startExp, endExp = 0, 20
+	if start != startExp || end != endExp {
+		t.Fatalf("Expected start:%d, end:%d, but got start:%d, end:%d", startExp, endExp, start, end)
+	}
+
+	start, end = ValidateIndexes(&coll, 20, 200, pageSize)
+	startExp, endExp = 20, 35
+	if start != startExp || end != endExp {
+		t.Fatalf("Expected start:%d, end:%d, but got start:%d, end:%d", startExp, endExp, start, end)
+	}
+}

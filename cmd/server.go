@@ -42,7 +42,7 @@ func NewServer(port int, cfg *Config) *Server {
 			page = 0
 		}
 
-		res, err := json.Marshal(srv.db.GetActors(query.Get("contains"), page))
+		res, err := json.Marshal(srv.db.GetActors(&query, page))
 		if err != nil {
 			log.Println(err)
 			return
@@ -57,7 +57,7 @@ func NewServer(port int, cfg *Config) *Server {
 			page = 0
 		}
 
-		res, err := json.Marshal(srv.db.GetDirectors(query.Get("contains"), page))
+		res, err := json.Marshal(srv.db.GetDirectors(&query, page))
 		if err != nil {
 			log.Println(err)
 			return

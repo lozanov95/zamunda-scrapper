@@ -12,15 +12,23 @@ import (
 	"golang.org/x/text/language"
 )
 
-func ValidateIndexes[C string | *Movie](c *[]C, start, end int) (int, int) {
+func ValidateIndexes[C string | *Movie](c *[]C, start, end, pageSize int) (int, int) {
 	if len(*c) == 0 {
 		return 0, 0
 	}
-	if start < 0 || start > len(*c)-1 {
-		start = 0
+	if start > len(*c) {
+		return len(*c), len(*c)
 	}
-	if end >= len(*c) || end < 0 {
-		end = len(*c)
+	if start < 0 {
+		start = 0
+		end = start + pageSize
+	}
+	if end > len(*c) {
+		if end+pageSize > len(*c) {
+			return start, len(*c)
+		}
+
+		return start, end + pageSize
 	}
 
 	return start, end

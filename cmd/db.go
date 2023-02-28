@@ -10,10 +10,10 @@ import (
 
 type MovieDB struct {
 	movies    *[]*Movie
-	actors    *map[string][]*Movie
-	directors *map[string][]*Movie
-	countries *map[string][]*Movie
-	genres    *map[string][]*Movie
+	actors    *[]string
+	directors *[]string
+	countries *[]string
+	genres    *[]string
 	pageSize  int
 }
 
@@ -28,34 +28,50 @@ func NewMovieDB(pageSize int) *MovieDB {
 	if err != nil {
 		log.Fatal(err)
 	}
+	actors := make(map[string]bool)
+	directors := make(map[string]bool)
+	countries := make(map[string]bool)
+	genres := make(map[string]bool)
 
-	actors := make(map[string][]*Movie)
-	directors := make(map[string][]*Movie)
-	countries := make(map[string][]*Movie)
-	genres := make(map[string][]*Movie)
+	for _, m := range movies {
+		for _, actor := range m.Actors {
+			actors[actor] = true
+		}
+		for _, director := range m.Directors {
+			directors[director] = true
+		}
+		for _, country := range m.Countries {
+			countries[country] = true
+		}
+		for _, genre := range m.Genres {
+			genres[genre] = true
+		}
+	}
 
-	for _, movie := range movies {
-		for _, actor := range movie.Actors {
-			AppendToSliceInMap(&actors, actor, movie)
-		}
-		for _, director := range movie.Directors {
-			AppendToSliceInMap(&directors, director, movie)
+	actorsList := make([]string, 0)
+	directorsList := make([]string, 0)
+	countriesList := make([]string, 0)
+	genresList := make([]string, 0)
 
-		}
-		for _, country := range movie.Countries {
-			AppendToSliceInMap(&countries, country, movie)
-		}
-		for _, genre := range movie.Genres {
-			AppendToSliceInMap(&genres, genre, movie)
-		}
+	for k := range actors {
+		actorsList = append(actorsList, k)
+	}
+	for k := range directors {
+		directorsList = append(directorsList, k)
+	}
+	for k := range countries {
+		countriesList = append(countriesList, k)
+	}
+	for k := range genres {
+		genresList = append(genresList, k)
 	}
 
 	return &MovieDB{
 		movies:    &movies,
-		actors:    &actors,
-		directors: &directors,
-		countries: &countries,
-		genres:    &genres,
+		actors:    &actorsList,
+		directors: &directorsList,
+		countries: &countriesList,
+		genres:    &genresList,
 		pageSize:  pageSize,
 	}
 }
@@ -70,53 +86,48 @@ func (db *MovieDB) GetMovies(queries url.Values, page int) []*Movie {
 			movies = append(movies, movie)
 		}
 	}
-	start, end = ValidateIndexes(&movies, start, end)
+	start, end = ValidateIndexes(&movies, start, end, db.pageSize)
 	return movies[start:end]
 }
 
-func (db *MovieDB) GetMoviesForActor(name string, page int) []*Movie {
-	return (*db.actors)[name]
-}
+func (db *MovieDB) GetActors(params *url.Values, page int) []string {
+	start := page * db.pageSize
+	end := start + db.pageSize
+	contains := params.Get("contains")
+	if contains == "" {
+		start, end = ValidateIndexes(db.actors, start, end, db.pageSize)
+		return (*db.actors)[start:end]
+	}
 
-func (db *MovieDB) GetMoviesForCountry(name string, page int) []*Movie {
-	return (*db.countries)[name]
-}
-
-func (db *MovieDB) GetMoviesForDirector(name string, page int) []*Movie {
-	return (*db.directors)[name]
-}
-
-func (db *MovieDB) GetMoviesForGenre(name string, page int) []*Movie {
-	name = ConvertToTitleCase(name)
-	movies := (*db.genres)[name]
-	var mv []*Movie
-	for _, m := range movies {
-		for _, t := range m.Torrents {
-			if t.BG_AUDIO && m.Year > 2010 {
-				mv = append(mv, m)
-				break
-			}
+	var actors []string
+	for _, actor := range *db.actors {
+		if StringContainsInsensitive(actor, contains) {
+			actors = append(actors, actor)
 		}
 	}
 
-	return mv
-}
-
-func (db *MovieDB) GetActors(contains string, page int) []string {
-	actors := GetMapKeysContainingSubstring(db.actors, contains)
-	start := page * db.pageSize
-	end := start + db.pageSize
-
-	start, end = ValidateIndexes(&actors, start, end)
+	start, end = ValidateIndexes(&actors, start, end, db.pageSize)
 	return actors[start:end]
 }
 
-func (db *MovieDB) GetDirectors(contains string, page int) []string {
-	directors := GetMapKeysContainingSubstring(db.directors, contains)
+func (db *MovieDB) GetDirectors(params *url.Values, page int) []string {
 	start := page * db.pageSize
 	end := start + db.pageSize
 
-	start, end = ValidateIndexes(&directors, start, end)
+	contains := params.Get("contains")
+	if contains == "" {
+		start, end = ValidateIndexes(db.directors, start, end, db.pageSize)
+		return (*db.directors)[start:end]
+	}
+
+	var directors []string
+	for _, director := range *db.directors {
+		if StringContainsInsensitive(director, contains) {
+			directors = append(directors, director)
+		}
+	}
+
+	start, end = ValidateIndexes(&directors, start, end, db.pageSize)
 	return directors[start:end]
 }
 
@@ -129,18 +140,12 @@ func (db *MovieDB) GetSortedMovies(queries url.Values, page int) []*Movie {
 	start := page * db.pageSize
 	end := start + db.pageSize
 
-	start, end = ValidateIndexes(&sortedMovies, start, end)
+	start, end = ValidateIndexes(&sortedMovies, start, end, db.pageSize)
 	return sortedMovies[start:end]
 }
 
 func (db *MovieDB) GetGenres() []string {
-	var genres []string
-
-	for genre := range *db.genres {
-		genres = append(genres, genre)
-	}
-
-	return genres
+	return *db.genres
 }
 
 func GetMapKeysContainingSubstring(m *map[string][]*Movie, str string) []string {
