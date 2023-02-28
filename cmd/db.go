@@ -80,7 +80,7 @@ func (db *MovieDB) GetMovies(queries url.Values, page int) []*Movie {
 	start := page * db.pageSize
 	end := start + db.pageSize
 
-	var movies []*Movie
+	movies := []*Movie{}
 	for _, movie := range *db.movies {
 		if DoesMovieSatisfiesConditions(queries, movie) {
 			movies = append(movies, movie)
