@@ -172,7 +172,7 @@ function FilterSection({ filters }: { filters: Filters }) {
 
   useEffect(() => {
     const controller = new AbortController()
-    fetch(`http://localhost/actors?contains=${filters.actor}&fromYear=${filters.fromYear}&minRating=${filters.minRating}`, { signal: controller.signal })
+    fetch(`http://localhost/actors?contains=${filters.actor}`, { signal: controller.signal })
       .then((data) => {
         return data.json()
       }).then((actors) => {
