@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, DetailedHTMLProps, ReactEventHandler, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 
@@ -34,7 +34,7 @@ type Filters = {
   availableActors: never[],
   setAvailableActors: React.Dispatch<React.SetStateAction<never[]>>
 }
-
+// TODO: show how many movies satisfy the parameters
 function App() {
   const [movies, setMovies] = useState<MovieType[]>([])
   const [selectedGenres, setSelectedGenres] = useState<string[]>([])
@@ -64,18 +64,24 @@ function App() {
   return (
     <>
       <FilterPanel filters={filters} />
-      <div className='movies'>
-        {
-          movies?.length === 0 ? <div>Loading movies...</div> :
-            <div className="grid-cont  bg-2">
-              {movies?.map((movie: MovieType, idx) => {
-                return <Movie movie={movie} key={idx} />
-              })
-              }
-            </div>
-        }
-      </div>
+      <MoviesSection movies={movies} />
     </>
+  )
+}
+
+function MoviesSection({ movies }: { movies: MovieType[] }) {
+  return (
+    <div className='movies'>
+      {
+        movies?.length === 0 ? <div>Loading movies...</div> :
+          <div className="grid-cont bg-2">
+            {movies?.map((movie: MovieType, idx) => {
+              return <Movie movie={movie} key={idx} />
+            })
+            }
+          </div>
+      }
+    </div>
   )
 }
 
