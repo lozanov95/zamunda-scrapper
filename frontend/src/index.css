@@ -129,7 +129,10 @@ button {
 }
 .header-search {
   margin: 1rem;
-  min-width: 1rem;
+  min-width: 25%;
+  border-radius: 50px;
+  min-height: 30px;
+  border-color: var(--primary-color);
 }
 #root {
   width: 100%;
@@ -146,4 +149,5 @@ input {
   padding: 5px;
   font-weight: 600;
   color: var(--primary-color);
+  text-align: center;
 }

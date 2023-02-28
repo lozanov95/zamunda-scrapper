@@ -76,8 +76,8 @@ function App() {
 function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dispatch<React.SetStateAction<string>> }) {
   return (
     <div className='header-section'>
-      <label className='text-header'>Заглавие<input className='header-search' value={title} onChange={(e) => setTitle(e.target.value)} /></label>
-    </div>
+      <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
+    </div >
   )
 }
 
