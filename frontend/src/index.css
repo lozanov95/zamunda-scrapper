@@ -126,7 +126,7 @@ button {
   grid:
     "empty filter movies empty1"
     "empty е2 movies empty1" 1fr
-    /5% 15% 1fr 10%;
+    /5% 20% 1fr 10%;
   grid-auto-rows: max-content;
   gap: 8px;
 }

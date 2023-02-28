@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, ChangeEventHandler, DetailedHTMLProps, ReactEventHandler, useEffect, useState } from 'react'
 import './App.css'
 
 
@@ -22,26 +22,52 @@ type TorrentType = {
   bg_subs: boolean,
 }
 
+type Filters = {
+  selectedGenres: string[],
+  setSelectedGenres: React.Dispatch<React.SetStateAction<string[]>>
+  actor: string,
+  setActor: React.Dispatch<React.SetStateAction<string>>
+  minRating: number,
+  setMinRating: React.Dispatch<React.SetStateAction<number>>
+  fromYear: number,
+  setFromYear: React.Dispatch<React.SetStateAction<number>>
+  availableActors: never[],
+  setAvailableActors: React.Dispatch<React.SetStateAction<never[]>>
+}
+
 function App() {
   const [movies, setMovies] = useState<MovieType[]>([])
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([])
+  const [actor, setActor] = useState<string>("")
+  const [minRating, setMinRating] = useState<number>(0)
+  const [fromYear, setFromYear] = useState<number>(0)
+  const [availableActors, setAvailableActors] = useState([])
+
+  const filters = {
+    selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
+    fromYear, setFromYear, availableActors, setAvailableActors
+  }
 
   useEffect(() => {
-    fetch("http://localhost/movies").then((data) => {
+    const controller = new AbortController();
+    fetch(`http://localhost/movies?fromYear=${filters.fromYear}&minRating=${filters.minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`, { signal: controller.signal }).then((data) => {
       return data.json()
     }).then((newMovies) => {
       setMovies(newMovies)
     }).catch((err) => {
       console.log(err)
     })
-  }, [])
+
+    return () => { controller.abort() }
+  }, [selectedGenres, minRating, fromYear])
 
   return (
     <>
-      <FilterPanel />
+      <FilterPanel filters={filters} />
       <div className='movies'>
         {
-          movies.length === 0 ? <div>Loading movies...</div> :
-            <div className="grid-cont">
+          movies?.length === 0 ? <div>Loading movies...</div> :
+            <div className="grid-cont  bg-2">
               {movies?.map((movie: MovieType, idx) => {
                 return <Movie movie={movie} key={idx} />
               })
@@ -115,12 +141,8 @@ function TextField({ header, text }: { header: string, text: string }) {
   )
 }
 
-function FilterPanel() {
+function FilterPanel({ filters }: { filters: Filters }) {
   const [genres, setGenres] = useState<string[]>([])
-  const [actor, setActor] = useState<string>("")
-  const [minRating, setMinRating] = useState<number>(0)
-  const [fromYear, setFromYear] = useState<number>(0)
-  const [availableActors, setAvailableActors] = useState([])
 
   useEffect(() => {
     fetch("http://localhost/genres").then((data) => {
@@ -134,53 +156,65 @@ function FilterPanel() {
 
   useEffect(() => {
     const controller = new AbortController()
-    fetch(`http://localhost/actors?contains=${actor}&fromYear=${fromYear}&minRating=${minRating}`, { signal: controller.signal })
+    fetch(`http://localhost/actors?contains=${filters.actor}&fromYear=${filters.fromYear}&minRating=${filters.minRating}`, { signal: controller.signal })
       .then((data) => {
         return data.json()
       }).then((actors) => {
-        setAvailableActors(actors ?? [])
+        filters.setAvailableActors(actors ?? [])
       }).catch((err) => {
         console.log(err)
       })
 
     return () => controller.abort()
-  }, [actor])
+  }, [filters.actor])
+
+  useEffect(() => {
+    console.log(filters.selectedGenres)
+  }, [filters.selectedGenres])
+
+  function HandleSelectGenres(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      filters.setSelectedGenres((g) => [...g, e.target.value])
+      return
+    }
+    filters.setSelectedGenres((g) => g.filter((v) => v != e.target.value))
+  }
 
   function HandleActorTextChange(e: any) {
-    setActor(e.target.value)
+    filters.setActor(e.target.value)
   }
 
   return (
     <div className='filter grid-cont'>
       <label className='text-header'>Жанрове (комбинирано)</label>
-      <div className='grid-cont grid-cols-2'>
+      <div className='grid-cont grid-cols-2 bg-3'>
         {genres.map((val, idx) => {
           return (
             <label className='text-header'>
               {val}
-              <input type="checkbox" key={idx} value={val} />
+              <input type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
             </label>
           )
         })}
       </div>
-      <div className='grid-cont'>
+      <div className='grid-cont bg-3'>
         <label className='text-header'>
           След година
         </label>
-        <input type="number" value={fromYear} onChange={(e) => setFromYear(parseInt(e.target.value))} max={new Date().getFullYear()} min="1900" />
+        <input type="number" value={filters.fromYear} onChange={(e) => filters.setFromYear(parseInt(e.target.value))} max={new Date().getFullYear()} min="1900" />
       </div>
-      <div className='grid-cont'>
+      <div className='grid-cont bg-3'>
         <label className='text-header'>
           Минимален рейтинг
-          <input type="number" value={minRating} onChange={(e) => setMinRating(parseFloat(e.target.value))} max="10" min="0" />
+          <input type="number" value={filters.minRating} onChange={(e) => filters.setMinRating(parseFloat(e.target.value))} max="10" min="0" />
         </label>
       </div>
-      <div className='grid-cont'>
+      <div className='grid-cont bg-3'>
         <label className='text-header'>
           С участието на
         </label>
-        <input type="text" value={actor} onChange={HandleActorTextChange} />
-        {availableActors.length > 0 && availableActors.map((actor) => {
+        <input type="text" value={filters.actor} onChange={HandleActorTextChange} />
+        {filters.availableActors.length > 0 && filters.availableActors.map((actor) => {
           return <li>{actor}</li>
         })}
       </div>
