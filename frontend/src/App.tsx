@@ -36,6 +36,7 @@ type Filters = {
 }
 // TODO: show how many movies satisfy the parameters
 function App() {
+  const [title, setTitle] = useState<string>("")
   const [movies, setMovies] = useState<MovieType[]>([])
   const [selectedGenres, setSelectedGenres] = useState<string[]>([])
   const [actor, setActor] = useState<string>("")
@@ -50,7 +51,7 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`http://localhost/movies?fromYear=${filters.fromYear}&minRating=${filters.minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
+    fetch(`http://localhost/movies?contains=${title}&fromYear=${filters.fromYear}&minRating=${filters.minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
       { signal: controller.signal })
       .then((data) => {
         return data.json()
@@ -61,13 +62,22 @@ function App() {
       })
 
     return () => { controller.abort() }
-  }, [selectedGenres, minRating, fromYear])
+  }, [selectedGenres, minRating, fromYear, title])
 
   return (
     <>
+      <HeaderSection title={title} setTitle={setTitle} />
       <FilterSection filters={filters} />
       <MoviesSection movies={movies} />
     </>
+  )
+}
+
+function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dispatch<React.SetStateAction<string>> }) {
+  return (
+    <div className='header-section'>
+      <label className='text-header'>Заглавие<input className='header-search' value={title} onChange={(e) => setTitle(e.target.value)} /></label>
+    </div>
   )
 }
 

@@ -121,10 +121,21 @@ button {
 .movies {
   grid-area: movies;
 }
+.header-section {
+  width: 100%;
+  grid-area: header;
+  min-width: 30px;
+  background-color: var(--secondary-color);
+}
+.header-search {
+  margin: 1rem;
+  min-width: 1rem;
+}
 #root {
   width: 100%;
   display: grid;
   grid:
+    "header header header header"
     "empty filter movies empty1"
     "empty е2 movies empty1" 1fr
     /5% 20% 1fr 10%;
@@ -133,5 +144,6 @@ button {
 input {
   border-radius: 6px;
   padding: 5px;
-  font-weight: bold;
+  font-weight: 600;
+  color: var(--primary-color);
 }
