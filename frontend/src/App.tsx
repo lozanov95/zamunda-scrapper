@@ -106,14 +106,14 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
 }
 
 function MoviesSection({ movies, movieCount, setPage }: { movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>> }) {
-  const msg = `There ${movieCount == 1 ? "is" : "are"} ${movieCount} ${movieCount == 1 ? "movie" : "movies"} that satisfy this filter.`
+  const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
 
   return (
     <div className='movies'>
       <div className="grid-cont bg-2">
         <div className='text-header'>{msg}</div>
         {movies?.length == 0 ?
-          "No movies." :
+          "Не са намерени филми." :
           movies?.map((movie: MovieType, idx) => {
             return <Movie movie={movie} key={idx} />
           })}
@@ -277,7 +277,7 @@ function TriggerOnVisible({ setPage }: { setPage: React.Dispatch<React.SetStateA
   }, [isVisible])
 
   return (
-    <div ref={ref}>1</div>
+    <div ref={ref}></div>
   )
 }
 
