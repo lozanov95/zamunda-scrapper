@@ -34,7 +34,7 @@ type Filters = {
   availableActors: never[],
   setAvailableActors: React.Dispatch<React.SetStateAction<never[]>>
 }
-// TODO: show how many movies satisfy the parameters
+
 function App() {
   const [title, setTitle] = useState<string>("")
   const [movies, setMovies] = useState<MovieType[]>([])
