@@ -73,7 +73,9 @@ func DoesMovieSatisfiesConditions(params url.Values, movie *Movie) bool {
 		ValidateGenres(&params, movie) &&
 		ValidateDirectors(&params, movie) &&
 		ValidateActors(&params, movie) &&
-		ValidateCountries(&params, movie) {
+		ValidateCountries(&params, movie) &&
+		ValidateBGAudio(&params, movie) &&
+		ValidateBGSubs(&params, movie) {
 		return true
 	}
 
@@ -175,4 +177,32 @@ func ValidateCountries(params *url.Values, m *Movie) bool {
 		}
 	}
 	return true
+}
+
+func ValidateBGAudio(params *url.Values, m *Movie) bool {
+	if params.Get("bgaudio") != "1" {
+		return true
+	}
+
+	for _, torrent := range m.Torrents {
+		if torrent.BG_AUDIO {
+			return true
+		}
+	}
+
+	return false
+}
+
+func ValidateBGSubs(params *url.Values, m *Movie) bool {
+	if params.Get("bgsubs") != "1" {
+		return true
+	}
+
+	for _, torrent := range m.Torrents {
+		if torrent.BG_SUBS {
+			return true
+		}
+	}
+
+	return false
 }
