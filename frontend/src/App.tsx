@@ -33,6 +33,10 @@ type Filters = {
   setFromYear: React.Dispatch<React.SetStateAction<number>>
   availableActors: never[],
   setAvailableActors: React.Dispatch<React.SetStateAction<never[]>>
+  bgAudio: boolean,
+  setBgAudio: React.Dispatch<React.SetStateAction<boolean>>
+  bgSubs: boolean,
+  setBgSubs: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function App() {
@@ -45,16 +49,20 @@ function App() {
   const [fromYear, setFromYear] = useState<number>(0)
   const [availableActors, setAvailableActors] = useState([])
   const [page, setPage] = useState<number>(0)
+  const [bgAudio, setBgAudio] = useState<boolean>(false)
+  const [bgSubs, setBgSubs] = useState<boolean>(false)
 
   const filters = {
     selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
-    fromYear, setFromYear, availableActors, setAvailableActors
+    fromYear, setFromYear, availableActors, setAvailableActors, bgAudio, setBgAudio, bgSubs, setBgSubs
   }
+
+  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}`
 
   useEffect(() => {
     setPage(0)
     const controller = new AbortController();
-    fetch(`http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}`,
+    fetch(URL,
       { signal: controller.signal })
       .then((data) => {
         return data.json()
@@ -66,7 +74,7 @@ function App() {
       })
 
     return () => { controller.abort() }
-  }, [selectedGenres, minRating, fromYear, title, actor])
+  }, [selectedGenres, minRating, fromYear, title, actor, bgAudio, bgSubs])
 
   useEffect(() => {
     if (page == 0) {
@@ -74,7 +82,7 @@ function App() {
     }
 
     const controller = new AbortController();
-    fetch(`http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}&page=${page}`,
+    fetch(URL,
       { signal: controller.signal })
       .then((data) => {
         return data.json()
@@ -240,6 +248,14 @@ function FilterSection({ filters }: { filters: Filters }) {
             </label>
           )
         })}
+      </div>
+      <div className='grid-cont bg-3'>
+        <label className='text-header'>БГ Аудио
+          <input type="checkbox" checked={filters.bgAudio} onChange={(e) => filters.setBgAudio(e.target.checked)} />
+        </label>
+        <label className='text-header'>БГ Субтитри
+          <input type="checkbox" checked={filters.bgSubs} onChange={(e) => filters.setBgSubs(e.target.checked)} />
+        </label>
       </div>
       <div className='grid-cont bg-3'>
         <label className='text-header'>
