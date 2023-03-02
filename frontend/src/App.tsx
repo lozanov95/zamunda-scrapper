@@ -259,7 +259,7 @@ function FilterSection({ filters }: { filters: Filters }) {
         </label>
         <input type="text" value={filters.actor} onChange={HandleActorTextChange} />
         {filters.availableActors.length > 0 && filters.availableActors.map((actor) => {
-          return <li>{actor}</li>
+          return <span>{actor}</span>
         })}
       </div>
     </div>
