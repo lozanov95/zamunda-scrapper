@@ -23,19 +23,25 @@ type TorrentType = {
 }
 
 type Filters = {
-  selectedGenres: string[],
+  selectedGenres: string[]
   setSelectedGenres: React.Dispatch<React.SetStateAction<string[]>>
-  actor: string,
+
+  actor: string
   setActor: React.Dispatch<React.SetStateAction<string>>
-  minRating: number,
+
+  director: string
+  setDirector: React.Dispatch<React.SetStateAction<string>>
+
+  minRating: number
   setMinRating: React.Dispatch<React.SetStateAction<number>>
-  fromYear: number,
+
+  fromYear: number
   setFromYear: React.Dispatch<React.SetStateAction<number>>
-  availableActors: never[],
-  setAvailableActors: React.Dispatch<React.SetStateAction<never[]>>
-  bgAudio: boolean,
+
+  bgAudio: boolean
   setBgAudio: React.Dispatch<React.SetStateAction<boolean>>
-  bgSubs: boolean,
+
+  bgSubs: boolean
   setBgSubs: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -44,20 +50,22 @@ function App() {
   const [movies, setMovies] = useState<MovieType[]>([])
   const [movieCount, setMovieCount] = useState<number>(0)
   const [selectedGenres, setSelectedGenres] = useState<string[]>([])
+
   const [actor, setActor] = useState<string>("")
+  const [director, setDirector] = useState<string>("")
+
   const [minRating, setMinRating] = useState<number>(0)
   const [fromYear, setFromYear] = useState<number>(0)
-  const [availableActors, setAvailableActors] = useState([])
   const [page, setPage] = useState<number>(0)
   const [bgAudio, setBgAudio] = useState<boolean>(false)
   const [bgSubs, setBgSubs] = useState<boolean>(false)
 
   const filters = {
     selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
-    fromYear, setFromYear, availableActors, setAvailableActors, bgAudio, setBgAudio, bgSubs, setBgSubs
+    fromYear, setFromYear, bgAudio, setBgAudio, bgSubs, setBgSubs, director, setDirector
   }
 
-  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}`
+  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&directors=${director}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}`
 
   useEffect(() => {
     setPage(0)
@@ -195,6 +203,8 @@ function TextField({ header, text }: { header: string, text: string }) {
 
 function FilterSection({ filters }: { filters: Filters }) {
   const [genres, setGenres] = useState<string[]>([])
+  const [actors, setActors] = useState<string[]>([])
+  const [directors, setDirectors] = useState<string[]>([])
 
   useEffect(() => {
     fetch("http://localhost/genres").then((data) => {
@@ -212,13 +222,27 @@ function FilterSection({ filters }: { filters: Filters }) {
       .then((data) => {
         return data.json()
       }).then((actors) => {
-        filters.setAvailableActors(actors ?? [])
+        setActors(actors ?? [])
       }).catch((err) => {
         console.log(err)
       })
 
     return () => controller.abort()
   }, [filters.actor])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch(`http://localhost/directors?contains=${filters.director}`, { signal: controller.signal })
+      .then((data) => {
+        return data.json()
+      }).then((directors) => {
+        setDirectors(directors ?? [])
+      }).catch((err) => {
+        console.log(err)
+      })
+
+    return () => controller.abort()
+  }, [filters.director])
 
   useEffect(() => {
     console.log(filters.selectedGenres)
@@ -234,6 +258,9 @@ function FilterSection({ filters }: { filters: Filters }) {
 
   function HandleActorTextChange(e: any) {
     filters.setActor(e.target.value)
+  }
+  function HandleDirectorTextChange(e: any) {
+    filters.setDirector(e.target.value)
   }
 
   return (
@@ -269,15 +296,23 @@ function FilterSection({ filters }: { filters: Filters }) {
           <input type="number" value={filters.minRating} onChange={(e) => filters.setMinRating(parseFloat(e.target.value))} max="10" min="0" />
         </label>
       </div>
-      <div className='grid-cont bg-3'>
-        <label className='text-header'>
-          С участието на
-        </label>
-        <input type="text" value={filters.actor} onChange={HandleActorTextChange} />
-        {filters.availableActors.length > 0 && filters.availableActors.map((actor) => {
-          return <span>{actor}</span>
-        })}
-      </div>
+      <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
+      <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={HandleDirectorTextChange} suggestions={directors} />
+    </div>
+  )
+}
+
+function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }: any) {
+
+  return (
+    <div className='grid-cont bg-3'>
+      <label className='text-header'>
+        {labelString}
+      </label>
+      <input type="text" value={value} onChange={handleChangeValue} />
+      {suggestions.length > 0 && suggestions.map((suggestion: any) => {
+        return <span>{suggestion}</span>
+      })}
     </div>
   )
 }
