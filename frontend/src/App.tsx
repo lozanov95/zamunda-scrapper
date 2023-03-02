@@ -2,6 +2,21 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 import './App.css'
 
 
+enum SortingCriteria {
+  // Don't sort the movies
+  SortSkip = 0,
+
+  // Sort the movies by rating in descending order
+  SortRatingDescending,
+  // Sort the movies by rating in ascending order
+  SortRatingAscending,
+
+  // Sort the movies by year descending order
+  SortYearDescending,
+  // Sort the movies by year in ascending order
+  SortYearAscending,
+}
+
 type MovieType = {
   title: string,
   genres: string[],
@@ -43,6 +58,9 @@ type Filters = {
 
   bgSubs: boolean
   setBgSubs: React.Dispatch<React.SetStateAction<boolean>>
+
+  sortCriteria: number
+  setSortCriteria: React.Dispatch<React.SetStateAction<number>>
 }
 
 function App() {
@@ -59,13 +77,14 @@ function App() {
   const [page, setPage] = useState<number>(0)
   const [bgAudio, setBgAudio] = useState<boolean>(false)
   const [bgSubs, setBgSubs] = useState<boolean>(false)
+  const [sortCriteria, setSortCriteria] = useState<number>(0)
 
   const filters = {
     selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
-    fromYear, setFromYear, bgAudio, setBgAudio, bgSubs, setBgSubs, director, setDirector
+    fromYear, setFromYear, bgAudio, setBgAudio, bgSubs, setBgSubs, director, setDirector, sortCriteria, setSortCriteria
   }
 
-  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&directors=${director}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}`
+  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&directors=${director}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}&sort=${sortCriteria}`
 
   useEffect(() => {
     setPage(0)
@@ -82,7 +101,7 @@ function App() {
       })
 
     return () => { controller.abort() }
-  }, [selectedGenres, minRating, fromYear, title, actor, bgAudio, bgSubs])
+  }, [selectedGenres, minRating, fromYear, title, actor, director, bgAudio, bgSubs, sortCriteria])
 
   useEffect(() => {
     if (page == 0) {
@@ -90,7 +109,7 @@ function App() {
     }
 
     const controller = new AbortController();
-    fetch(URL,
+    fetch(`${URL}&page=${page}`,
       { signal: controller.signal })
       .then((data) => {
         return data.json()
@@ -276,6 +295,7 @@ function FilterSection({ filters }: { filters: Filters }) {
           )
         })}
       </div>
+      <SortingPanel setSortCriteria={filters.setSortCriteria} />
       <div className='grid-cont bg-3'>
         <label className='text-header'>БГ Аудио
           <input type="checkbox" checked={filters.bgAudio} onChange={(e) => filters.setBgAudio(e.target.checked)} />
@@ -302,7 +322,8 @@ function FilterSection({ filters }: { filters: Filters }) {
   )
 }
 
-function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }: any) {
+function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
+  { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
   return (
     <div className='grid-cont bg-3'>
@@ -314,6 +335,39 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
         return <span>{suggestion}</span>
       })}
     </div>
+  )
+}
+
+function SortingPanel({ setSortCriteria }: any) {
+
+  function HandleChange(e: any) {
+    setSortCriteria(e.target.value)
+    console.log(e.target.value)
+  }
+  return (
+    <form className='grid-cont bg-3' onChange={HandleChange}>
+      <span className='text-header'>Сортиране</span>
+      <label htmlFor="">
+        Не сортирай
+        <input type="radio" name='sort' defaultChecked={true} value={SortingCriteria.SortSkip} />
+      </label>
+      <label htmlFor="">
+        Рейтинг низходящо
+        <input type="radio" name='sort' value={SortingCriteria.SortRatingDescending} />
+      </label>
+      <label htmlFor="">
+        Рейтинг възходящо
+        <input type="radio" name='sort' value={SortingCriteria.SortRatingAscending} />
+      </label>
+      <label htmlFor="">
+        Година низходящо
+        <input type="radio" name='sort' value={SortingCriteria.SortYearDescending} />
+      </label>
+      <label htmlFor="">
+        Година възходящо
+        <input type="radio" name='sort' value={SortingCriteria.SortYearAscending} />
+      </label>
+    </form >
   )
 }
 
