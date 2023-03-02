@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"sort"
+	"strconv"
 )
 
 type MovieDB struct {
@@ -16,6 +17,23 @@ type MovieDB struct {
 	genres    *[]string
 	pageSize  int
 }
+
+type SortCriteria int
+
+const (
+	// Don't sort the movie
+	SortSkip = iota
+
+	// Sort the movies by rating in descending order
+	SortRatingDescending
+	// Sort the movies by rating in ascending order
+	SortRatingAscending
+
+	// Sort the movies by year descending order
+	SortYearDescending
+	// Sort the movies by year in ascending order
+	SortYearAscending
+)
 
 func NewMovieDB(pageSize int) *MovieDB {
 	movieBytes, err := os.ReadFile("movies.json")
@@ -77,16 +95,17 @@ func NewMovieDB(pageSize int) *MovieDB {
 }
 
 func (db *MovieDB) GetMovies(queries url.Values, page int) ([]*Movie, int) {
-	start := page * db.pageSize
-	end := start + db.pageSize
-
 	movies := []*Movie{}
 	for _, movie := range *db.movies {
 		if DoesMovieSatisfiesConditions(queries, movie) {
 			movies = append(movies, movie)
 		}
 	}
-	start, end = ValidateIndexes(&movies, start, end, db.pageSize)
+
+	SortMovies(&queries, &movies)
+
+	start := page * db.pageSize
+	start, end := ValidateIndexes(&movies, start, start+db.pageSize, db.pageSize)
 	return movies[start:end], len(movies)
 }
 
@@ -131,19 +150,6 @@ func (db *MovieDB) GetDirectors(params *url.Values, page int) []string {
 	return directors[start:end]
 }
 
-func (db *MovieDB) GetSortedMovies(queries url.Values, page int) []*Movie {
-	movies, _ := db.GetMovies(queries, 0)
-	sortedMovies := make([]*Movie, len(movies))
-	copy(sortedMovies, movies)
-	SortByRating(sortedMovies)
-
-	start := page * db.pageSize
-	end := start + db.pageSize
-
-	start, end = ValidateIndexes(&sortedMovies, start, end, db.pageSize)
-	return sortedMovies[start:end]
-}
-
 func (db *MovieDB) GetGenres() []string {
 	return *db.genres
 }
@@ -159,8 +165,54 @@ func GetMapKeysContainingSubstring(m *map[string][]*Movie, str string) []string 
 	return result
 }
 
-func SortByRating(movies []*Movie) {
+func SortByRatingAscending(movies []*Movie) {
 	sort.Slice(movies, func(i, j int) bool {
-		return (movies)[i].Rating > (movies)[j].Rating
+		return float64((movies)[i].Rating) < float64((movies)[j].Rating)
 	})
+}
+
+func SortByRatingDescending(movies []*Movie) {
+	sort.Slice(movies, func(i, j int) bool {
+		return float64((movies)[i].Rating) > float64((movies)[j].Rating)
+	})
+}
+
+func SortByYearAscending(movies []*Movie) {
+	sort.Slice(movies, func(i, j int) bool {
+		return int64((movies)[i].Year) < int64((movies)[j].Year)
+	})
+}
+
+func SortByYearDescending(movies []*Movie) {
+	sort.Slice(movies, func(i, j int) bool {
+		return int64((movies)[i].Year) > int64((movies)[j].Year)
+	})
+}
+
+func SortMovies(params *url.Values, movies *[]*Movie) {
+	sort := params.Get("sort")
+	if sort == "" {
+		return
+	}
+
+	criteria, err := strconv.Atoi(sort)
+	if err != nil {
+		return
+	}
+
+	switch criteria {
+	case SortRatingAscending:
+		SortByRatingAscending(*movies)
+
+	case SortRatingDescending:
+		SortByRatingDescending(*movies)
+
+	case SortYearAscending:
+		SortByYearAscending(*movies)
+
+	case SortYearDescending:
+		SortByYearDescending(*movies)
+	default:
+		return
+	}
 }

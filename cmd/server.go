@@ -72,21 +72,6 @@ func NewServer(port int, cfg *Config) *Server {
 		SendJson(w, res)
 	})
 
-	srv.mux.HandleFunc("/movies/top", func(w http.ResponseWriter, r *http.Request) {
-		query := r.URL.Query()
-		page, err := strconv.Atoi(query.Get("page"))
-		if err != nil {
-			page = 0
-		}
-
-		res, err := json.Marshal(srv.db.GetSortedMovies(query, page))
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		SendJson(w, res)
-	})
-
 	srv.mux.HandleFunc("/genres", func(w http.ResponseWriter, r *http.Request) {
 		payload, err := json.Marshal(srv.db.GetGenres())
 		if err != nil {
