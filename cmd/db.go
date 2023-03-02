@@ -84,6 +84,10 @@ func NewMovieDB(pageSize int) *MovieDB {
 		genresList = append(genresList, k)
 	}
 
+	sort.Slice(genresList, func(i, j int) bool {
+		return genresList[i] < genresList[j]
+	})
+
 	return &MovieDB{
 		movies:    &movies,
 		actors:    &actorsList,
