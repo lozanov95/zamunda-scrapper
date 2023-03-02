@@ -64,6 +64,8 @@ type Filters = {
 }
 
 function App() {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [areMorePagesAvailable, setAreMorePagesAvailable] = useState<boolean>(true)
   const [title, setTitle] = useState<string>("")
   const [movies, setMovies] = useState<MovieType[]>([])
   const [movieCount, setMovieCount] = useState<number>(0)
@@ -87,6 +89,7 @@ function App() {
   const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&directors=${director}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}&sort=${sortCriteria}`
 
   useEffect(() => {
+    setIsLoading(true)
     setPage(0)
     const controller = new AbortController();
     fetch(URL,
@@ -96,7 +99,9 @@ function App() {
       }).then(({ value, count }) => {
         setMovies(value)
         setMovieCount(count)
+        setIsLoading(false)
       }).catch((err) => {
+        setIsLoading(false)
         console.log(err)
       })
 
@@ -107,16 +112,21 @@ function App() {
     if (page == 0) {
       return
     }
-
+    setIsLoading(true)
     const controller = new AbortController();
     fetch(`${URL}&page=${page}`,
       { signal: controller.signal })
       .then((data) => {
         return data.json()
       }).then(({ value, count }) => {
+        if (value.length == 0) {
+          setAreMorePagesAvailable(false)
+        }
         setMovies((v) => [...v, ...value])
         setMovieCount(count)
+        setIsLoading(false)
       }).catch((err) => {
+        setIsLoading(false)
         console.log(err)
       })
 
@@ -127,7 +137,7 @@ function App() {
     <>
       <HeaderSection title={title} setTitle={setTitle} />
       <FilterSection filters={filters} />
-      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} />
+      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} isLoading={isLoading} areMorePagesAvailable={areMorePagesAvailable} />
     </>
   )
 }
@@ -140,21 +150,41 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
   )
 }
 
-function MoviesSection({ movies, movieCount, setPage }: { movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>> }) {
-  const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
+function MoviesSection({ movies, movieCount, setPage, isLoading, areMorePagesAvailable }:
+  {
+    movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>>,
+    isLoading: boolean, areMorePagesAvailable: boolean
+  }) {
+
 
   return (
     <div className='movies'>
       <div className="grid-cont bg-2">
-        <div className='text-header'>{msg}</div>
-        {movies?.length == 0 ?
-          "Не са намерени филми." :
-          movies?.map((movie: MovieType, idx) => {
-            return <Movie movie={movie} key={idx} />
-          })}
+        {isLoading ?
+          <div className='text-header'>Зареждане...</div> :
+          <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
+        }
       </div>
-      <TriggerOnVisible setPage={setPage} />
     </div>
+  )
+}
+
+function MoviesList({ movies, movieCount, setPage, areMorePagesAvailable }: {
+  movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>>, areMorePagesAvailable: boolean
+}) {
+  const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
+  return (
+    <>
+
+      <div className='text-header'>{msg}</div>
+      {movieCount == 0 ?
+        "Не са намерени филми." :
+        movies?.map((movie: MovieType, idx) => {
+          return <Movie movie={movie} key={idx} />
+        })
+      }
+      {areMorePagesAvailable && <TriggerOnVisible setPage={setPage} />}
+    </>
   )
 }
 
