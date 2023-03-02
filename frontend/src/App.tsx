@@ -361,7 +361,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
         {labelString}
       </label>
       <input type="text" value={value} onChange={handleChangeValue} />
-      {suggestions.length > 0 && suggestions.map((suggestion: any) => {
+      {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any) => {
         return <span>{suggestion}</span>
       })}
     </div>
