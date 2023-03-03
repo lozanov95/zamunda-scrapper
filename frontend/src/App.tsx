@@ -364,34 +364,26 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
 }
 
 function SortingPanel({ setSortCriteria }: any) {
-
   function HandleChange(e: any) {
     setSortCriteria(e.target.value)
   }
   return (
     <form className='grid-cont bg-3' onChange={HandleChange}>
-      <span className='text-header'>Сортиране</span>
-      <label htmlFor="">
-        Не сортирай
-        <input type="radio" name='sort' defaultChecked={true} value={SortingCriteria.SortSkip} />
-      </label>
-      <label htmlFor="">
-        Рейтинг низходящо
-        <input type="radio" name='sort' value={SortingCriteria.SortRatingDescending} />
-      </label>
-      <label htmlFor="">
-        Рейтинг възходящо
-        <input type="radio" name='sort' value={SortingCriteria.SortRatingAscending} />
-      </label>
-      <label htmlFor="">
-        Година низходящо
-        <input type="radio" name='sort' value={SortingCriteria.SortYearDescending} />
-      </label>
-      <label htmlFor="">
-        Година възходящо
-        <input type="radio" name='sort' value={SortingCriteria.SortYearAscending} />
-      </label>
+      <InputWithLabel labelVal='Не сортирай' type='radio' name='sort' value={SortingCriteria.SortSkip.toString()} defaultChecked={true} />
+      <InputWithLabel labelVal='Рейтинг низходящо' type='radio' name='sort' value={SortingCriteria.SortRatingDescending.toString()} />
+      <InputWithLabel labelVal='Рейтинг възходящо' type='radio' name='sort' value={SortingCriteria.SortRatingAscending.toString()} />
+      <InputWithLabel labelVal='Година низходящо' type='radio' name='sort' value={SortingCriteria.SortRatingDescending.toString()} />
+      <InputWithLabel labelVal='Година възходящо' type='radio' name='sort' value={SortingCriteria.SortYearAscending.toString()} />
     </form >
+  )
+}
+
+function InputWithLabel({ labelVal, type, name, value, defaultChecked }: { labelVal: string, type: string, name: string, value: string, defaultChecked?: boolean }) {
+  return (
+    <label className='text-header'>
+      {labelVal}
+      <input type={type} name={name} value={value} defaultChecked={defaultChecked} />
+    </label>
   )
 }
 
