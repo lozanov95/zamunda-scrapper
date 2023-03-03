@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo, memo } from 'react'
 import './App.css'
 
 
@@ -81,14 +81,21 @@ function App() {
   const [bgSubs, setBgSubs] = useState<boolean>(false)
   const [sortCriteria, setSortCriteria] = useState<number>(0)
 
+  const [previousUrl, setPreviousURL] = useState("")
+
   const filters = {
     selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
     fromYear, setFromYear, bgAudio, setBgAudio, bgSubs, setBgSubs, director, setDirector, sortCriteria, setSortCriteria
   }
 
-  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor}&directors=${director}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}&sort=${sortCriteria}`
+  const URL = `http://localhost/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor.length > 2 ? actor : ""}&directors=${director.length > 2 ? director : ""}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}&sort=${sortCriteria}`
 
   useEffect(() => {
+    if (URL == previousUrl) {
+      return
+    }
+
+    setPreviousURL(URL)
     setIsLoading(true)
     setPage(0)
     const controller = new AbortController();
@@ -169,7 +176,7 @@ function MoviesSection({ movies, movieCount, setPage, isLoading, areMorePagesAva
   )
 }
 
-function MoviesList({ movies, movieCount, setPage, areMorePagesAvailable }: {
+const MoviesList = memo(function MoviesList({ movies, movieCount, setPage, areMorePagesAvailable }: {
   movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>>, areMorePagesAvailable: boolean
 }) {
   const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
@@ -186,9 +193,9 @@ function MoviesList({ movies, movieCount, setPage, areMorePagesAvailable }: {
       {areMorePagesAvailable && <TriggerOnVisible setPage={setPage} />}
     </>
   )
-}
+})
 
-function Movie({ movie }: { movie: MovieType }) {
+const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
   const [displayTorrents, setDisplayTorrents] = useState(false)
 
   function ToggleTorrent() {
@@ -222,7 +229,7 @@ function Movie({ movie }: { movie: MovieType }) {
       </div>
     </div>
   )
-}
+})
 
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
