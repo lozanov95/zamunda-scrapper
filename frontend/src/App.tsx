@@ -291,9 +291,6 @@ function FilterSection({ filters }: { filters: Filters }) {
     return () => controller.abort()
   }, [filters.director])
 
-  useEffect(() => {
-    console.log(filters.selectedGenres)
-  }, [filters.selectedGenres])
 
   function HandleSelectGenres(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
@@ -316,7 +313,7 @@ function FilterSection({ filters }: { filters: Filters }) {
       <div className='grid-cont grid-cols-2 bg-3'>
         {genres.map((val, idx) => {
           return (
-            <label className='text-header'>
+            <label className='text-header' key={idx}>
               {val}
               <input type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
             </label>
@@ -359,8 +356,8 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
         {labelString}
       </label>
       <input type="text" value={value} onChange={handleChangeValue} />
-      {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any) => {
-        return <span>{suggestion}</span>
+      {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any, idx) => {
+        return <span key={idx}>{suggestion}</span>
       })}
     </div>
   )
@@ -370,7 +367,6 @@ function SortingPanel({ setSortCriteria }: any) {
 
   function HandleChange(e: any) {
     setSortCriteria(e.target.value)
-    console.log(e.target.value)
   }
   return (
     <form className='grid-cont bg-3' onChange={HandleChange}>
