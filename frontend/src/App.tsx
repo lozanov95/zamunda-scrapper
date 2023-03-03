@@ -325,7 +325,6 @@ function FilterSection({ filters }: { filters: Filters }) {
           )
         })}
       </div>
-      <SortingPanel setSortCriteria={filters.setSortCriteria} />
       <div className='grid-cont bg-3'>
         <label className='text-header'>БГ Аудио
           <input type="checkbox" checked={filters.bgAudio} onChange={(e) => filters.setBgAudio(e.target.checked)} />
@@ -334,6 +333,7 @@ function FilterSection({ filters }: { filters: Filters }) {
           <input type="checkbox" checked={filters.bgSubs} onChange={(e) => filters.setBgSubs(e.target.checked)} />
         </label>
       </div>
+      <SortingPanel setSortCriteria={filters.setSortCriteria} />
       <div className='grid-cont bg-3'>
         <label className='text-header'>
           След година
