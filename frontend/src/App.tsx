@@ -64,7 +64,6 @@ type Filters = {
 }
 
 function App() {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [areMorePagesAvailable, setAreMorePagesAvailable] = useState<boolean>(true)
   const [title, setTitle] = useState<string>("")
   const [movies, setMovies] = useState<MovieType[]>([])
@@ -96,7 +95,6 @@ function App() {
     }
 
     setPreviousURL(URL)
-    setIsLoading(true)
     setPage(0)
     const controller = new AbortController();
     fetch(URL,
@@ -106,9 +104,7 @@ function App() {
       }).then(({ value, count }) => {
         setMovies(value)
         setMovieCount(count)
-        setIsLoading(false)
       }).catch((err) => {
-        setIsLoading(false)
         console.log(err)
       })
 
@@ -119,7 +115,6 @@ function App() {
     if (page == 0) {
       return
     }
-    setIsLoading(true)
     const controller = new AbortController();
     fetch(`${URL}&page=${page}`,
       { signal: controller.signal })
@@ -131,9 +126,7 @@ function App() {
         }
         setMovies((v) => [...v, ...value])
         setMovieCount(count)
-        setIsLoading(false)
       }).catch((err) => {
-        setIsLoading(false)
         console.log(err)
       })
 
@@ -144,7 +137,7 @@ function App() {
     <>
       <HeaderSection title={title} setTitle={setTitle} />
       <FilterSection filters={filters} />
-      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} isLoading={isLoading} areMorePagesAvailable={areMorePagesAvailable} />
+      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
     </>
   )
 }
@@ -157,20 +150,18 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
   )
 }
 
-function MoviesSection({ movies, movieCount, setPage, isLoading, areMorePagesAvailable }:
+function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailable }:
   {
-    movies: MovieType[], movieCount: number, setPage: React.Dispatch<React.SetStateAction<number>>,
-    isLoading: boolean, areMorePagesAvailable: boolean
+    movies: MovieType[], movieCount: number,
+    setPage: React.Dispatch<React.SetStateAction<number>>,
+    areMorePagesAvailable: boolean
   }) {
 
 
   return (
     <div className='movies'>
       <div className="grid-cont bg-2">
-        {isLoading ?
-          <div className='text-header'>Зареждане...</div> :
-          <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
-        }
+        <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
       </div>
     </div>
   )
