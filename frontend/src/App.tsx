@@ -312,34 +312,20 @@ function FilterSection({ filters }: { filters: Filters }) {
       <label className='text-header'>Жанрове (комбинирано)</label>
       <div className='grid-cont grid-cols-2 bg-3'>
         {genres.map((val, idx) => {
-          return (
-            <label className='text-header' key={idx}>
-              {val}
-              <input type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
-            </label>
-          )
+          return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
+
         })}
       </div>
       <div className='grid-cont bg-3'>
-        <label className='text-header'>БГ Аудио
-          <input type="checkbox" checked={filters.bgAudio} onChange={(e) => filters.setBgAudio(e.target.checked)} />
-        </label>
-        <label className='text-header'>БГ Субтитри
-          <input type="checkbox" checked={filters.bgSubs} onChange={(e) => filters.setBgSubs(e.target.checked)} />
-        </label>
+        <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={filters.bgAudio} onChange={(e: any) => filters.setBgAudio(e.target.checked)} />
+        <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={filters.bgSubs} onChange={(e: any) => filters.setBgSubs(e.target.checked)} />
       </div>
       <SortingPanel setSortCriteria={filters.setSortCriteria} />
-      <div className='grid-cont bg-3'>
-        <label className='text-header'>
-          След година
-        </label>
-        <input type="number" value={filters.fromYear} onChange={(e) => filters.setFromYear(parseInt(e.target.value))} max={new Date().getFullYear()} min="1900" />
+      <div className='grid-cont bg-3 grid-cols-1'>
+        <InputWithLabel labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
       </div>
       <div className='grid-cont bg-3'>
-        <label className='text-header'>
-          Минимален рейтинг
-          <input type="number" value={filters.minRating} onChange={(e) => filters.setMinRating(parseFloat(e.target.value))} max="10" min="0" />
-        </label>
+        <InputWithLabel labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
       </div>
       <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
       <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={HandleDirectorTextChange} suggestions={directors} />
@@ -378,11 +364,15 @@ function SortingPanel({ setSortCriteria }: any) {
   )
 }
 
-function InputWithLabel({ labelVal, type, name, value, defaultChecked }: { labelVal: string, type: string, name: string, value: string, defaultChecked?: boolean }) {
+function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaultValue, defaultChecked }:
+  {
+    labelVal: string, type?: string, name?: string, value?: string | number,
+    checked?: boolean, onChange?: any, defaultValue?: string | number, defaultChecked?: boolean
+  }) {
   return (
     <label className='text-header'>
       {labelVal}
-      <input type={type} name={name} value={value} defaultChecked={defaultChecked} />
+      <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
     </label>
   )
 }
