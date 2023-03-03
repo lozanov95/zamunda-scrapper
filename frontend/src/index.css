@@ -151,3 +151,6 @@ input {
   color: var(--primary-color);
   text-align: center;
 }
+fieldset {
+  display: grid;
+}
