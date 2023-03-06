@@ -46,12 +46,6 @@ func IsStringInSlice(collection []string, s string) bool {
 	return false
 }
 
-func AppendToSliceInMap[T Movie](newM *map[string][]*T, key string, t *T) {
-	slice := (*newM)[key]
-	slice = append(slice, t)
-	(*newM)[key] = slice
-}
-
 // Returns if the substring is contained in the string. Ignores case.
 func StringContainsInsensitive(s, substr string) bool {
 	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
