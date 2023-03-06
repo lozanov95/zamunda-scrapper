@@ -321,7 +321,7 @@ function FilterSection({ filters }: { filters: Filters }) {
         <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={filters.bgSubs} onChange={(e: any) => filters.setBgSubs(e.target.checked)} />
       </div>
       <SortingPanel setSortCriteria={filters.setSortCriteria} />
-      <div className='grid-cont bg-3 grid-cols-1'>
+      <div className='grid-cont bg-3'>
         <InputWithLabel labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
       </div>
       <div className='grid-cont bg-3'>
