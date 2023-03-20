@@ -313,12 +313,11 @@ function FilterSection({ filters }: { filters: Filters }) {
     <div className='filter grid-cont'>
       <div className='grid-cont bg-2 shadowed'>
         <label className='text-header'>Жанрове (комбинирано)</label>
-      </div>
-      <div className='grid-cont grid-cols-2 bg-2 shadowed'>
-        {genres.map((val, idx) => {
-          return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
-
-        })}
+        <div className='grid-cont grid-cols-2 bg-2'>
+          {genres.map((val, idx) => {
+            return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
+          })}
+        </div>
       </div>
       <div className='grid-cont bg-2 shadowed'>
         <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={filters.bgAudio} onChange={(e: any) => filters.setBgAudio(e.target.checked)} />
@@ -333,7 +332,7 @@ function FilterSection({ filters }: { filters: Filters }) {
       </div>
       <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
       <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={HandleDirectorTextChange} suggestions={directors} />
-    </div>
+    </div >
   )
 }
 
