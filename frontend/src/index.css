@@ -173,7 +173,15 @@ fieldset {
 .br-6px {
   border-radius: 6px;
 }
-
 .marg-2px {
   margin: 2px;
+}
+.marg-0 {
+  margin: 0;
+}
+.pad-0 {
+  padding: 0;
+}
+.grid {
+  display: grid;
 }

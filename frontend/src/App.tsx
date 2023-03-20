@@ -313,7 +313,8 @@ function FilterSection({ filters }: { filters: Filters }) {
     <div className='filter grid-cont'>
       <div className='grid-cont bg-2 shadowed'>
         <label className='text-header'>Жанрове (комбинирано)</label>
-        <div className='grid-cont grid-cols-2 bg-2'>
+        <HR />
+        <div className='grid-cont grid-cols-2 bg-2 pad-0 marg-0 '>
           {genres.map((val, idx) => {
             return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
           })}
@@ -325,10 +326,10 @@ function FilterSection({ filters }: { filters: Filters }) {
       </div>
       <SortingPanel setSortCriteria={filters.setSortCriteria} />
       <div className='grid-cont bg-2 shadowed'>
-        <InputWithLabel labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
+        <InputWithLabel className='grid' labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
       </div>
       <div className='grid-cont bg-2 shadowed'>
-        <InputWithLabel labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
+        <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
       </div>
       <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
       <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={HandleDirectorTextChange} suggestions={directors} />
@@ -370,13 +371,13 @@ function SortingPanel({ setSortCriteria }: any) {
   )
 }
 
-function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaultValue, defaultChecked }:
+function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaultValue, defaultChecked, className }:
   {
     labelVal: string, type?: string, name?: string, value?: string | number,
-    checked?: boolean, onChange?: any, defaultValue?: string | number, defaultChecked?: boolean
+    checked?: boolean, onChange?: any, defaultValue?: string | number, defaultChecked?: boolean, className?: string
   }) {
   return (
-    <label className='text-header'>
+    <label className={className + " text-header"}>
       {labelVal}
       <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
     </label>
@@ -413,4 +414,16 @@ function useOnScreen(ref: any, rootMargin: string) {
 
   return isIntersecting
 }
+
+function HR() {
+  return (
+    <hr style={{
+      color: 'black',
+      backgroundColor: 'black',
+      height: "0.5px",
+      width: "100%"
+    }}></hr>
+  )
+}
+
 export default App
