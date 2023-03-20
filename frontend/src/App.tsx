@@ -160,7 +160,7 @@ function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailable }:
 
   return (
     <div className='movies'>
-      <div className="grid-cont bg-2">
+      <div className="grid-cont">
         <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
       </div>
     </div>
@@ -174,7 +174,7 @@ const MoviesList = memo(function MoviesList({ movies, movieCount, setPage, areMo
   return (
     <>
 
-      <div className='text-header'>{msg}</div>
+      <div className='text-header bg-2 grid-cont shadowed'>{msg}</div>
       {movieCount == 0 ?
         "Не са намерени филми." :
         movies?.map((movie: MovieType, idx) => {
@@ -194,18 +194,20 @@ const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
   }
 
   return (
-    <div className='grid-cont grid-cols-2 bg-3'>
+    <div className='grid-cont grid-cols-2 bg-2 shadowed'>
       <div>
         {movie.previewLink.startsWith("http") ?
           <img className='img-cover' src={movie.previewLink}></img> :
           <img className='img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
         }
         <div className='col'>
-          <button onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-          {displayTorrents && movie.torrents?.map((torrent, idx) => {
-            return <Torrent torrent={torrent} key={idx} />
-          })}
-          {displayTorrents && <button onClick={ToggleTorrent}>Скрий торентите</button>}
+          <button className='bg-3' onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+          <div className='flex-cont gap-5px'>
+            {displayTorrents && movie.torrents?.map((torrent, idx) => {
+              return <Torrent torrent={torrent} key={idx} />
+            })}
+          </div>
+          {displayTorrents && <button className='bg-3' onClick={ToggleTorrent}>Скрий торентите</button>}
         </div>
       </div>
       <div>
@@ -224,7 +226,7 @@ const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
-    <div className='grid-cont bg-2'>
+    <div className='grid-cont bg-3 fit-content'>
       {torrent.bg_subs && <TextField header="БГ Суб" text='Да' />}
       {torrent.bg_audio && <TextField header="БГ Аудио" text='Да' />}
       <TextField header='Размер' text={torrent.size} />
@@ -309,22 +311,24 @@ function FilterSection({ filters }: { filters: Filters }) {
 
   return (
     <div className='filter grid-cont'>
-      <label className='text-header'>Жанрове (комбинирано)</label>
-      <div className='grid-cont grid-cols-2 bg-3'>
+      <div className='grid-cont bg-2 shadowed'>
+        <label className='text-header'>Жанрове (комбинирано)</label>
+      </div>
+      <div className='grid-cont grid-cols-2 bg-2 shadowed'>
         {genres.map((val, idx) => {
           return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
 
         })}
       </div>
-      <div className='grid-cont bg-3'>
+      <div className='grid-cont bg-2 shadowed'>
         <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={filters.bgAudio} onChange={(e: any) => filters.setBgAudio(e.target.checked)} />
         <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={filters.bgSubs} onChange={(e: any) => filters.setBgSubs(e.target.checked)} />
       </div>
       <SortingPanel setSortCriteria={filters.setSortCriteria} />
-      <div className='grid-cont bg-3'>
+      <div className='grid-cont bg-2 shadowed'>
         <InputWithLabel labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
       </div>
-      <div className='grid-cont bg-3'>
+      <div className='grid-cont bg-2 shadowed'>
         <InputWithLabel labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
       </div>
       <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
@@ -337,7 +341,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
   { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
   return (
-    <div className='grid-cont bg-3'>
+    <div className='grid-cont bg-2 shadowed'>
       <label className='text-header'>
         {labelString}
       </label>
@@ -354,7 +358,7 @@ function SortingPanel({ setSortCriteria }: any) {
     setSortCriteria(e.target.value)
   }
   return (
-    <form className='grid-cont bg-3' onChange={HandleChange}>
+    <form className='grid-cont bg-2 shadowed' onChange={HandleChange}>
       <fieldset>
         <legend className='text-header'>Сортиране</legend>
         <InputWithLabel labelVal='Не сортирай' type='radio' name='sort' value={SortingCriteria.SortSkip.toString()} defaultChecked={true} />
