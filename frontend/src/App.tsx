@@ -226,9 +226,9 @@ const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
-    <div className='grid-cont bg-3 fit-content'>
-      {torrent.bg_subs && <TextField cN="bg-2 pad-5px br-6px" header="БГ Суб" text='Да' />}
-      {torrent.bg_audio && <TextField cN='bg-4 pad-5px br-6px' header="БГ Аудио" text='Да' />}
+    <div className='grid-cont bg-5 fit-content'>
+      {torrent.bg_subs && <TextField cN="bg-2 pad-5px br-6px marg-2px" header="БГ Суб" text='Да' />}
+      {torrent.bg_audio && <TextField cN='bg-4 pad-5px br-6px marg-2px' header="БГ Аудио" text='Да' />}
       <TextField header='Размер' text={torrent.size} />
       <div><span className='text-header'>Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
     </div >

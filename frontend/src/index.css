@@ -11,7 +11,7 @@
   --secondary-color: #a5c4d4;
   --thertiary-color: #fcd581;
   --quaternary-color: #b185a7;
-  --quinary-color: #c98686;
+  --quinary-color: #799aaa;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -101,6 +101,9 @@ button:focus-visible {
   background-color: var(--secondary-color);
 }
 .bg-4 {
+  background-color: var(--quaternary-color);
+}
+.bg-5 {
   background-color: var(--quinary-color);
 }
 .title {
@@ -169,4 +172,7 @@ fieldset {
 }
 .br-6px {
   border-radius: 6px;
+}
+.marg-2px {
+  margin: 2px;
 }
