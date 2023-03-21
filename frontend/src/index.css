@@ -94,11 +94,14 @@ button:focus-visible {
 .grid-cols-2 {
   grid-template-columns: repeat(2, 1fr);
 }
-.bg-3 {
-  background-color: var(--thertiary-color);
+.bg-1 {
+  background-color: var(--primary-color);
 }
 .bg-2 {
   background-color: var(--secondary-color);
+}
+.bg-3 {
+  background-color: var(--thertiary-color);
 }
 .bg-4 {
   background-color: var(--quaternary-color);

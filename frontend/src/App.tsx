@@ -187,11 +187,7 @@ const MoviesList = memo(function MoviesList({ movies, movieCount, setPage, areMo
 })
 
 const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
-  const [displayTorrents, setDisplayTorrents] = useState(false)
 
-  function ToggleTorrent() {
-    setDisplayTorrents((val) => !val)
-  }
 
   return (
     <div className='grid-cont grid-cols-2 bg-2 shadowed'>
@@ -200,15 +196,7 @@ const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
           <img className='img-cover' src={movie.previewLink}></img> :
           <img className='img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
         }
-        <div className='col'>
-          <button className='bg-3' onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-          <div className='flex-cont gap-5px'>
-            {displayTorrents && movie.torrents?.map((torrent, idx) => {
-              return <Torrent torrent={torrent} key={idx} />
-            })}
-          </div>
-          {displayTorrents && <button className='bg-3' onClick={ToggleTorrent}>Скрий торентите</button>}
-        </div>
+        <TorrentSection movie={movie} />
       </div>
       <div>
         <div className='title'>{movie.title}</div>
@@ -224,13 +212,33 @@ const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
   )
 })
 
+function TorrentSection({ movie }: { movie: MovieType }) {
+  const [displayTorrents, setDisplayTorrents] = useState(false)
+
+  function ToggleTorrent() {
+    setDisplayTorrents((val) => !val)
+  }
+
+  return (
+    <div className='col'>
+      <button className='bg-3' onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+      <div className='flex-cont gap-5px'>
+        {displayTorrents && movie.torrents?.map((torrent, idx) => {
+          return <Torrent torrent={torrent} key={idx} />
+        })}
+      </div>
+      {displayTorrents && <button className='bg-3' onClick={ToggleTorrent}>Скрий торентите</button>}
+    </div>
+  )
+}
+
 function Torrent({ torrent }: { torrent: TorrentType }) {
   return (
     <div className='grid-cont bg-5 fit-content'>
-      {torrent.bg_subs && <TextField cN="bg-2 pad-5px br-6px marg-2px" header="БГ Суб" text='Да' />}
-      {torrent.bg_audio && <TextField cN='bg-4 pad-5px br-6px marg-2px' header="БГ Аудио" text='Да' />}
       <TextField header='Размер' text={torrent.size} />
       <div><span className='text-header'>Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
+      {torrent.bg_audio && <Tag className='bg-4 ' value="БГ Аудио" />}
+      {torrent.bg_subs && <Tag className='bg-2 ' value="БГ Субтитри" />}
     </div >
   )
 }
@@ -381,6 +389,14 @@ function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaul
       {labelVal}
       <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
     </label>
+  )
+}
+
+function Tag({ value, className }: { value: string, className?: string }) {
+  return (
+    <div className={["pad-5px br-6px marg-2px text-header", className].join(" ")}>
+      {value}
+    </div>
   )
 }
 
