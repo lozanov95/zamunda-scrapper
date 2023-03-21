@@ -1,3 +1,5 @@
+import { useRef, useEffect, useState, useMemo } from "react"
+
 export function TextField({ header, text, cN: className }: { header: string, text: string, cN?: string }) {
 
     return (
@@ -60,4 +62,35 @@ export function HR() {
             width: "100%"
         }}></hr>
     )
+}
+
+export function TriggerOnVisible({ setPage }: { setPage: React.Dispatch<React.SetStateAction<number>> }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const isVisible = useOnScreen(ref, '600px')
+
+    useEffect(() => {
+        if (isVisible) {
+            setPage((p) => p + 1)
+        }
+    }, [isVisible])
+
+    return (
+        <div ref={ref}></div>
+    )
+}
+
+function useOnScreen(ref: any, rootMargin: string) {
+    const [isIntersecting, setIntersecting] = useState(false)
+
+    const observer = useMemo(() => new IntersectionObserver(
+        ([entry]) => setIntersecting(entry.isIntersecting)
+        , { rootMargin }), [ref])
+
+
+    useEffect(() => {
+        observer.observe(ref.current)
+        return () => observer.disconnect()
+    }, [])
+
+    return isIntersecting
 }
