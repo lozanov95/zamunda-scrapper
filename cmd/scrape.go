@@ -59,6 +59,8 @@ const (
 	SIZE_SELECTOR          = "tbody > tr:nth-child(2) > td:nth-child(5)"
 	MOVIE_LINK_SELECTOR    = ".colheadd > .notranslate"
 	PREVIEW_IMAGE_SELECTOR = "td > a > img"
+
+	DELAY_BETWEEN_SCRAPE = time.Millisecond * 800
 )
 
 var (
@@ -181,7 +183,7 @@ func (s *Scrapper) StartWorker(wg *sync.WaitGroup, pages chan int, results chan 
 	for p := range pages {
 		s.ScrapeMoviePage(client, p, results)
 		log.Println("scraped page", p)
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(DELAY_BETWEEN_SCRAPE)
 		wg.Done()
 	}
 }
