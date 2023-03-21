@@ -198,22 +198,14 @@ const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
         }
         <TorrentSection movie={movie} />
       </div>
-      <div>
-        <div className='title'>{movie.title}</div>
-        <TextField header='Жанр' text={movie.genres?.join(", ")} />
-        <TextField header='Режисьор' text={movie.directors?.join(", ")} />
-        <TextField header='Актьори' text={movie.actors?.join(", ")} />
-        <TextField header='Държавa' text={movie.countries?.join(", ")} />
-        {movie.rating > 0 && <TextField header='Рейтинг' text={movie.rating.toString() + '/10'} />}
-        <TextField header='Година' text={movie.year.toString()} />
-        <TextField header='Резюме' text={movie.description} />
-      </div>
+      <ResumeSection movie={movie} />
     </div>
   )
 })
 
 function TorrentSection({ movie }: { movie: MovieType }) {
   const [displayTorrents, setDisplayTorrents] = useState(false)
+  const btnClass = "bg-3"
 
   function ToggleTorrent() {
     setDisplayTorrents((val) => !val)
@@ -221,13 +213,13 @@ function TorrentSection({ movie }: { movie: MovieType }) {
 
   return (
     <div className='col'>
-      <button className='bg-3' onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+      <button className={btnClass} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
       <div className='flex-cont gap-5px'>
         {displayTorrents && movie.torrents?.map((torrent, idx) => {
           return <Torrent torrent={torrent} key={idx} />
         })}
       </div>
-      {displayTorrents && <button className='bg-3' onClick={ToggleTorrent}>Скрий торентите</button>}
+      {displayTorrents && <button className={btnClass} onClick={ToggleTorrent}>Скрий торентите</button>}
     </div>
   )
 }
@@ -255,6 +247,21 @@ function TextField({ header, text, cN }: { header: string, text: string, cN?: st
         <></>
       }
     </>
+  )
+}
+
+function ResumeSection({ movie }: { movie: MovieType }) {
+  return (
+    <div>
+      <div className='title'>{movie.title}</div>
+      <TextField header='Жанр' text={movie.genres?.join(", ")} />
+      <TextField header='Режисьор' text={movie.directors?.join(", ")} />
+      <TextField header='Актьори' text={movie.actors?.join(", ")} />
+      <TextField header='Държавa' text={movie.countries?.join(", ")} />
+      {movie.rating > 0 && <TextField header='Рейтинг' text={movie.rating.toString() + '/10'} />}
+      <TextField header='Година' text={movie.year.toString()} />
+      <TextField header='Резюме' text={movie.description} />
+    </div>
   )
 }
 
