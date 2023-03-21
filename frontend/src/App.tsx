@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo, memo } from 'react'
+import { Tag, HR, InputWithLabel, InputWithSuggestions, TextField } from './components/common'
 import './App.css'
 
 
@@ -235,21 +236,6 @@ function Torrent({ torrent }: { torrent: TorrentType }) {
   )
 }
 
-function TextField({ header, text, cN }: { header: string, text: string, cN?: string }) {
-
-  return (
-    <>
-      {text?.length > 0 ?
-        <div className={cN}>
-          <span className="text-header">{header}: </span>
-          <span>{text}</span>
-        </div> :
-        <></>
-      }
-    </>
-  )
-}
-
 function ResumeSection({ movie }: { movie: MovieType }) {
   return (
     <div>
@@ -352,21 +338,6 @@ function FilterSection({ filters }: { filters: Filters }) {
   )
 }
 
-function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
-  { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
-
-  return (
-    <div className='grid-cont bg-2 shadowed'>
-      <label className='text-header'>
-        {labelString}
-      </label>
-      <input type="text" value={value} onChange={handleChangeValue} />
-      {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any, idx) => {
-        return <span key={idx}>{suggestion}</span>
-      })}
-    </div>
-  )
-}
 
 function SortingPanel({ setSortCriteria }: any) {
   function HandleChange(e: any) {
@@ -386,26 +357,7 @@ function SortingPanel({ setSortCriteria }: any) {
   )
 }
 
-function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaultValue, defaultChecked, className }:
-  {
-    labelVal: string, type?: string, name?: string, value?: string | number,
-    checked?: boolean, onChange?: any, defaultValue?: string | number, defaultChecked?: boolean, className?: string
-  }) {
-  return (
-    <label className={className + " text-header"}>
-      {labelVal}
-      <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
-    </label>
-  )
-}
 
-function Tag({ value, className }: { value: string, className?: string }) {
-  return (
-    <div className={["pad-5px br-6px marg-2px text-header", className].join(" ")}>
-      {value}
-    </div>
-  )
-}
 
 function TriggerOnVisible({ setPage }: { setPage: React.Dispatch<React.SetStateAction<number>> }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -436,17 +388,6 @@ function useOnScreen(ref: any, rootMargin: string) {
   }, [])
 
   return isIntersecting
-}
-
-function HR() {
-  return (
-    <hr style={{
-      color: 'black',
-      backgroundColor: 'black',
-      height: "0.5px",
-      width: "100%"
-    }}></hr>
-  )
 }
 
 export default App
