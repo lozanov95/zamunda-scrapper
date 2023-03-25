@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { HR, InputWithLabel, InputWithSuggestions } from "./common"
 import { Filters, SortingCriteria } from "./types"
 
-export function FilterSection({ filters }: { filters: Filters }) {
+export function FilterSection({ filters, domain }: { filters: Filters, domain: string }) {
     const [genres, setGenres] = useState<string[]>([])
     const [actors, setActors] = useState<string[]>([])
     const [directors, setDirectors] = useState<string[]>([])
@@ -19,7 +19,7 @@ export function FilterSection({ filters }: { filters: Filters }) {
 
     useEffect(() => {
         const controller = new AbortController()
-        fetch(`http://localhost/actors?contains=${filters.actor}`, { signal: controller.signal })
+        fetch(`${domain}/actors?contains=${filters.actor}`, { signal: controller.signal })
             .then((data) => {
                 return data.json()
             }).then((actors) => {
@@ -33,7 +33,7 @@ export function FilterSection({ filters }: { filters: Filters }) {
 
     useEffect(() => {
         const controller = new AbortController()
-        fetch(`http://localhost/directors?contains=${filters.director}`, { signal: controller.signal })
+        fetch(`${domain}/directors?contains=${filters.director}`, { signal: controller.signal })
             .then((data) => {
                 return data.json()
             }).then((directors) => {
