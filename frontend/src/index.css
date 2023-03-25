@@ -197,6 +197,10 @@ input {
   border-radius: 6px;
 }
 
+.br-12px {
+  border-radius: 12px;
+}
+
 .marg-2px {
   margin: 2px;
 }

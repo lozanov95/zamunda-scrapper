@@ -45,8 +45,8 @@ export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
         <div className='grid-cont grid-cols-2 bg-2 shadowed w-90'>
             <div>
                 {movie.previewLink.startsWith("http") ?
-                    <img className='img-cover' src={movie.previewLink}></img> :
-                    <img className='img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
+                    <img className='br-12px img-cover' src={movie.previewLink}></img> :
+                    <img className='br-12px img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
                 }
                 <TorrentSection movie={movie} />
             </div>
