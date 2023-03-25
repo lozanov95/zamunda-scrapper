@@ -30,7 +30,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
             {movieCount == 0 ?
                 "Не са намерени филми." :
                 movies?.map((movie: MovieType, idx) => {
-                    return <Movie movie={movie} key={idx} />
+                    return <Movie movie={movie} key={movie.title} />
                 })
             }
             {areMorePagesAvailable && <TriggerOnVisible setPage={setPage} />}
