@@ -37,7 +37,7 @@ export function InputWithLabel({ labelVal, type, name, value, checked, onChange,
         checked?: boolean, onChange?: any, defaultValue?: string | number, defaultChecked?: boolean, className?: string
     }) {
     return (
-        <label className={className + " text-header"}>
+        <label className={["text-header", className].join(" ")}>
             {labelVal}
             <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
         </label>
