@@ -8,7 +8,7 @@ export function FilterSection({ filters, domain }: { filters: Filters, domain: s
     const [directors, setDirectors] = useState<string[]>([])
 
     useEffect(() => {
-        fetch("http://localhost/genres").then((data) => {
+        fetch(`${domain}/genres`).then((data) => {
             return data.json()
         }).then((newMovies) => {
             setGenres(newMovies)
