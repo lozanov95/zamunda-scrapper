@@ -62,7 +62,7 @@ export function FilterSection({ filters, domain }: { filters: Filters, domain: s
     }
 
     return (
-        <div className='grid-col-1 grid-cont w-100'>
+        <div className='filter grid-cont'>
             <div className='grid-cont bg-2 shadowed w-90'>
                 <label className='text-header'>Жанрове (комбинирано)</label>
                 <HR />

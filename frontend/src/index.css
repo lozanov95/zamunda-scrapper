@@ -175,10 +175,6 @@ input {
   text-align: center;
 }
 
-fieldset {
-  display: grid;
-}
-
 .fit-content {
   width: fit-content;
 }
@@ -247,7 +243,20 @@ fieldset {
 
 @media only screen and (min-width:1440px) {
   .movies-section {
-    width: 70%;
-    margin: auto;
+    grid-column-start: 3;
+    grid-column-end: 4;
+  }
+
+  .main-section {
+    grid-template-columns: 10% 20% 60%;
+  }
+
+  .filter {
+    grid-column: 2;
+  }
+
+  .header-section {
+    grid-column-start: 1;
+    grid-column-end: 5;
   }
 }
