@@ -19,7 +19,7 @@ export function InputWithSuggestions({ labelString, value, handleChangeValue, su
     { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
     return (
-        <div className='grid-cont bg-2 shadowed'>
+        <div className='grid-cont bg-2 shadowed w-90'>
             <label className='text-header'>
                 {labelString}
             </label>

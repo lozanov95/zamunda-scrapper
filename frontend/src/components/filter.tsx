@@ -62,25 +62,25 @@ export function FilterSection({ filters, domain }: { filters: Filters, domain: s
     }
 
     return (
-        <div className='filter grid-cont'>
-            <div className='grid-cont bg-2 shadowed'>
+        <div className='grid-col-1 grid-cont w-100'>
+            <div className='grid-cont bg-2 shadowed w-90'>
                 <label className='text-header'>Жанрове (комбинирано)</label>
                 <HR />
-                <div className='grid-cont grid-cols-2 bg-2 pad-0 marg-0 '>
+                <div className='grid-cont grid-cols-2 bg-2 pad-0 marg-0 justify-items-right'>
                     {genres.map((val, idx) => {
                         return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
                     })}
                 </div>
             </div>
-            <div className='grid-cont bg-2 shadowed'>
+            <div className='grid-cont bg-2 shadowed w-90 justify-items-right justify-content-space-around'>
                 <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={filters.bgAudio} onChange={(e: any) => filters.setBgAudio(e.target.checked)} />
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={filters.bgSubs} onChange={(e: any) => filters.setBgSubs(e.target.checked)} />
             </div>
             <SortingPanel setSortCriteria={filters.setSortCriteria} />
-            <div className='grid-cont bg-2 shadowed'>
+            <div className='grid-cont bg-2 shadowed w-90'>
                 <InputWithLabel className='grid' labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
             </div>
-            <div className='grid-cont bg-2 shadowed'>
+            <div className='grid-cont bg-2 shadowed w-90'>
                 <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
             </div>
             <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
@@ -94,15 +94,16 @@ export function SortingPanel({ setSortCriteria }: any) {
         setSortCriteria(e.target.value)
     }
     return (
-        <form className='grid-cont bg-2 shadowed' onChange={HandleChange}>
-            <fieldset>
-                <legend className='text-header'>Сортиране</legend>
+        <form className='grid-cont bg-2 shadowed w-90' onChange={HandleChange}>
+            <label className='text-header'>Сортиране</label>
+            <HR />
+            <div className="grid-cont bg-2 pad-0 marg-0 justify-items-right">
                 <InputWithLabel labelVal='Не сортирай' type='radio' name='sort' value={SortingCriteria.SortSkip.toString()} defaultChecked={true} />
                 <InputWithLabel labelVal='Рейтинг низходящо' type='radio' name='sort' value={SortingCriteria.SortRatingDescending.toString()} />
                 <InputWithLabel labelVal='Рейтинг възходящо' type='radio' name='sort' value={SortingCriteria.SortRatingAscending.toString()} />
                 <InputWithLabel labelVal='Година низходящо' type='radio' name='sort' value={SortingCriteria.SortYearDescending.toString()} />
                 <InputWithLabel labelVal='Година възходящо' type='radio' name='sort' value={SortingCriteria.SortYearAscending.toString()} />
-            </fieldset>
+            </div>
         </form >
     )
 }

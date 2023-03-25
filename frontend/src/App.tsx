@@ -78,17 +78,17 @@ function App() {
   }, [page])
 
   return (
-    <>
+    <div className='main-section grid grid-row-3'>
       <HeaderSection title={title} setTitle={setTitle} />
       <FilterSection filters={filters} domain={DOMAIN} />
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
-    </>
+    </div>
   )
 }
 
 function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dispatch<React.SetStateAction<string>> }) {
   return (
-    <div className='header-section'>
+    <div className='header-section grid-row-start-1'>
       <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
     </div >
   )

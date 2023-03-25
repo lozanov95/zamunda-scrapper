@@ -11,7 +11,7 @@ export function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailab
 
 
     return (
-        <div className='movies'>
+        <div className="movies-section">
             <div className="grid-cont">
                 <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
             </div>
@@ -26,7 +26,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     return (
         <>
 
-            <div className='text-header bg-2 grid-cont shadowed'>{msg}</div>
+            <div className='text-header bg-2 grid-cont shadowed w-90'>{msg}</div>
             {movieCount == 0 ?
                 "Не са намерени филми." :
                 movies?.map((movie: MovieType, idx) => {
@@ -42,7 +42,7 @@ export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
 
     return (
-        <div className='grid-cont grid-cols-2 bg-2 shadowed'>
+        <div className='grid-cont grid-cols-2 bg-2 shadowed w-90'>
             <div>
                 {movie.previewLink.startsWith("http") ?
                     <img className='img-cover' src={movie.previewLink}></img> :
