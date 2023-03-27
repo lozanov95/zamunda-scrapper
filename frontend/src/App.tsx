@@ -6,7 +6,7 @@ import { MoviesSection } from './components/movie'
 
 
 function App() {
-  const DOMAIN = "http://localhost"
+  const DOMAIN = "http://maimunda.vloz.website"
 
   const [areMorePagesAvailable, setAreMorePagesAvailable] = useState<boolean>(true)
   const [title, setTitle] = useState<string>("")
