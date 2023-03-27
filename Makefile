@@ -4,7 +4,9 @@ prod:
 	docker container run -dp 80:80 --name c-maimunda maimunda
 
 install:
+	echo {"username": "","password": "","workers": 1,"pageSize": 10} > config.json
 	cd frontend && npm install 
+	go get ./cmd
 
 dev-fe:
 	npm run --prefix frontend dev
