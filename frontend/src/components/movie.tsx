@@ -42,7 +42,7 @@ export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
 
     return (
-        <div className='grid-cont grid-cols-2 bg-2 shadowed w-90'>
+        <div className='grid-cont grid-cols-2 bg-2 shadowed w-90 gap-5px'>
             <div>
                 {movie.previewLink.startsWith("http") ?
                     <img className='br-12px img-cover' src={movie.previewLink}></img> :

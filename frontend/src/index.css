@@ -31,7 +31,7 @@ body {
   margin: 0 auto;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  min-width: fit-content;
   min-height: 100vh;
   background-color: var(--primary-color);
 }
@@ -128,8 +128,8 @@ a:hover {
 
 .img-cover {
   aspect-ratio: 2/3;
-  max-width: 400px;
-  max-height: 600px;
+  max-width: 120px;
+  max-width: 180px;
 }
 
 .header-section {
@@ -235,6 +235,11 @@ input {
   .movies-section {
     grid-column-start: 3;
     grid-column-end: 4;
+  }
+
+  .img-cover {
+    max-width: 400px;
+    max-height: 600px;
   }
 
   .main-section {
