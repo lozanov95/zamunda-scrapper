@@ -14,16 +14,10 @@ function App() {
   const [movies, setMovies] = useState<MovieType[]>([])
   const [movieCount, setMovieCount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
-  const [previousUrl, setPreviousURL] = useState("")
 
   const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}`
 
   useEffect(() => {
-    if (URL == previousUrl) {
-      return
-    }
-
-    setPreviousURL(URL)
     setPage(0)
     const controller = new AbortController();
     fetch(URL,
