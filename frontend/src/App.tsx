@@ -16,7 +16,7 @@ function App() {
   const [page, setPage] = useState<number>(0)
   const [previousUrl, setPreviousURL] = useState("")
 
-  const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}&page=${page}`
+  const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}`
 
   useEffect(() => {
     if (URL == previousUrl) {
