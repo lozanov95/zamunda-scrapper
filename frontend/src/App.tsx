@@ -8,30 +8,15 @@ import { MoviesSection } from './components/movie'
 function App() {
   const DOMAIN = "http://maimunda.vloz.website"
 
-  const [areMorePagesAvailable, setAreMorePagesAvailable] = useState<boolean>(true)
+  const [filterParams, setFilterParams] = useState("")
   const [title, setTitle] = useState<string>("")
+  const [areMorePagesAvailable, setAreMorePagesAvailable] = useState<boolean>(true)
   const [movies, setMovies] = useState<MovieType[]>([])
   const [movieCount, setMovieCount] = useState<number>(0)
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([])
-
-  const [actor, setActor] = useState<string>("")
-  const [director, setDirector] = useState<string>("")
-
-  const [minRating, setMinRating] = useState<number>(0)
-  const [fromYear, setFromYear] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
-  const [bgAudio, setBgAudio] = useState<boolean>(false)
-  const [bgSubs, setBgSubs] = useState<boolean>(false)
-  const [sortCriteria, setSortCriteria] = useState<number>(0)
-
   const [previousUrl, setPreviousURL] = useState("")
 
-  const filters = {
-    selectedGenres, setSelectedGenres, actor, setActor, minRating, setMinRating,
-    fromYear, setFromYear, bgAudio, setBgAudio, bgSubs, setBgSubs, director, setDirector, sortCriteria, setSortCriteria
-  }
-
-  const URL = `${DOMAIN}/movies?contains=${title}&fromYear=${fromYear}&minRating=${minRating}&actors=${actor.length > 2 ? actor : ""}&directors=${director.length > 2 ? director : ""}&genres=${selectedGenres.join(",")}&page=${page}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}&sort=${sortCriteria}`
+  const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}&page=${page}`
 
   useEffect(() => {
     if (URL == previousUrl) {
@@ -53,7 +38,7 @@ function App() {
       })
 
     return () => { controller.abort() }
-  }, [selectedGenres, minRating, fromYear, title, actor, director, bgAudio, bgSubs, sortCriteria])
+  }, [URL])
 
   useEffect(() => {
     if (page == 0) {
@@ -80,7 +65,7 @@ function App() {
   return (
     <div className='main-section grid grid-row-3'>
       <HeaderSection title={title} setTitle={setTitle} />
-      <FilterSection filters={filters} domain={DOMAIN} />
+      <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} />
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
     </div>
   )
@@ -93,7 +78,5 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
     </div >
   )
 }
-
-
 
 export default App

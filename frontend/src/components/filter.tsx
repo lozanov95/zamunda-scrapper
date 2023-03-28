@@ -1,30 +1,44 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, SetStateAction } from "react"
 import { HR, InputWithLabel } from "./common"
-import { Filters, SortingCriteria } from "./types"
+import { SortingCriteria } from "./types"
 
-export function FilterSection({ filters, domain }: { filters: Filters, domain: string }) {
+export function FilterSection({ domain, setFilterParams }: { setFilterParams: React.Dispatch<SetStateAction<string>>, domain: string }) {
+    const [actor, setActor] = useState<string>("")
+    const [director, setDirector] = useState<string>("")
+    const [selectedGenres, setSelectedGenres] = useState<string[]>([])
+    const [minRating, setMinRating] = useState<number>(0)
+    const [fromYear, setFromYear] = useState<number>(0)
+    const [bgAudio, setBgAudio] = useState<boolean>(false)
+    const [bgSubs, setBgSubs] = useState<boolean>(false)
+    const [sortCriteria, setSortCriteria] = useState<number>(0)
+    const filterParams = `&fromYear=${fromYear}&minRating=${minRating}&actors=${actor.length > 2 ? actor : ""}&directors=${director.length > 2 ? director : ""}&genres=${selectedGenres.join(",")}&bgaudio=${bgAudio ? "1" : "0"}&bgsubs=${bgSubs ? "1" : "0"}&sort=${sortCriteria}`
+
+    useEffect(() => {
+        setFilterParams(filterParams)
+    }, [filterParams])
+
 
     return (
         <div className='filter grid-cont'>
-            <GenresPanel domain={domain} filters={filters} />
+            <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
             <div className='grid-cont bg-2 shadowed w-90 justify-items-right justify-content-space-around'>
-                <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={filters.bgAudio} onChange={(e: any) => filters.setBgAudio(e.target.checked)} />
-                <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={filters.bgSubs} onChange={(e: any) => filters.setBgSubs(e.target.checked)} />
+                <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
+                <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
-            <SortingPanel setSortCriteria={filters.setSortCriteria} />
+            <SortingPanel setSortCriteria={setSortCriteria} />
             <div className='grid-cont bg-2 shadowed w-90'>
-                <InputWithLabel className='grid' labelVal='След година' type='number' value={filters.fromYear} onChange={(e: any) => filters.setFromYear(parseInt(e.target.value))} defaultValue={0} />
+                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} defaultValue={0} />
             </div>
             <div className='grid-cont bg-2 shadowed w-90'>
-                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
+                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} defaultValue={0} />
             </div>
-            <ActorsPanel domain={domain} filters={filters} />
-            <DirectorsPanel domain={domain} filters={filters} />
+            <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
+            <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
         </div >
     )
 }
 
-function GenresPanel({ domain, filters }: { domain: string, filters: Filters }) {
+function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelectedGenres: React.Dispatch<SetStateAction<string[]>> }) {
     const [genres, setGenres] = useState<string[]>([])
 
     useEffect(() => {
@@ -39,10 +53,10 @@ function GenresPanel({ domain, filters }: { domain: string, filters: Filters }) 
 
     function HandleSelectGenres(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.checked) {
-            filters.setSelectedGenres((g) => [...g, e.target.value])
+            setSelectedGenres((g) => [...g, e.target.value])
             return
         }
-        filters.setSelectedGenres((g) => g.filter((v) => v != e.target.value))
+        setSelectedGenres((g) => g.filter((v) => v != e.target.value))
     }
 
     return (
@@ -77,12 +91,12 @@ function SortingPanel({ setSortCriteria }: any) {
     )
 }
 
-function ActorsPanel({ domain, filters }: { domain: string, filters: Filters, }) {
+function ActorsPanel({ domain, actor, setActor }: { domain: string, actor: string, setActor: React.Dispatch<SetStateAction<string>> }) {
     const [actors, setActors] = useState<string[]>([])
 
     useEffect(() => {
         const controller = new AbortController()
-        fetch(`${domain}/actors?contains=${filters.actor}`, { signal: controller.signal })
+        fetch(`${domain}/actors?contains=${actor}`, { signal: controller.signal })
             .then((data) => {
                 return data.json()
             }).then((actors) => {
@@ -92,20 +106,20 @@ function ActorsPanel({ domain, filters }: { domain: string, filters: Filters, })
             })
 
         return () => controller.abort()
-    }, [filters.actor])
+    }, [actor])
 
 
     return (
-        <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={(e: any) => filters.setActor(e.target.value)} suggestions={actors} />
+        <InputWithSuggestions labelString="С участието на " value={actor} handleChangeValue={(e: any) => setActor(e.target.value)} suggestions={actors} />
     )
 }
 
-function DirectorsPanel({ domain, filters }: { domain: string, filters: Filters, }) {
+function DirectorsPanel({ domain, director, setDirector }: { domain: string, director: string, setDirector: React.Dispatch<SetStateAction<string>> }) {
     const [directors, setDirectors] = useState<string[]>([])
 
     useEffect(() => {
         const controller = new AbortController()
-        fetch(`${domain}/directors?contains=${filters.director}`, { signal: controller.signal })
+        fetch(`${domain}/directors?contains=${director}`, { signal: controller.signal })
             .then((data) => {
                 return data.json()
             }).then((directors) => {
@@ -115,13 +129,12 @@ function DirectorsPanel({ domain, filters }: { domain: string, filters: Filters,
             })
 
         return () => controller.abort()
-    }, [filters.director])
+    }, [director])
 
     return (
-        <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={(e: any) => filters.setDirector(e.target.value)} suggestions={directors} />
+        <InputWithSuggestions labelString="Режисьор" value={director} handleChangeValue={(e: any) => setDirector(e.target.value)} suggestions={directors} />
     )
 }
-
 
 function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
     { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
