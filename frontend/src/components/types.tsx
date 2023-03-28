@@ -32,29 +32,3 @@ export type TorrentType = {
     bg_audio: boolean,
     bg_subs: boolean,
 }
-
-export type Filters = {
-    selectedGenres: string[]
-    setSelectedGenres: React.Dispatch<React.SetStateAction<string[]>>
-
-    actor: string
-    setActor: React.Dispatch<React.SetStateAction<string>>
-
-    director: string
-    setDirector: React.Dispatch<React.SetStateAction<string>>
-
-    minRating: number
-    setMinRating: React.Dispatch<React.SetStateAction<number>>
-
-    fromYear: number
-    setFromYear: React.Dispatch<React.SetStateAction<number>>
-
-    bgAudio: boolean
-    setBgAudio: React.Dispatch<React.SetStateAction<boolean>>
-
-    bgSubs: boolean
-    setBgSubs: React.Dispatch<React.SetStateAction<boolean>>
-
-    sortCriteria: number
-    setSortCriteria: React.Dispatch<React.SetStateAction<number>>
-}
