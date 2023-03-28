@@ -1,46 +1,8 @@
-import { useState, useEffect, SetStateAction } from "react"
-import { HR, InputWithLabel, InputWithSuggestions } from "./common"
+import { useState, useEffect } from "react"
+import { HR, InputWithLabel } from "./common"
 import { Filters, SortingCriteria } from "./types"
 
 export function FilterSection({ filters, domain }: { filters: Filters, domain: string }) {
-    const [actors, setActors] = useState<string[]>([])
-    const [directors, setDirectors] = useState<string[]>([])
-
-    useEffect(() => {
-        const controller = new AbortController()
-        fetch(`${domain}/actors?contains=${filters.actor}`, { signal: controller.signal })
-            .then((data) => {
-                return data.json()
-            }).then((actors) => {
-                setActors(actors ?? [])
-            }).catch((err) => {
-                console.log(err)
-            })
-
-        return () => controller.abort()
-    }, [filters.actor])
-
-    useEffect(() => {
-        const controller = new AbortController()
-        fetch(`${domain}/directors?contains=${filters.director}`, { signal: controller.signal })
-            .then((data) => {
-                return data.json()
-            }).then((directors) => {
-                setDirectors(directors ?? [])
-            }).catch((err) => {
-                console.log(err)
-            })
-
-        return () => controller.abort()
-    }, [filters.director])
-
-
-    function HandleActorTextChange(e: any) {
-        filters.setActor(e.target.value)
-    }
-    function HandleDirectorTextChange(e: any) {
-        filters.setDirector(e.target.value)
-    }
 
     return (
         <div className='filter grid-cont'>
@@ -56,8 +18,8 @@ export function FilterSection({ filters, domain }: { filters: Filters, domain: s
             <div className='grid-cont bg-2 shadowed w-90'>
                 <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={filters.minRating} onChange={(e: any) => filters.setMinRating(parseFloat(e.target.value))} defaultValue={0} />
             </div>
-            <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={HandleActorTextChange} suggestions={actors} />
-            <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={HandleDirectorTextChange} suggestions={directors} />
+            <ActorsPanel domain={domain} filters={filters} />
+            <DirectorsPanel domain={domain} filters={filters} />
         </div >
     )
 }
@@ -112,5 +74,67 @@ function SortingPanel({ setSortCriteria }: any) {
                 <InputWithLabel labelVal='Година възходящо' type='radio' name='sort' value={SortingCriteria.SortYearAscending.toString()} />
             </div>
         </form >
+    )
+}
+
+function ActorsPanel({ domain, filters }: { domain: string, filters: Filters, }) {
+    const [actors, setActors] = useState<string[]>([])
+
+    useEffect(() => {
+        const controller = new AbortController()
+        fetch(`${domain}/actors?contains=${filters.actor}`, { signal: controller.signal })
+            .then((data) => {
+                return data.json()
+            }).then((actors) => {
+                setActors(actors ?? [])
+            }).catch((err) => {
+                console.log(err)
+            })
+
+        return () => controller.abort()
+    }, [filters.actor])
+
+
+    return (
+        <InputWithSuggestions labelString="С участието на " value={filters.actor} handleChangeValue={(e: any) => filters.setActor(e.target.value)} suggestions={actors} />
+    )
+}
+
+function DirectorsPanel({ domain, filters }: { domain: string, filters: Filters, }) {
+    const [directors, setDirectors] = useState<string[]>([])
+
+    useEffect(() => {
+        const controller = new AbortController()
+        fetch(`${domain}/directors?contains=${filters.director}`, { signal: controller.signal })
+            .then((data) => {
+                return data.json()
+            }).then((directors) => {
+                setDirectors(directors ?? [])
+            }).catch((err) => {
+                console.log(err)
+            })
+
+        return () => controller.abort()
+    }, [filters.director])
+
+    return (
+        <InputWithSuggestions labelString="Режисьор" value={filters.director} handleChangeValue={(e: any) => filters.setDirector(e.target.value)} suggestions={directors} />
+    )
+}
+
+
+function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
+    { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
+
+    return (
+        <div className='grid-cont bg-2 shadowed w-90'>
+            <label className='text-header'>
+                {labelString}
+            </label>
+            <input type="text" value={value} onChange={handleChangeValue} />
+            {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any, idx) => {
+                return <span key={idx}>{suggestion}</span>
+            })}
+        </div>
     )
 }

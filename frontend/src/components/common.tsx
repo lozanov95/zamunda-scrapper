@@ -15,21 +15,7 @@ export function TextField({ header, text, cN: className }: { header: string, tex
     )
 }
 
-export function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
-    { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
-    return (
-        <div className='grid-cont bg-2 shadowed w-90'>
-            <label className='text-header'>
-                {labelString}
-            </label>
-            <input type="text" value={value} onChange={handleChangeValue} />
-            {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any, idx) => {
-                return <span key={idx}>{suggestion}</span>
-            })}
-        </div>
-    )
-}
 
 export function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaultValue, defaultChecked, className }:
     {
