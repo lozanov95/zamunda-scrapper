@@ -20,3 +20,6 @@ dev-be:
 
 dev:
 	make -j 2 dev-fe dev-be
+
+scrape:
+	go run ./cmd -scrape
