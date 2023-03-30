@@ -44,10 +44,7 @@ export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
     return (
         <div className='grid-cont grid-cols-2 bg-2 shadowed w-90 gap-5px'>
             <div>
-                {movie.previewLink.startsWith("http") ?
-                    <img className='br-12px img-cover' src={movie.previewLink}></img> :
-                    <img className='br-12px img-cover' src={"https://zamunda.net" + movie.previewLink}></img>
-                }
+                <MovieImage previewLink={movie.previewLink} />
                 <TorrentSection movie={movie} />
             </div>
             <ResumeSection movie={movie} />
@@ -99,5 +96,15 @@ export function ResumeSection({ movie }: { movie: MovieType }) {
             <TextField header='Година' text={movie.year.toString()} />
             <TextField header='Резюме' text={movie.description} />
         </div>
+    )
+}
+
+function MovieImage({ previewLink }: { previewLink: string }) {
+    const imageElement = previewLink.startsWith("http") ?
+        <img className='br-12px img-cover' src={previewLink}></img> :
+        <img className='br-12px img-cover' src={"https://zamunda.net" + previewLink}></img>
+
+    return (
+        imageElement
     )
 }
