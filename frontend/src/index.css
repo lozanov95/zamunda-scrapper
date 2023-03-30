@@ -158,6 +158,7 @@ a:hover {
 #root {
   width: 100%;
   gap: 8px;
+  align-self: self-start;
 }
 
 input {
