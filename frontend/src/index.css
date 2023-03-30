@@ -300,7 +300,7 @@ input {
   }
 
   .main-section {
-    grid-template-columns: 5% 20% 75%;
+    grid-template-columns: 5% 25% 70%;
   }
 
   .header-section {
