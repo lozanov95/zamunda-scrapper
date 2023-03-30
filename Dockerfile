@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY ./go.mod ./go.sum  ./
 RUN go mod download && go mod verify
 COPY ./cmd/ ./config.json ./movies.json ./
-COPY --from=fe /fe/dist/ ./ui/
 RUN go build -v -o /usr/local/bin/maimunda ./...
+COPY --from=fe /fe/dist/ ./ui/
 
 CMD ["maimunda","-serve"]
