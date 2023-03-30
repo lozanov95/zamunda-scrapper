@@ -31,7 +31,7 @@ func NewServer(port int, cfg *Config) *Server {
 		if err != nil {
 			page = 0
 		}
-
+		log.Printf("[%s] %s ", r.RemoteAddr, query)
 		movies, count := srv.db.GetMovies(query, page)
 		res, err := json.Marshal(GetMoviesResponse{Value: movies, Count: count})
 		if err != nil {
