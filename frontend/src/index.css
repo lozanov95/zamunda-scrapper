@@ -264,6 +264,10 @@ input {
   transition: ease-in;
 }
 
+.hidden {
+  display: none;
+}
+
 @media screen and (min-width:1300px) {
   .img-cover {
     max-width: 400px;
@@ -285,24 +289,28 @@ input {
   .filter {
     grid-column: unset;
   }
-}
 
-@media only screen and (min-width:1440px) {
   .movies-section {
     grid-column-start: 3;
     grid-column-end: 4;
   }
 
   .main-section {
-    grid-template-columns: 10% 20% 60%;
-  }
-
-  .filter {
-    grid-column: 2;
+    grid-template-columns: 5% 20% 75%;
   }
 
   .header-section {
     grid-column-start: 1;
     grid-column-end: 5;
+  }
+
+  .filter {
+    grid-column: 2;
+  }
+}
+
+@media only screen and (min-width:1440px) {
+  .main-section {
+    grid-template-columns: 10% 20% 60%;
   }
 }

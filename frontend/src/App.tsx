@@ -65,7 +65,7 @@ function App() {
     <div className='main-section grid grid-row-3'>
       <ToggleFilter handleClick={handleToggleFilter} />
       <HeaderSection title={title} setTitle={setTitle} />
-      {displayFilter && <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} />}
+      <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} hidden={!displayFilter} />
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
     </div>
   )
