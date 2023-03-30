@@ -27,11 +27,9 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
         <>
 
             <div className='text-header bg-2 grid-cont shadowed w-90'>{msg}</div>
-            {movieCount == 0 ?
-                "Не са намерени филми." :
-                movies?.map((movie: MovieType, idx) => {
-                    return <Movie movie={movie} key={movie.title} />
-                })
+            {movies?.map((movie: MovieType) => {
+                return <Movie movie={movie} key={movie.title} />
+            })
             }
             {areMorePagesAvailable && <TriggerOnVisible setPage={setPage} />}
         </>
