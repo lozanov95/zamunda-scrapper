@@ -42,7 +42,7 @@ export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
 
     return (
-        <div className='grid-cont grid-cols-2 bg-2 shadowed w-90 gap-5px'>
+        <div className='grid-cont grid-cols-2-md bg-2 shadowed w-90 gap-5px'>
             <div>
                 <MovieImage previewLink={movie.previewLink} />
                 <TorrentSection movie={movie} />
@@ -86,7 +86,7 @@ export function Torrent({ torrent }: { torrent: TorrentType }) {
 
 export function ResumeSection({ movie }: { movie: MovieType }) {
     return (
-        <div>
+        <div className="grid-row-1 grid-row-unset-md">
             <div className='title'>{movie.title}</div>
             <TextField header='Жанр' text={movie.genres?.join(", ")} />
             <TextField header='Режисьор' text={movie.directors?.join(", ")} />

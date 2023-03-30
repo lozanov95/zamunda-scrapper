@@ -203,9 +203,14 @@ input {
   display: grid;
 }
 
+.grid-row-1 {
+  grid-row: 1;
+}
+
 .grid-row-3 {
   grid-row: 3;
 }
+
 
 .grid-row-start-1 {
   grid-row-start: 1;
@@ -237,6 +242,13 @@ input {
     max-height: 600px;
   }
 
+  .grid-cols-2-md {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  .grid-row-unset-md {
+    grid-row: unset;
+  }
 }
 
 @media only screen and (min-width:1440px) {
