@@ -257,10 +257,6 @@ input {
   align-self: center;
 }
 
-.hamburger:hover {
-  background-color: var(--quinary-color);
-}
-
 .hamburger>div {
   width: 35px;
   height: 4px;
