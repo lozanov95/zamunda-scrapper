@@ -57,24 +57,27 @@ function App() {
     return () => { controller.abort() }
   }, [page])
 
-  function handleToggleFilter() {
-    setDisplayFilter((displayFilter) => !displayFilter)
-  }
+
 
   return (
     <div className='main-section grid grid-row-3'>
-      <ToggleFilter handleClick={handleToggleFilter} />
-      <HeaderSection title={title} setTitle={setTitle} />
+      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} />
       <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} hidden={!displayFilter} />
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
     </div>
   )
 }
 
-function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dispatch<React.SetStateAction<string>> }) {
+function HeaderSection({ title, setTitle, setDisplayFilter }: { title: string, setTitle: React.Dispatch<React.SetStateAction<string>>, setDisplayFilter: React.Dispatch<React.SetStateAction<boolean>> }) {
+  function handleToggleFilter() {
+    setDisplayFilter((displayFilter) => !displayFilter)
+  }
+
   return (
-    <div className='header-section grid-row-start-1'>
+    <div className='header-section grid-row-start-1 inline-flex-sm'>
+      <ToggleFilter handleClick={handleToggleFilter} />
       <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
+      <div className='flex-1'></div>
     </div >
   )
 }
@@ -82,7 +85,7 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
 function ToggleFilter({ handleClick }: { handleClick: VoidFunction }) {
 
   return (
-    <div onClick={handleClick} className="hamburger">
+    <div onClick={handleClick} className="hamburger flex-1">
       <div></div>
       <div></div>
       <div></div>

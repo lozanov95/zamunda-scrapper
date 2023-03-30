@@ -66,6 +66,9 @@ a:hover {
   color: #747bff;
 }
 
+.flex-1 {
+  flex: 1;
+}
 
 .grid-cont {
   display: grid;
@@ -130,6 +133,10 @@ a:hover {
   margin: 5px;
   max-width: 200px;
   max-height: 300px;
+}
+
+.inline-flex-sm {
+  display: inline-flex;
 }
 
 .header-section {
@@ -242,13 +249,12 @@ input {
 
 .hamburger {
   display: inline-block;
-  cursor: pointer;
-  position: absolute;
   top: 0px;
   left: 0px;
   padding: 6px;
   margin: 3px;
   border-radius: 50%;
+  align-self: center;
 }
 
 .hamburger:hover {
@@ -327,6 +333,10 @@ input {
 
   .grid-row-unset-md {
     grid-row: unset;
+  }
+
+  .inline-flex-sm {
+    display: unset;
   }
 
   .hamburger {
