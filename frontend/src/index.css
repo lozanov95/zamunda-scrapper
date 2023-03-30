@@ -236,6 +236,34 @@ input {
   justify-content: space-around;
 }
 
+.hamburger {
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 6px;
+  margin: 3px;
+  border-radius: 50%;
+}
+
+.hamburger:hover {
+  background-color: var(--quinary-color);
+}
+
+.hamburger>div {
+  width: 35px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 5px 0;
+}
+
+.filter {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  transition: ease-in;
+}
+
 @media screen and (min-width:1300px) {
   .img-cover {
     max-width: 400px;
@@ -248,6 +276,14 @@ input {
 
   .grid-row-unset-md {
     grid-row: unset;
+  }
+
+  .hamburger {
+    display: none
+  }
+
+  .filter {
+    grid-column: unset;
   }
 }
 

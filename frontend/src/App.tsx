@@ -14,6 +14,7 @@ function App() {
   const [movies, setMovies] = useState<MovieType[]>([])
   const [movieCount, setMovieCount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
+  const [displayFilter, setDisplayFilter] = useState<boolean>(true)
 
   const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}`
 
@@ -56,10 +57,15 @@ function App() {
     return () => { controller.abort() }
   }, [page])
 
+  function handleToggleFilter() {
+    setDisplayFilter((displayFilter) => !displayFilter)
+  }
+
   return (
     <div className='main-section grid grid-row-3'>
+      <ToggleFilter handleClick={handleToggleFilter} />
       <HeaderSection title={title} setTitle={setTitle} />
-      <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} />
+      {displayFilter && <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} />}
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
     </div>
   )
@@ -70,6 +76,17 @@ function HeaderSection({ title, setTitle }: { title: string, setTitle: React.Dis
     <div className='header-section grid-row-start-1'>
       <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
     </div >
+  )
+}
+
+function ToggleFilter({ handleClick }: { handleClick: VoidFunction }) {
+
+  return (
+    <div onClick={handleClick} className="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   )
 }
 
