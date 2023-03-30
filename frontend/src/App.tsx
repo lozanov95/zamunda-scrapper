@@ -14,7 +14,7 @@ function App() {
   const [movies, setMovies] = useState<MovieType[]>([])
   const [movieCount, setMovieCount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
-  const [displayFilter, setDisplayFilter] = useState<boolean>(true)
+  const [displayFilter, setDisplayFilter] = useState<boolean>(false)
 
   const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}`
 

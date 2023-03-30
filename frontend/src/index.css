@@ -264,11 +264,15 @@ input {
   transition: ease-in;
 }
 
-.hidden {
+.hidden-sm {
   display: none;
 }
 
 @media screen and (min-width:1300px) {
+  .hidden-sm {
+    display: unset;
+  }
+
   .img-cover {
     max-width: 400px;
     max-height: 600px;
