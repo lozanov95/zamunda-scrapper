@@ -127,9 +127,9 @@ a:hover {
 }
 
 .img-cover {
-  aspect-ratio: 2/3;
-  max-width: 120px;
-  max-width: 180px;
+  margin: 5px;
+  max-width: 200px;
+  max-height: 300px;
 }
 
 .header-section {
@@ -269,6 +269,41 @@ input {
 }
 
 @media screen and (min-width:1300px) {
+  .movie {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(3, auto);
+  }
+
+  .grid-col-end-3-md {
+    grid-column-end: 3;
+  }
+
+  .grid-col-start-1-md {
+    grid-column-start: 1;
+  }
+
+  .grid-col-start-2-md {
+    grid-column-start: 2;
+  }
+
+  .grid-row-start-1-md {
+    grid-row-start: 1;
+  }
+
+  .grid-row-start-2-md {
+    grid-row-start: 2;
+  }
+
+  .grid-row-end-2-md {
+    grid-row-end: 2;
+  }
+
+  .grid-row-end-3-md {
+    grid-row-end: 3;
+  }
+
+
   .hidden-sm {
     display: unset;
   }

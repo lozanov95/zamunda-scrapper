@@ -40,14 +40,12 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
 
 export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
-
     return (
-        <div className='grid-cont grid-cols-2-md bg-2 shadowed w-90 gap-5px'>
-            <div>
-                <MovieImage previewLink={movie.previewLink} />
-                <TorrentSection movie={movie} />
-            </div>
+        <div className='movie grid-cont bg-2 w-90 shadowed'>
+            <div className='title grid-row-1 grid-col-1 grid-col-end-3-md grid-col-start-2-md grid-row-start-1-md'>{movie.title}</div>
+            <MovieImage previewLink={movie.previewLink} />
             <ResumeSection movie={movie} />
+            <TorrentSection movie={movie} />
         </div>
     )
 })
@@ -61,7 +59,7 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
     }
 
     return (
-        <div className='col'>
+        <div className='col grid-col-1 grid-col-end-3-md'>
             <button className={btnClass} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
             <div className='flex-cont gap-5px'>
                 {displayTorrents && movie.torrents?.map((torrent, idx) => {
@@ -86,8 +84,7 @@ export function Torrent({ torrent }: { torrent: TorrentType }) {
 
 export function ResumeSection({ movie }: { movie: MovieType }) {
     return (
-        <div className="grid-row-1 grid-row-unset-md">
-            <div className='title'>{movie.title}</div>
+        <div className="marg-2px grid-col-start-2-md grid-row-start-2-md">
             <TextField header='Жанр' text={movie.genres?.join(", ")} />
             <TextField header='Режисьор' text={movie.directors?.join(", ")} />
             <TextField header='Актьори' text={movie.actors?.join(", ")} />
@@ -101,8 +98,8 @@ export function ResumeSection({ movie }: { movie: MovieType }) {
 
 function MovieImage({ previewLink }: { previewLink: string }) {
     const imageElement = previewLink.startsWith("http") ?
-        <img className='br-12px img-cover' src={previewLink}></img> :
-        <img className='br-12px img-cover' src={"https://zamunda.net" + previewLink}></img>
+        <img className='br-12px img-cover grid-row-start-1-md grid-row-end-3-md' src={previewLink}></img> :
+        <img className='br-12px img-cover grid-row-start-1-md grid-row-end-3-md' src={"https://zamunda.net" + previewLink}></img>
 
     return (
         imageElement
