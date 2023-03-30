@@ -18,23 +18,21 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     }, [filterParams])
 
     return (
-        <div className='filter grid-cont'>
-            <div hidden={hidden}>
-                <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
-                <div className='grid-cont bg-2 shadowed w-90 justify-items-right justify-content-space-around'>
-                    <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
-                    <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
-                </div>
-                <SortingPanel setSortCriteria={setSortCriteria} />
-                <div className='grid-cont bg-2 shadowed w-90'>
-                    <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} defaultValue={0} />
-                </div>
-                <div className='grid-cont bg-2 shadowed w-90'>
-                    <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} defaultValue={0} />
-                </div>
-                <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
-                <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
+        <div className={`filter grid-cont${hidden ? " hidden" : ""}`}>
+            <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
+            <div className='grid-cont bg-2 shadowed w-90 justify-items-right justify-content-space-around'>
+                <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
+                <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
+            <SortingPanel setSortCriteria={setSortCriteria} />
+            <div className='grid-cont bg-2 shadowed w-90'>
+                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} defaultValue={0} />
+            </div>
+            <div className='grid-cont bg-2 shadowed w-90'>
+                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} defaultValue={0} />
+            </div>
+            <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
+            <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
         </div >
     )
 }
