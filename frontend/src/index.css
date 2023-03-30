@@ -295,6 +295,10 @@ input {
     grid-row-start: 2;
   }
 
+  .grid-row-start-3-md {
+    grid-row-start: 3;
+  }
+
   .grid-row-end-2-md {
     grid-row-end: 2;
   }
