@@ -236,6 +236,10 @@ input {
   justify-content: space-around;
 }
 
+.text-align-justify {
+  text-align: justify;
+}
+
 .hamburger {
   display: inline-block;
   cursor: pointer;

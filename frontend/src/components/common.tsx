@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useMemo } from "react"
 
-export function TextField({ header, text, cN: className }: { header: string, text: string, cN?: string }) {
+export function TextField({ header, text, className }: { header: string, text: string, className?: string }) {
 
     return (
         <>

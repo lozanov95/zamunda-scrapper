@@ -84,7 +84,7 @@ export function Torrent({ torrent }: { torrent: TorrentType }) {
 
 export function ResumeSection({ movie }: { movie: MovieType }) {
     return (
-        <div className="marg-2px grid-col-start-2-md grid-row-start-2-md">
+        <div className="flex marg-2px grid-col-start-2-md grid-row-start-2-md text-align-justify">
             <TextField header='Жанр' text={movie.genres?.join(", ")} />
             <TextField header='Режисьор' text={movie.directors?.join(", ")} />
             <TextField header='Актьори' text={movie.actors?.join(", ")} />
