@@ -64,7 +64,7 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
         <div className='grid-cont bg-2 shadowed w-90'>
             <label className='text-header'>Жанрове (комбинирано)</label>
             <HR />
-            <div className='grid-cont grid-cols-2 bg-2 pad-0 marg-0 justify-items-right'>
+            <div className='pad-0-md marg-0-md grid-cont grid-cols-2 bg-2 justify-items-right'>
                 {genres.map((val, idx) => {
                     return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
                 })}

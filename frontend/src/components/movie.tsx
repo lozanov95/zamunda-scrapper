@@ -26,7 +26,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     return (
         <>
 
-            <div className='text-header bg-2 grid-cont shadowed w-90'>{msg}</div>
+            <div className='text-header bg-2 grid-cont shadowed w-90-md'>{msg}</div>
             {movies?.map((movie: MovieType) => {
                 return <Movie movie={movie} key={movie.title} />
             })
@@ -39,7 +39,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
 export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
     return (
-        <div className='movie grid-cont bg-2 w-90 shadowed'>
+        <div className='movie grid-cont bg-2 w-90-md shadowed'>
             <div className='title grid-row-1 grid-col-1 grid-col-end-3-md grid-col-start-2-md grid-row-start-1-md'>{movie.title}</div>
             <MovieImage previewLink={movie.previewLink} />
             <ResumeSection movie={movie} />

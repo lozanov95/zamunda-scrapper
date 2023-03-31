@@ -75,9 +75,7 @@ a:hover {
   justify-items: center;
   align-items: start;
   align-content: baseline;
-  padding: 1rem;
   margin: 1rem auto;
-  border-radius: 12px;
 }
 
 .w-90 {
@@ -280,6 +278,23 @@ input {
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-template-rows: repeat(3, auto);
+  }
+
+  .grid-cont {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .pad-0-md {
+    padding: 0;
+  }
+
+  .marg-0-md {
+    margin: 0;
+  }
+
+  .w-90-md {
+    width: 90%;
   }
 
   .grid-col-end-3-md {
