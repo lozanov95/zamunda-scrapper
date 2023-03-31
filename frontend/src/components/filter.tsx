@@ -77,14 +77,21 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
 }
 
 function SortingPanel({ setSortCriteria }: any) {
+    const [displaySorting, setDisplaySorting] = useState<boolean>(false)
+
     function HandleChange(e: any) {
         setSortCriteria(e.target.value)
     }
+
+    function ToggleSorting() {
+        setDisplaySorting((displaySorting) => !displaySorting)
+    }
+
     return (
         <div className='grid-cont bg-2 shadowed w-90-md' onChange={HandleChange}>
-            <label className='text-header'>Сортиране</label>
+            <label className='text-header'>Сортиране <FontAwesomeIcon onClick={ToggleSorting} icon={faCaretDown} /></label>
             <HR />
-            <div className="grid-cont bg-2 pad-0 marg-0 justify-items-right">
+            <div className={`grid-cont bg-2 pad-0 marg-0 justify-items-right ${displaySorting ? "toggled-on" : "toggled-off"}`}>
                 <InputWithLabel labelVal='Не сортирай' type='radio' name='sort' value={SortingCriteria.SortSkip.toString()} defaultChecked={true} />
                 <InputWithLabel labelVal='Рейтинг низходящо' type='radio' name='sort' value={SortingCriteria.SortRatingDescending.toString()} />
                 <InputWithLabel labelVal='Рейтинг възходящо' type='radio' name='sort' value={SortingCriteria.SortRatingAscending.toString()} />
