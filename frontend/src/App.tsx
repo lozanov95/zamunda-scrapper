@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { FilterSection } from './components/filter'
 import { MovieType } from './components/types'
-import './App.css'
 import { MoviesSection } from './components/movie'
+import { HeaderSection } from './components/header'
+import './App.css'
 
 
 function App() {
