@@ -25,8 +25,8 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
             <div className='grid-cont bg-2 shadowed w-90-md'>
-                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} defaultValue={0} />
-                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} defaultValue={0} />
+                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} />
+                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} />
             </div>
             <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
             <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
