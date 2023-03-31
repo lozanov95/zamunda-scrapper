@@ -277,8 +277,6 @@ input {
 
 .hamburger {
   display: inline-block;
-  top: 0px;
-  left: 0px;
   padding: 6px;
   margin: 3px;
   border-radius: 50%;
@@ -286,10 +284,18 @@ input {
 }
 
 .hamburger>div {
-  width: 35px;
+  width: 32px;
   height: 4px;
   background-color: var(--primary-color);
   margin: 5px 0;
+}
+
+.hamburger.toggled>div:nth-of-type(2) {
+  width: 24px;
+}
+
+.hamburger.toggled>div:nth-of-type(3) {
+  width: 18px;
 }
 
 .filter {
