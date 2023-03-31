@@ -309,6 +309,22 @@ input {
   display: none;
 }
 
+.toggled-off {
+  height: fit-content;
+}
+
+.toggled-off>* {
+  height: 0;
+  opacity: 0;
+  transition: height .9s ease;
+}
+
+.toggled-on>* {
+  opacity: 1;
+  height: initial;
+  transition: height 0.5s ease, opacity .8s;
+}
+
 @media screen and (min-width:1300px) {
   .movie {
     display: grid;
@@ -366,7 +382,7 @@ input {
 
 
   .hidden-sm {
-    display: unset;
+    display: initial;
   }
 
   .img-cover {
