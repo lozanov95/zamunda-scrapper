@@ -24,7 +24,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     return (
         <>
 
-            <div className='text-header bg-2 grid-cont shadowed w-90-md'>{msg}</div>
+            <div className='text-header bg-2 grid-cont shadowed w-90-md pad-x-1'>{msg}</div>
             {movies?.map((movie: MovieType) => {
                 return <Movie movie={movie} key={movie.title} />
             })
