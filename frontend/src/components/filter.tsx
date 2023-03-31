@@ -1,6 +1,8 @@
-import { useState, useEffect, SetStateAction, memo } from "react"
+import { useState, useEffect, SetStateAction } from "react"
 import { HR, InputWithLabel } from "./common"
 import { SortingCriteria } from "./types"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons"
 
 export function FilterSection({ domain, setFilterParams, hidden }: { setFilterParams: React.Dispatch<SetStateAction<string>>, domain: string, hidden: boolean }) {
     const [actor, setActor] = useState<string>("")
@@ -37,6 +39,7 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
 
 function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelectedGenres: React.Dispatch<SetStateAction<string[]>> }) {
     const [genres, setGenres] = useState<string[]>([])
+    const [displayGenres, setDisplayGenres] = useState<boolean>(false)
 
     useEffect(() => {
         fetch(`${domain}/genres`).then((data) => {
@@ -56,11 +59,15 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
         setSelectedGenres((g) => g.filter((v) => v != e.target.value))
     }
 
+    function ToggleGenres() {
+        setDisplayGenres((display) => !display)
+    }
+
     return (
         <div className='grid-cont bg-2 shadowed w-90-md'>
-            <label className='text-header'>Жанрове (комбинирано)</label>
+            <label className='text-header'>Жанрове (комбинирано) <FontAwesomeIcon onClick={ToggleGenres} icon={faCaretDown} /></label>
             <HR />
-            <div className='pad-0 marg-0 grid-cont grid-cols-2 bg-2 justify-items-right'>
+            <div className={`pad-0 marg-0 grid-cont grid-cols-2 bg-2 justify-items-right ${displayGenres ? "toggled-on" : "toggled-off"}`}>
                 {genres.map((val, idx) => {
                     return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
                 })}
