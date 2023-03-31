@@ -57,7 +57,7 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
     return (
         <div className='col grid-col-1 grid-row-start-3-md grid-col-end-2-md'>
             <button className={btnClass} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-            <div className='flex-cont gap-5px'>
+            <div className='flex-cont flex-center gap-5px'>
                 {displayTorrents && movie.torrents?.map((torrent, idx) => {
                     return <Torrent torrent={torrent} key={idx} />
                 })}
@@ -69,7 +69,7 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
 
 export function Torrent({ torrent }: { torrent: TorrentType }) {
     return (
-        <div className='grid-cont bg-5 fit-content'>
+        <div className='grid-cont bg-5 fit-content pad-1 br-12px marg-1'>
             <TextField header='Размер' text={torrent.size} />
             <div><span className='text-header'>Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
             {torrent.bg_audio && <Tag className='bg-4 ' value="БГ Аудио" />}

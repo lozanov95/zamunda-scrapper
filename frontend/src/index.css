@@ -70,6 +70,11 @@ a:hover {
   flex: 1;
 }
 
+.flex-center {
+  justify-content: center;
+  align-content: center;
+}
+
 .grid-cont {
   display: grid;
   justify-items: center;
@@ -209,8 +214,20 @@ input {
   margin: 0;
 }
 
+.marg-1 {
+  margin: 1rem;
+}
+
+.marg-b-05 {
+  margin-bottom: 0.5rem;
+}
+
 .pad-0 {
   padding: 0;
+}
+
+.pad-1 {
+  padding: 1rem;
 }
 
 .grid {
