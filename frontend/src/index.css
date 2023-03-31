@@ -75,7 +75,7 @@ a:hover {
   justify-items: center;
   align-items: start;
   align-content: baseline;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
@@ -290,6 +290,7 @@ input {
 
   .grid-cont {
     padding: 1rem;
+    margin-bottom: 1rem;
     border-radius: 12px;
   }
 
