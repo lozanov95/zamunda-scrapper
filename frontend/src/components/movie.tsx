@@ -11,10 +11,8 @@ export function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailab
 
 
     return (
-        <div className="movies-section">
-            <div className="grid-cont">
-                <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
-            </div>
+        <div className="movies-section grid-cont">
+            <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )
 }

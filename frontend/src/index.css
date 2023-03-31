@@ -75,7 +75,15 @@ a:hover {
   justify-items: center;
   align-items: start;
   align-content: baseline;
-  margin: 1rem auto;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.movies-section {
+  display: block;
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 .w-90 {
@@ -266,7 +274,7 @@ input {
 .filter {
   grid-column-start: 1;
   grid-column-end: 3;
-  transition: ease-in;
+  display: block;
 }
 
 .hidden-sm {

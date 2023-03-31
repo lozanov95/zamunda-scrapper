@@ -18,23 +18,21 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     }, [filterParams])
 
     return (
-        <div className={`filter${hidden ? " hidden-sm" : ""}`}>
-            <div className="grid-cont">
-                <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
-                <div className='grid-cont bg-2 shadowed w-90 justify-items-right justify-content-space-around'>
-                    <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
-                    <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
-                </div>
-                <SortingPanel setSortCriteria={setSortCriteria} />
-                <div className='grid-cont bg-2 shadowed w-90'>
-                    <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} defaultValue={0} />
-                </div>
-                <div className='grid-cont bg-2 shadowed w-90'>
-                    <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} defaultValue={0} />
-                </div>
-                <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
-                <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
+        <div className={`grid-cont filter ${hidden ? " hidden-sm" : ""}`}>
+            <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
+            <div className='grid-cont bg-2 shadowed w-90-md justify-items-right justify-content-space-around'>
+                <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
+                <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
+            <SortingPanel setSortCriteria={setSortCriteria} />
+            <div className='grid-cont bg-2 shadowed w-90-md'>
+                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} defaultValue={0} />
+            </div>
+            <div className='grid-cont bg-2 shadowed w-90-md'>
+                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} defaultValue={0} />
+            </div>
+            <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
+            <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
         </div >
     )
 }
@@ -61,10 +59,10 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
     }
 
     return (
-        <div className='grid-cont bg-2 shadowed w-90'>
+        <div className='grid-cont bg-2 shadowed w-90-md'>
             <label className='text-header'>Жанрове (комбинирано)</label>
             <HR />
-            <div className='pad-0-md marg-0-md grid-cont grid-cols-2 bg-2 justify-items-right'>
+            <div className='pad-0 marg-0 grid-cont grid-cols-2 bg-2 justify-items-right'>
                 {genres.map((val, idx) => {
                     return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
                 })}
@@ -78,7 +76,7 @@ function SortingPanel({ setSortCriteria }: any) {
         setSortCriteria(e.target.value)
     }
     return (
-        <form className='grid-cont bg-2 shadowed w-90' onChange={HandleChange}>
+        <form className='grid-cont bg-2 shadowed w-90-md' onChange={HandleChange}>
             <label className='text-header'>Сортиране</label>
             <HR />
             <div className="grid-cont bg-2 pad-0 marg-0 justify-items-right">
@@ -141,7 +139,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
     { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
     return (
-        <div className='grid-cont bg-2 shadowed w-90'>
+        <div className='grid-cont bg-2 shadowed w-90-md'>
             <label className='text-header'>
                 {labelString}
             </label>
