@@ -61,31 +61,36 @@ function App() {
 
   return (
     <div className='main-section grid grid-row-3'>
-      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} />
+      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} displayFilter={displayFilter} />
       <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} hidden={!displayFilter} />
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
     </div>
   )
 }
 
-function HeaderSection({ title, setTitle, setDisplayFilter }: { title: string, setTitle: React.Dispatch<React.SetStateAction<string>>, setDisplayFilter: React.Dispatch<React.SetStateAction<boolean>> }) {
+function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter }:
+  {
+    title: string,
+    setTitle: React.Dispatch<React.SetStateAction<string>>,
+    displayFilter: boolean,
+    setDisplayFilter: React.Dispatch<React.SetStateAction<boolean>>
+  }) {
   function handleToggleFilter() {
     setDisplayFilter((displayFilter) => !displayFilter)
   }
 
   return (
     <div className='header-section grid-row-start-1 inline-flex-sm'>
-      <ToggleFilter handleClick={handleToggleFilter} />
+      <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
       <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
       <div className='flex-1'></div>
     </div >
   )
 }
 
-function ToggleFilter({ handleClick }: { handleClick: VoidFunction }) {
-
+function ToggleFilter({ handleClick, toggled }: { handleClick: VoidFunction, toggled: boolean }) {
   return (
-    <div onClick={handleClick} className="hamburger flex-1">
+    <div onClick={handleClick} className={`hamburger flex-1${toggled ? " toggled" : ""}`}>
       <div></div>
       <div></div>
       <div></div>
