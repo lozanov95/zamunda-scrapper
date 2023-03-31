@@ -11,7 +11,7 @@ export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter
     }
 
     return (
-        <div className='header-section grid-row-start-1 inline-flex-sm'>
+        <div className='header-section grid-row-start-1 inline-flex'>
             <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
             <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
             <div className='flex-1'></div>

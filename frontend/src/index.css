@@ -89,6 +89,7 @@ a:hover {
   display: block;
   grid-column-start: 1;
   grid-column-end: 3;
+  margin-top: 4rem;
 }
 
 .w-90 {
@@ -146,7 +147,7 @@ a:hover {
   max-height: 300px;
 }
 
-.inline-flex-sm {
+.inline-flex {
   display: inline-flex;
 }
 
@@ -156,6 +157,9 @@ a:hover {
   background-color: var(--secondary-color);
   grid-column-start: 1;
   grid-column-end: 3;
+  position: fixed;
+  height: 4rem;
+  align-items: center;
 }
 
 .header-search {
@@ -308,6 +312,10 @@ input {
   grid-column-start: 1;
   grid-column-end: 3;
   display: block;
+  position: fixed;
+  width: 100%;
+  margin-top: 4rem;
+  background-color: var(--primary-color);
 }
 
 .hidden-sm {
@@ -343,6 +351,11 @@ input {
 
   .pad-0-md {
     padding: 0;
+  }
+
+  .pad-x-0-md {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .marg-0-md {
@@ -385,6 +398,9 @@ input {
     grid-row-end: 3;
   }
 
+  .hamburger>div {
+    display: none;
+  }
 
   .hidden-sm {
     display: initial;
@@ -403,21 +419,17 @@ input {
     grid-row: unset;
   }
 
-  .inline-flex-sm {
-    display: unset;
-  }
-
-  .hamburger {
-    display: none
-  }
 
   .filter {
     grid-column: unset;
+    position: relative;
+    margin-top: 0;
   }
 
   .movies-section {
     grid-column-start: 3;
     grid-column-end: 4;
+    margin-top: 0;
   }
 
   .main-section {
@@ -427,6 +439,7 @@ input {
   .header-section {
     grid-column-start: 1;
     grid-column-end: 5;
+    position: relative;
   }
 
   .filter {
