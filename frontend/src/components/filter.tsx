@@ -39,7 +39,7 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
 
 function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelectedGenres: React.Dispatch<SetStateAction<string[]>> }) {
     const [genres, setGenres] = useState<string[]>([])
-    const [displayGenres, setDisplayGenres] = useState<boolean>(false)
+    const [displayGenres, setDisplayGenres] = useState<boolean>(true)
 
     useEffect(() => {
         fetch(`${domain}/genres`).then((data) => {
@@ -77,7 +77,7 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
 }
 
 function SortingPanel({ setSortCriteria }: any) {
-    const [displaySorting, setDisplaySorting] = useState<boolean>(false)
+    const [displaySorting, setDisplaySorting] = useState<boolean>(true)
 
     function HandleChange(e: any) {
         setSortCriteria(e.target.value)
