@@ -288,6 +288,7 @@ input {
   height: 4px;
   background-color: var(--primary-color);
   margin: 5px 0;
+  transition: width 0.3s ease-in;
 }
 
 .hamburger.toggled>div:nth-of-type(2) {
