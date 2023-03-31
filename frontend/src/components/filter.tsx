@@ -30,8 +30,10 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
                 <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} />
                 <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} />
             </div>
-            <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
-            <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
+            <div className='grid-cont bg-2 shadowed w-90-md'>
+                <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
+                <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
+            </div>
             <SortingPanel setSortCriteria={setSortCriteria} />
         </div >
     )
@@ -151,7 +153,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
     { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
     return (
-        <div className='grid-cont bg-2 shadowed w-90-md'>
+        <>
             <label className='text-header'>
                 {labelString}
             </label>
@@ -159,6 +161,6 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
             {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any, idx) => {
                 return <span key={idx}>{suggestion}</span>
             })}
-        </div>
+        </>
     )
 }
