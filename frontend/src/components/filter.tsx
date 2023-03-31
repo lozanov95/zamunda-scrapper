@@ -74,7 +74,7 @@ function SortingPanel({ setSortCriteria }: any) {
         setSortCriteria(e.target.value)
     }
     return (
-        <form className='grid-cont bg-2 shadowed w-90-md' onChange={HandleChange}>
+        <div className='grid-cont bg-2 shadowed w-90-md' onChange={HandleChange}>
             <label className='text-header'>Сортиране</label>
             <HR />
             <div className="grid-cont bg-2 pad-0 marg-0 justify-items-right">
@@ -84,7 +84,7 @@ function SortingPanel({ setSortCriteria }: any) {
                 <InputWithLabel labelVal='Година низходящо' type='radio' name='sort' value={SortingCriteria.SortYearDescending.toString()} />
                 <InputWithLabel labelVal='Година възходящо' type='radio' name='sort' value={SortingCriteria.SortYearAscending.toString()} />
             </div>
-        </form >
+        </div >
     )
 }
 
