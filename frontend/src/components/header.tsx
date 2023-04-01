@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 
-export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter, setDisplayMovies }:
+export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter, setDisplayMovies, movieCount }:
     {
         title: string,
         setTitle: React.Dispatch<React.SetStateAction<string>>,
         displayFilter: boolean,
         setDisplayFilter: React.Dispatch<React.SetStateAction<boolean>>
         setDisplayMovies: React.Dispatch<React.SetStateAction<boolean>>
+        movieCount: number
     }) {
 
     const [scrollPos, setScrollPos] = useState({ x: 0, y: 0 })
@@ -18,6 +19,11 @@ export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter
             window.scrollTo(0, 0)
         }
     }, [displayFilter])
+
+    useEffect(() => {
+        setScrollPos({ x: 0, y: 0 })
+    }, [movieCount])
+
 
     function handleToggleFilter() {
         setDisplayFilter((displayFilter) => !displayFilter)

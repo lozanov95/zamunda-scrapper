@@ -63,7 +63,7 @@ function App() {
 
   return (
     <div className='main-section grid grid-row-3'>
-      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} displayFilter={displayFilter} setDisplayMovies={setDisplayMovies} />
+      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} displayFilter={displayFilter} setDisplayMovies={setDisplayMovies} movieCount={movieCount} />
       <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} hidden={!displayFilter} />
       <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} hidden={!displayMovies} />
     </div>
