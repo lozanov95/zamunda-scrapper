@@ -89,7 +89,7 @@ a:hover {
   display: block;
   grid-column-start: 1;
   grid-column-end: 3;
-  margin-top: 4rem;
+  margin-top: 3.5rem;
 }
 
 .w-90 {
@@ -315,7 +315,7 @@ input {
   display: block;
   position: absolute;
   width: 100%;
-  margin-top: 4rem;
+  margin-top: 3.5rem;
   background-color: var(--primary-color);
 }
 
