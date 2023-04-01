@@ -16,6 +16,7 @@ function App() {
   const [movieCount, setMovieCount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
   const [displayFilter, setDisplayFilter] = useState<boolean>(false)
+  const [displayMovies, setDisplayMovies] = useState<boolean>(true)
 
   const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}`
 
@@ -62,9 +63,9 @@ function App() {
 
   return (
     <div className='main-section grid grid-row-3'>
-      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} displayFilter={displayFilter} />
+      <HeaderSection title={title} setTitle={setTitle} setDisplayFilter={setDisplayFilter} displayFilter={displayFilter} setDisplayMovies={setDisplayMovies} />
       <FilterSection setFilterParams={setFilterParams} domain={DOMAIN} hidden={!displayFilter} />
-      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
+      <MoviesSection movies={movies} movieCount={movieCount} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} hidden={!displayMovies} />
     </div>
   )
 }

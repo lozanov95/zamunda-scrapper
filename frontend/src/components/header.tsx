@@ -1,13 +1,15 @@
 
-export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter }:
+export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter, setDisplayMovies }:
     {
         title: string,
         setTitle: React.Dispatch<React.SetStateAction<string>>,
         displayFilter: boolean,
         setDisplayFilter: React.Dispatch<React.SetStateAction<boolean>>
+        setDisplayMovies: React.Dispatch<React.SetStateAction<boolean>>
     }) {
     function handleToggleFilter() {
         setDisplayFilter((displayFilter) => !displayFilter)
+        setDisplayMovies((displayMovies) => !displayMovies)
     }
 
     return (

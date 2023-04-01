@@ -2,16 +2,17 @@ import { memo, useState } from "react"
 import { TriggerOnVisible, TextField, Tag } from "./common"
 import { MovieType, TorrentType } from "./types"
 
-export function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailable }:
+export function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailable, hidden }:
     {
         movies: MovieType[], movieCount: number,
         setPage: React.Dispatch<React.SetStateAction<number>>,
-        areMorePagesAvailable: boolean
+        areMorePagesAvailable: boolean,
+        hidden: boolean,
     }) {
 
 
     return (
-        <div className="movies-section grid-cont">
+        <div className={`movies-section grid-cont${hidden ? " hidden-sm" : ""}`}>
             <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )

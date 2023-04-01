@@ -160,6 +160,7 @@ a:hover {
   position: fixed;
   height: 4rem;
   align-items: center;
+  z-index: 9999;
 }
 
 .header-search {
@@ -312,7 +313,7 @@ input {
   grid-column-start: 1;
   grid-column-end: 3;
   display: block;
-  position: fixed;
+  position: absolute;
   width: 100%;
   margin-top: 4rem;
   background-color: var(--primary-color);
