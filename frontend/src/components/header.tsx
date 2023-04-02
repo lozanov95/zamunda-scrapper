@@ -22,6 +22,7 @@ export function HeaderSection({ title, setTitle, displayFilter, setDisplayFilter
 
     useEffect(() => {
         setScrollPos({ x: 0, y: 0 })
+        window.scrollTo(0, 0)
     }, [URL])
 
 
