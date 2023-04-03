@@ -75,14 +75,16 @@ a:hover {
 
 .slide-out-left {
   transform: translateX(-100%);
+  opacity: 0;
   visibility: hidden;
-  transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration);
+  transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration), opacity var(--animation-duration);
 }
 
 .slide-out-right {
   transform: translateX(100%);
+  opacity: 0;
   visibility: hidden;
-  transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration);
+  transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration), opacity var(--animation-duration);
 }
 
 .slide-in {
