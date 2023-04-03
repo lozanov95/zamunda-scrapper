@@ -87,9 +87,32 @@ a:hover {
   transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration), opacity var(--animation-duration);
 }
 
-.slide-in {
-  transform: translateX(0);
-  transition: transform var(--animation-duration) ease;
+.slide-in-right {
+  animation: slide-from-right var(--animation-duration);
+}
+
+.slide-in-left {
+  animation: slide-from-left var(--animation-duration);
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 .flex-center {

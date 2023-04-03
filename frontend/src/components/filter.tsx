@@ -20,7 +20,7 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     }, [filterParams])
 
     return (
-        <div className={`grid-cont filter ${hidden ? "slide-out-left" : "slide-in"}`}>
+        <div className={`grid-cont filter ${hidden ? "slide-out-left" : "slide-in-left"}`} onTransitionEnd={(e) => hidden && e.currentTarget.classList.add("hidden-sm")}>
             <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
             <div className='grid-cont grid-cols-2 bg-2 shadowed w-90-md justify-items-right justify-content-space-around'>
                 <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
