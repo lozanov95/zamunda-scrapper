@@ -67,7 +67,7 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
 
     return (
         <div className='grid-cont bg-2 shadowed w-90-md'>
-            <label className='text-header'>Жанрове (комбинирано) <FontAwesomeIcon onClick={ToggleGenres} icon={faCaretDown} /></label>
+            <label className='text-header'>Жанрове (комбинирано) <FontAwesomeIcon onClick={ToggleGenres} icon={faCaretDown} className={displayGenres ? "rotated" : ""} /></label>
             <HR />
             <div className={`pad-0 marg-0 grid-cont grid-cols-2 bg-2 justify-items-right ${displayGenres ? "toggled-on" : "toggled-off"}`}>
                 {genres.map((val, idx) => {
@@ -91,7 +91,7 @@ function SortingPanel({ setSortCriteria }: any) {
 
     return (
         <div className='grid-cont bg-2 shadowed w-90-md' onChange={HandleChange}>
-            <label className='text-header'>Сортиране <FontAwesomeIcon onClick={ToggleSorting} icon={faCaretDown} /></label>
+            <label className='text-header'>Сортиране <FontAwesomeIcon onClick={ToggleSorting} icon={faCaretDown} className={displaySorting ? "rotated" : ""} /></label>
             <HR />
             <div className={`grid-cont bg-2 pad-0 marg-0 justify-items-right ${displaySorting ? "toggled-on" : "toggled-off"}`}>
                 <InputWithLabel labelVal='Не сортирай' type='radio' name='sort' value={SortingCriteria.SortSkip.toString()} defaultChecked={true} />

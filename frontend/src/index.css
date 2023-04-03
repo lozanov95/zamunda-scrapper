@@ -383,3 +383,11 @@ input {
   height: initial;
   transition: height 0.5s ease, opacity .8s;
 }
+
+.fa-caret-down {
+  transition: rotate var(--animation-duration);
+}
+
+.rotated {
+  rotate: 180deg;
+}
