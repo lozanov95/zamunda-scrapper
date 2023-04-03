@@ -12,12 +12,14 @@
   --quaternary-color: #b185a7;
   --quinary-color: #799aaa;
 
+  --animation-duration: .5s;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   text-align: center;
+  overflow-x: hidden;
 }
 
 a {
@@ -34,6 +36,7 @@ body {
   min-width: fit-content;
   min-height: 100vh;
   background-color: var(--primary-color);
+  overflow-x: hidden;
 }
 
 h1 {
@@ -68,6 +71,23 @@ a:hover {
 
 .flex-1 {
   flex: 1;
+}
+
+.slide-out-left {
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration);
+}
+
+.slide-out-right {
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform var(--animation-duration) ease, visibility 0.1s var(--animation-duration);
+}
+
+.slide-in {
+  transform: translateX(0);
+  transition: transform var(--animation-duration) ease;
 }
 
 .flex-center {

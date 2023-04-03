@@ -21,6 +21,10 @@ function App() {
   const URL = `${DOMAIN}/movies?contains=${title}&${filterParams}`
 
   useEffect(() => {
+    setDisplayFilter(() => window.innerWidth >= 1300 ? true : false)
+  }, [])
+
+  useEffect(() => {
     setPage(0)
     const controller = new AbortController();
     fetch(URL,

@@ -12,7 +12,7 @@ export function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailab
 
 
     return (
-        <div className={`movies-section grid-cont${hidden ? " hidden-sm" : ""}`}>
+        <div className={`movies-section grid-cont ${hidden ? "slide-out-right" : "slide-in"}`}>
             <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )
