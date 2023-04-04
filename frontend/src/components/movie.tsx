@@ -57,7 +57,7 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
     return (
         <div className={`grid-col-1 grid-row-start-3-md ${displayTorrents ? "grid-col-end-3-md" : "grid-col-end-2-md"}`}>
             <button className={btnClass} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-            <div className='flex-cont flex-center gap-5px'>
+            <div className='torrent-section'>
                 {displayTorrents && movie.torrents?.map((torrent, idx) => {
                     return <Torrent torrent={torrent} key={idx} />
                 })}

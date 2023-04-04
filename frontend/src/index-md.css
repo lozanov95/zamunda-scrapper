@@ -110,6 +110,12 @@
         left: 45%;
         transform: translateX(-50%);
     }
+
+    .torrent-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 @media only screen and (min-width:1440px) {
