@@ -463,9 +463,11 @@ div:focus-within>.dropdown {
 }
 
 .torrent-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
+
 
 @media only screen and (max-width:1300px) {
   .slide-in-right-sm {
@@ -474,5 +476,9 @@ div:focus-within>.dropdown {
 
   .slide-in-left-sm {
     animation: slide-from-left var(--animation-duration);
+  }
+
+  .torrent-section>* {
+    flex-basis: 32%;
   }
 }
