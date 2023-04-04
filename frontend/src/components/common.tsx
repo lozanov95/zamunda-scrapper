@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
 import { useRef, useEffect, useState, useMemo } from "react"
 
 export function TextField({ header, text, className }: { header: string, text: string, className?: string }) {
@@ -26,6 +28,26 @@ export function InputWithLabel({ labelVal, type, name, value, checked, onChange,
         <label className={["text-header", className].join(" ")}>
             {labelVal}
             <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
+        </label>
+    )
+}
+
+export function NumberWithLabel({ labelVal, value, onChange, className, setValue }: { labelVal: string, value: number, className: string, onChange: any, setValue: React.Dispatch<React.SetStateAction<number>> }) {
+    function decrement() {
+        setValue((val) => val - 1)
+    }
+    function increment() {
+        setValue((val) => val + 1)
+    }
+
+    return (
+        <label className={["text-header", className].join(" ")}>
+            {labelVal}
+            <span>
+                <FontAwesomeIcon icon={faMinus} onClick={decrement} className="marg-r-025" />
+                <input type="number" value={value} onChange={onChange} />
+                <FontAwesomeIcon icon={faPlus} onClick={increment} className="marg-l-025" />
+            </span>
         </label>
     )
 }

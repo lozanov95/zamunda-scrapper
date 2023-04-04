@@ -331,6 +331,14 @@ div:focus-within>.dropdown {
   margin-bottom: 0.5rem;
 }
 
+.marg-r-025 {
+  margin-right: 0.25rem;
+}
+
+.marg-l-025 {
+  margin-left: 0.25rem;
+}
+
 .pad-0 {
   padding: 0;
 }

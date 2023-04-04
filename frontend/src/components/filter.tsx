@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction, KeyboardEventHandler, EventHandler, KeyboardEvent } from "react"
-import { HR, InputWithLabel } from "./common"
+import { HR, InputWithLabel, NumberWithLabel } from "./common"
 import { SortingCriteria } from "./types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons"
@@ -45,8 +45,8 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
             <div className='grid-cont bg-2 shadowed w-90-md'>
-                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={handleYearChange} />
-                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={handleRatingChange} />
+                <NumberWithLabel className='grid' labelVal='Година' value={fromYear} onChange={handleYearChange} setValue={setFromYear} />
+                <NumberWithLabel className='grid' labelVal='Минимален рейтинг' value={minRating} onChange={handleRatingChange} setValue={setMinRating} />
             </div>
             <div className='grid-cont bg-2 shadowed w-90-md'>
                 <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
