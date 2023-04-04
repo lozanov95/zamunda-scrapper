@@ -23,7 +23,7 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
 
     useEffect(() => {
         setScrollPos({ x: 0, y: 0 })
-        if (displayMovies) {
+        if (displayMovies && !displayFilter) {
             window.scrollTo(0, 0)
         }
     }, [URL])
