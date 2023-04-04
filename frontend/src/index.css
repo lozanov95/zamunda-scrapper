@@ -375,13 +375,13 @@ input {
 .toggled-off>* {
   height: 0;
   opacity: 0;
-  transition: height .9s ease;
+  transition: height var(--animation-duration);
 }
 
 .toggled-on>* {
   opacity: 1;
   height: initial;
-  transition: height 0.5s ease, opacity .8s;
+  transition: height var(--animation-duration), opacity .8s;
 }
 
 .fa-caret-down {
