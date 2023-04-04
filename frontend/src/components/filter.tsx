@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction, ReactEventHandler, MouseEventHandler, MouseEvent } from "react"
+import { useState, useEffect, SetStateAction, KeyboardEventHandler, EventHandler, KeyboardEvent } from "react"
 import { HR, InputWithLabel } from "./common"
 import { SortingCriteria } from "./types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -8,8 +8,8 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     const [actor, setActor] = useState<string>("")
     const [director, setDirector] = useState<string>("")
     const [selectedGenres, setSelectedGenres] = useState<string[]>([])
-    const [minRating, setMinRating] = useState<number>(0)
-    const [fromYear, setFromYear] = useState<number>(0)
+    const [minRating, setMinRating] = useState<number>(5)
+    const [fromYear, setFromYear] = useState<number>(2000)
     const [bgAudio, setBgAudio] = useState<boolean>(false)
     const [bgSubs, setBgSubs] = useState<boolean>(false)
     const [sortCriteria, setSortCriteria] = useState<number>(0)
@@ -19,6 +19,24 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
         setFilterParams(filterParams)
     }, [filterParams])
 
+    function handleNaN(value: number) {
+        if (isNaN(value)) {
+            return 0
+        }
+
+        return value
+    }
+
+    function handleYearChange(e: KeyboardEvent<HTMLInputElement>) {
+        const year = parseInt(e.currentTarget.value)
+        setFromYear(handleNaN(year))
+    }
+
+    function handleRatingChange(e: KeyboardEvent<HTMLInputElement>) {
+        const rating = parseFloat(e.currentTarget.value)
+        setMinRating(handleNaN(rating))
+    }
+
     return (
         <div className={`grid-cont filter ${hidden ? "slide-out-left" : "slide-in-left"}`} onTransitionEnd={(e) => hidden && e.currentTarget.classList.add("hidden-sm")}>
             <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
@@ -27,8 +45,8 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
             <div className='grid-cont bg-2 shadowed w-90-md'>
-                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={(e: any) => setFromYear(parseInt(e.target.value))} />
-                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={(e: any) => setMinRating(parseFloat(e.target.value))} />
+                <InputWithLabel className='grid' labelVal='След година' type='number' value={fromYear} onChange={handleYearChange} />
+                <InputWithLabel className='grid' labelVal='Минимален рейтинг' type='number' value={minRating} onChange={handleRatingChange} />
             </div>
             <div className='grid-cont bg-2 shadowed w-90-md'>
                 <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
