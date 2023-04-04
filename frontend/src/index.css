@@ -95,23 +95,43 @@ a:hover {
   animation: slide-from-left var(--animation-duration);
 }
 
+.slide-in-top {
+  animation: slide-from-top var(--animation-duration)
+}
+
 @keyframes slide-from-right {
   from {
     transform: translateX(100%);
+    opacity: 0.3;
   }
 
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 
 @keyframes slide-from-left {
   from {
     transform: translateX(-100%);
+    opacity: 0.3;
   }
 
   to {
     transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-top {
+  from {
+    transform: translateY(-100%);
+    opacity: 0.3;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
