@@ -259,6 +259,28 @@ input {
   flex-wrap: wrap;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
+.dropdown {
+  position: absolute;
+  background-color: var(--quinary-color);
+  margin-top: 3.3rem;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 2000;
+}
+
+.drop-item {
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.drop-item:hover {
+  background-color: var(--secondary-color);
+}
 
 .gap-5px {
   gap: 5px;

@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from "react"
+import { useState, useEffect, SetStateAction, ReactEventHandler, MouseEventHandler, MouseEvent } from "react"
 import { HR, InputWithLabel } from "./common"
 import { SortingCriteria } from "./types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -152,15 +152,25 @@ function DirectorsPanel({ domain, director, setDirector }: { domain: string, dir
 function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
     { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
+    function onClick(e: React.MouseEvent<HTMLElement>) {
+        handleChangeValue(e)
+    }
+
+    const dropdownVisible = () => { return suggestions.length > 0 && value.length > 2 && value !== suggestions[0] }
+
     return (
         <>
             <label className='text-header'>
                 {labelString}
             </label>
             <input type="text" value={value} onChange={handleChangeValue} />
-            {suggestions.length > 0 && value.length > 2 && suggestions.map((suggestion: any, idx) => {
-                return <span key={idx}>{suggestion}</span>
-            })}
+            {dropdownVisible() &&
+                <div className="flex-cont flex-col dropdown">
+                    {suggestions.map((suggestion: any, idx) => {
+                        return <option className="drop-item" value={suggestion} onClick={onClick} key={idx}>{suggestion}</option>
+                    })}
+                </div>
+            }
         </>
     )
 }
