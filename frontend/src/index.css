@@ -263,7 +263,12 @@ input {
   flex-direction: column;
 }
 
+div:focus-within>.dropdown {
+  visibility: initial;
+}
+
 .dropdown {
+  visibility: hidden;
   position: absolute;
   background-color: var(--quinary-color);
   margin-top: 3.3rem;
@@ -271,11 +276,16 @@ input {
   padding: 0.5rem;
   cursor: pointer;
   z-index: 2000;
+  transition: visibility 100ms 100ms;
 }
 
 .drop-item {
-  border-radius: 6px;
   padding: 4px;
+  border-bottom: solid black 1px;
+}
+
+.drop-item:last-of-type {
+  border-bottom: none;
 }
 
 .drop-item:hover {

@@ -159,7 +159,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
     const dropdownVisible = () => { return suggestions.length > 0 && value.length > 2 && value !== suggestions[0] }
 
     return (
-        <>
+        <div className="flex-cont flex-col">
             <label className='text-header'>
                 {labelString}
             </label>
@@ -171,6 +171,6 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
                     })}
                 </div>
             }
-        </>
+        </div>
     )
 }
