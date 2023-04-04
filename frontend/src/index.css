@@ -464,3 +464,13 @@ div:focus-within>.dropdown {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
+@media only screen and (max-width:1300px) {
+  .slide-in-right-sm {
+    animation: slide-from-right var(--animation-duration);
+  }
+
+  .slide-in-left-sm {
+    animation: slide-from-left var(--animation-duration);
+  }
+}
