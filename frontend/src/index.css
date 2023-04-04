@@ -271,12 +271,14 @@ div:focus-within>.dropdown {
   visibility: hidden;
   position: absolute;
   background-color: var(--quinary-color);
-  margin-top: 3.3rem;
+  margin-top: 3.4rem;
   border-radius: 6px;
   padding: 0.5rem;
   cursor: pointer;
   z-index: 2000;
   transition: visibility 100ms 100ms;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .drop-item {
