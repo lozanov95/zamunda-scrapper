@@ -105,6 +105,11 @@
     .filter {
         grid-column: 2;
     }
+
+    .dropdown {
+        left: 45%;
+        transform: translateX(-50%);
+    }
 }
 
 @media only screen and (min-width:1440px) {
