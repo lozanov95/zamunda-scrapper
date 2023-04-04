@@ -391,3 +391,8 @@ input {
 .rotated {
   rotate: 180deg;
 }
+
+.scale-1:hover {
+  transform: scale(1.05);
+  transition: all 300ms;
+}

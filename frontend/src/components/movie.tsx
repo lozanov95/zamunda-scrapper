@@ -48,7 +48,7 @@ export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
 export function TorrentSection({ movie }: { movie: MovieType }) {
     const [displayTorrents, setDisplayTorrents] = useState(false)
-    const btnClass = "bg-3"
+    const btnClass = "bg-3 scale-1"
 
     function ToggleTorrent() {
         setDisplayTorrents((val) => !val)
