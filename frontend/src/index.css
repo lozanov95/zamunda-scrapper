@@ -325,6 +325,10 @@ div:focus-within>.dropdown {
   margin: 0;
 }
 
+.marg-05 {
+  margin: 0.5rem;
+}
+
 .marg-1 {
   margin: 1rem;
 }
@@ -365,6 +369,13 @@ div:focus-within>.dropdown {
   grid-row: 3;
 }
 
+.h-min-5 {
+  min-height: 5rem;
+}
+
+.w-min-7 {
+  min-width: 7rem;
+}
 
 .grid-row-start-1 {
   grid-row-start: 1;
