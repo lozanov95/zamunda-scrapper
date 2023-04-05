@@ -9,7 +9,12 @@ run-container:
 
 install:
 	echo {"username": "","password": "","workers": 1,"pageSize": 10} > config.json
+	make -j 2 install-fe install-be
+	
+install-fe:
 	cd frontend && npm install 
+
+install-be:
 	go get ./cmd
 
 dev-fe:
