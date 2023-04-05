@@ -68,7 +68,7 @@
 
     .img-cover {
         max-width: 400px;
-        max-height: 600px;
+        max-height: 400px;
     }
 
     .grid-cols-2-md {
@@ -101,6 +101,7 @@
         grid-column-end: 5;
         position: relative;
     }
+
 
     .filter {
         grid-column: 2;
