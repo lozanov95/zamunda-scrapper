@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faMinus, faCaretDown } from "@fortawesome/free-solid-svg-icons"
 import { useRef, useEffect, useState, useMemo } from "react"
 
 export function TextField({ header, text, className }: { header: string, text: string, className?: string }) {
@@ -16,8 +16,6 @@ export function TextField({ header, text, className }: { header: string, text: s
         </>
     )
 }
-
-
 
 export function InputWithLabel({ labelVal, type, name, value, checked, onChange, defaultValue, defaultChecked, className }:
     {
@@ -60,7 +58,6 @@ export function Tag({ value, className }: { value: string, className?: string })
     )
 }
 
-
 export function HR() {
     return (
         <hr style={{
@@ -84,6 +81,25 @@ export function TriggerOnVisible({ setPage }: { setPage: React.Dispatch<React.Se
 
     return (
         <div ref={ref}></div>
+    )
+}
+
+export function ToggleablePanel({ label, children, onChange, className }:
+    { label: string, children: React.ReactElement[], onChange?: any, className?: string }) {
+    const [toggled, setToggled] = useState<boolean>(true)
+
+    function Toggle() {
+        setToggled((toggled) => !toggled)
+    }
+
+    return (
+        <div className='grid-cont bg-2 shadowed w-90-md'>
+            <label className='text-header'>{label} <FontAwesomeIcon onClick={Toggle} icon={faCaretDown} className={toggled ? "rotated" : ""} /></label>
+            <HR />
+            <div className={[`grid-cont bg-2 pad-0 marg-0 justify-items-right ${toggled ? "toggled-on" : "toggled-off"}`, className].join(" ")} onChange={onChange}>
+                {children}
+            </div>
+        </div>
     )
 }
 
