@@ -23,7 +23,6 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
     return (
         <>
-
             <div className='text-header bg-2 grid-cont shadowed w-90-md pad-x-1 pad-x-0-md'>{msg}</div>
             {movies?.map((movie: MovieType) => {
                 return <Movie movie={movie} key={movie.title} />
@@ -55,15 +54,17 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
     }
 
     return (
-        <div className={`grid-col-1 grid-row-start-3-md ${displayTorrents ? "grid-col-end-3-md" : "grid-col-end-2-md"}`}>
-            <button className={btnClass} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-            <div className='torrent-section'>
-                {displayTorrents && movie.torrents?.map((torrent, idx) => {
-                    return <Torrent torrent={torrent} key={idx} />
-                })}
+        <>
+            <button className={`grid-col-1 grid-row-start-3-md ${btnClass}`} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
+            <div className={`grid-col-1 grid-row-start-4-md ${displayTorrents ? "grid-col-end-3-md" : "grid-col-end-2-md"}`}>
+                <div className='torrent-section'>
+                    {displayTorrents && movie.torrents?.map((torrent, idx) => {
+                        return <Torrent torrent={torrent} key={idx} />
+                    })}
+                </div>
+                {displayTorrents && <button className={btnClass} onClick={ToggleTorrent}>Скрий торентите</button>}
             </div>
-            {displayTorrents && <button className={btnClass} onClick={ToggleTorrent}>Скрий торентите</button>}
-        </div>
+        </>
     )
 }
 
