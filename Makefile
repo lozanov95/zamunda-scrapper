@@ -28,3 +28,6 @@ dev:
 
 scrape:
 	go run ./cmd -scrape
+
+bench:
+	go test ./cmd -bench=.
