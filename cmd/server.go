@@ -27,12 +27,13 @@ func NewServer(port int, cfg *Config) *Server {
 
 	srv.mux.HandleFunc("/movies", func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query()
+		log.Printf("[%s] %s ", r.RemoteAddr, query)
 		page, err := strconv.Atoi(query.Get("page"))
 		if err != nil {
 			page = 0
 		}
-		log.Printf("[%s] %s ", r.RemoteAddr, query)
-		movies, count := srv.db.GetMovies(query, page)
+		query.Del("page")
+		movies, count := srv.db.GetMoviesWithCache(query, page)
 		res, err := json.Marshal(GetMoviesResponse{Value: movies, Count: count})
 		if err != nil {
 			log.Println(err)

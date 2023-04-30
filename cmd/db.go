@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type MovieDB struct {
@@ -16,6 +17,7 @@ type MovieDB struct {
 	countries *[]string
 	genres    *[]string
 	pageSize  int
+	MovieCache
 }
 
 type SortCriteria int
@@ -89,12 +91,13 @@ func NewMovieDB(pageSize int) *MovieDB {
 	})
 
 	return &MovieDB{
-		movies:    &movies,
-		actors:    &actorsList,
-		directors: &directorsList,
-		countries: &countriesList,
-		genres:    &genresList,
-		pageSize:  pageSize,
+		movies:     &movies,
+		actors:     &actorsList,
+		directors:  &directorsList,
+		countries:  &countriesList,
+		genres:     &genresList,
+		pageSize:   pageSize,
+		MovieCache: *NewMovieCache(5*time.Minute, 30*time.Second),
 	}
 }
 
@@ -110,6 +113,26 @@ func (db *MovieDB) GetMovies(queries url.Values, page int) ([]*Movie, int) {
 
 	start := page * db.pageSize
 	start, end := ValidateIndexes(&movies, start, start+db.pageSize, db.pageSize)
+	return movies[start:end], len(movies)
+}
+
+func (db *MovieDB) GetMoviesWithCache(queries url.Values, page int) ([]*Movie, int) {
+	cached, count := db.MovieCache.Get(queries.Encode())
+	if count > 0 {
+		start, end := ValidateIndexes(&cached, page*db.pageSize, page*db.pageSize+db.pageSize, db.pageSize)
+		return cached[start:end], count
+	}
+
+	movies := []*Movie{}
+	for _, movie := range *db.movies {
+		if DoesMovieSatisfiesConditions(queries, movie) {
+			movies = append(movies, movie)
+		}
+	}
+
+	SortMovies(&queries, &movies)
+	db.MovieCache.Add(queries.Encode(), &movies)
+	start, end := ValidateIndexes(&movies, page*db.pageSize, page*db.pageSize+db.pageSize, db.pageSize)
 	return movies[start:end], len(movies)
 }
 
