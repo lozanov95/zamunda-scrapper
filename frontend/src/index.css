@@ -9,7 +9,7 @@
   --primary-color: #595959;
   --secondary-color: #a5c4d4;
   --thertiary-color: #fcd581;
-  --quaternary-color: #b185a7;
+  --quaternary-color: #6da594;
   --quinary-color: #799aaa;
 
   --animation-duration: 500ms;
@@ -188,7 +188,7 @@ a:hover {
 }
 
 .bg-2 {
-  background-color: var(--secondary-color);
+  background: linear-gradient(var(--secondary-color), var(--quaternary-color));
 }
 
 .bg-3 {

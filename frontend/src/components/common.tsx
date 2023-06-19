@@ -96,7 +96,7 @@ export function ToggleablePanel({ label, children, onChange, className }:
         <div className='grid-cont bg-2 shadowed w-90-md'>
             <label className='text-header'>{label} <FontAwesomeIcon onClick={Toggle} icon={faCaretDown} className={toggled ? "rotated" : ""} /></label>
             <HR />
-            <div className={[`grid-cont bg-2 pad-0 marg-0 justify-items-right ${toggled ? "toggled-on" : "toggled-off"}`, className].join(" ")} onChange={onChange}>
+            <div className={[`grid-cont pad-0 marg-0 justify-items-right ${toggled ? "toggled-on" : "toggled-off"}`, className].join(" ")} onChange={onChange}>
                 {children}
             </div>
         </div>
