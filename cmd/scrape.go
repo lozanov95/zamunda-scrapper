@@ -39,9 +39,9 @@ type Scrapper struct {
 }
 
 var (
-	RX_DIRECTOR    = regexp.MustCompile("Режисьор[: ]+([А-я ,-]+)")
-	RX_ACTORS      = regexp.MustCompile("В ролите[: ]+(['А-я ,-]+)")
-	RX_COUNTRY     = regexp.MustCompile(" Държава[: ]+([А-я ,-]+)")
+	RX_DIRECTOR    = regexp.MustCompile("Режисьор[: ]+([А-я ,-.]+)")
+	RX_ACTORS      = regexp.MustCompile("В ролите[: ]+(['А-я ,-.]+)")
+	RX_COUNTRY     = regexp.MustCompile(" Държава[: ]+([А-я ,-.]+)")
 	RX_YEAR        = regexp.MustCompile(`Година[: ]+(\d{4})`)
 	RX_DESCRIPTION = regexp.MustCompile("(?s)Резюме[: ]+([^#]+)")
 	RX_LAST_PAGE   = regexp.MustCompile(`page=(\d{1,10})`)
