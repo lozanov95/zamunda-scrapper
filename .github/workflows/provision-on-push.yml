@@ -16,8 +16,9 @@ jobs:
       - name: Install deps
         run: go get ./...
 
-      - name: Create config file          
-        run: echo {\"username\": \"$ZAMUNDA_USERNAME\",\"password\": \"$ZAMUNDA_PASSWORD\",\"workers\": 1,\"pageSize\": 10} > ./cmd/config_test.json
+      - name: Create config file
+        run: |
+          echo {\"username\": \"$ZAMUNDA_USERNAME\",\"password\": \"$ZAMUNDA_PASSWORD\",\"workers\": 1,\"pageSize\": 10} > ./cmd/config_test.json
         env:
           ZAMUNDA_USERNAME: ${{ secrets.ZAMUNDA_USERNAME }}
           ZAMUNDA_PASSWORD: ${{ secrets.ZAMUNDA_PASSWORD }}
