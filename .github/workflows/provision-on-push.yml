@@ -3,8 +3,13 @@ on:
   push:
     branches:
       - main
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  test_backend:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,4 +31,13 @@ jobs:
       - name: run tests
         run: go test -v ./...
         env:
-          CI: true
+          CI: 1
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: ${{ env.AWS_DEPLOY_ROLE}}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+        run: aws ssm send-command --instance-ids ${{ env.INSTANCE_ID }} --document-name "${{ env.SSM_DOC_NAME }}"
