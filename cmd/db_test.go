@@ -5,9 +5,8 @@ import (
 	"testing"
 )
 
-var db = NewMovieDB(10)
-
 func BenchmarkGetMovies(b *testing.B) {
+	var db = NewMovieDB(10)
 	url_vals := make(url.Values)
 	for n := 0; n < b.N; n++ {
 		db.GetMovies(url_vals, 0)
@@ -16,6 +15,7 @@ func BenchmarkGetMovies(b *testing.B) {
 	}
 }
 func BenchmarkGetCachedMovies(b *testing.B) {
+	var db = NewMovieDB(10)
 	url_vals := make(url.Values)
 	for n := 0; n < b.N; n++ {
 		db.GetMoviesWithCache(url_vals, 0)
@@ -24,6 +24,7 @@ func BenchmarkGetCachedMovies(b *testing.B) {
 	}
 }
 func BenchmarkGetMoviesWithParams(b *testing.B) {
+	var db = NewMovieDB(10)
 	url_vals := make(url.Values)
 	url_vals.Add("fromYear", "2000")
 	url_vals.Add("minRating", "5")
@@ -36,6 +37,7 @@ func BenchmarkGetMoviesWithParams(b *testing.B) {
 	}
 }
 func BenchmarkGetCachedMoviesWithParams(b *testing.B) {
+	var db = NewMovieDB(10)
 	url_vals := make(url.Values)
 	url_vals.Add("fromYear", "2000")
 	url_vals.Add("minRating", "5")
