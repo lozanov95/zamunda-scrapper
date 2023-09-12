@@ -34,7 +34,7 @@ jobs:
           CI: 1
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE}}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
