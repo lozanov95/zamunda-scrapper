@@ -20,13 +20,10 @@ jobs:
         run: |
           echo {\"username\": \"$ZAMUNDA_USERNAME\",\"password\": \"$ZAMUNDA_PASSWORD\",\"workers\": 1,\"pageSize\": 10} > ./cmd/config_test.json
         env:
-          # ZAMUNDA_USERNAME: ${{ secrets.ZAMUNDA_USERNAME }}
-          # ZAMUNDA_PASSWORD: ${{ secrets.ZAMUNDA_PASSWORD }}
-          ZAMUNDA_USERNAME: 1234
-          ZAMUNDA_PASSWORD: 5678
-
-      - name: echo the cmd file
-        run: echo ./cmd/config_test.json
+          ZAMUNDA_USERNAME: ${{ secrets.ZAMUNDA_USERNAME }}
+          ZAMUNDA_PASSWORD: ${{ secrets.ZAMUNDA_PASSWORD }}
 
       - name: run tests
         run: go test -v ./...
+        env:
+          CI: true

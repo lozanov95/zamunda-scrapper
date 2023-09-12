@@ -1,10 +1,15 @@
 package main
 
 import (
+	"os"
 	"testing"
 )
 
 func TestScrape(t *testing.T) {
+	if os.Getenv("CI") != "" {
+		t.Skip("skipping cloud run")
+	}
+
 	cfg := NewConfigFromJSON("config_test.json")
 	cfg.Workers = 1
 
