@@ -1,0 +1,11 @@
+name: Provision on push
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test_backend:
+    runs-on: golang:1.20
+    steps:
+      - name: run tests
+        run: go test ./cmd -v
