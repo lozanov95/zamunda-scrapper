@@ -40,4 +40,5 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Deploy
         run: aws ssm send-command --instance-ids ${{ env.INSTANCE_ID }} --document-name "${{ env.SSM_DOC_NAME }}"
