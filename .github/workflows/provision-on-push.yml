@@ -12,7 +12,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Download repo
+        uses: actions/checkout@v4
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -28,12 +30,12 @@ jobs:
           ZAMUNDA_USERNAME: ${{ secrets.ZAMUNDA_USERNAME }}
           ZAMUNDA_PASSWORD: ${{ secrets.ZAMUNDA_PASSWORD }}
 
-      - name: run tests
+      - name: Run tests
         run: go test -v ./...
         env:
           CI: 1
 
-      - name: configure aws credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE}}
