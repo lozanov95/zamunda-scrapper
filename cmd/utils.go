@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"golang.org/x/text/cases"
@@ -54,4 +55,11 @@ func StringContainsInsensitive(s, substr string) bool {
 func ConvertToTitleCase(s string) string {
 	caser := cases.Title(language.Bulgarian)
 	return caser.String(s)
+}
+
+func TruncateRedundantInfo(s string) string {
+	exp := regexp.MustCompile(`\[[^\[\]]+\]|\([^\(\)]+\)`)
+	replacer := strings.NewReplacer(",", "", ".", "", "  ", " ")
+
+	return strings.TrimSpace(replacer.Replace(exp.ReplaceAllString(s, "")))
 }

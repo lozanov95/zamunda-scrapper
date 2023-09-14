@@ -86,3 +86,13 @@ func TestValidateIndexes(t *testing.T) {
 		t.Fatalf("Expected start:%d, end:%d, but got start:%d, end:%d", startExp, endExp, start, end)
 	}
 }
+
+func TestTruncateRedundantInfo(t *testing.T) {
+	s := "Seven Worlds One Planet: S1 [Uhdremux] Complete Season 1 / Седем Свята Една Планета [2160P] Целият Сезон I (2019)"
+	res := TruncateRedundantInfo(s)
+	expectedRes := "Seven Worlds One Planet: S1 Complete Season 1 / Седем Свята Една Планета Целият Сезон I"
+
+	if res != expectedRes {
+		t.Errorf("Expected \"%s\", got \"%s\" instead", expectedRes, res)
+	}
+}
