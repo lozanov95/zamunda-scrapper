@@ -1,3 +1,7 @@
+KEY := $$HOME/.ssh/ghdeploykey
+SERVERHOST=ubuntu@vloz.website
+REMOTE_DIR=$(SERVERHOST):zamunda-scrapper/movies.json
+
 prod:
 	git pull
 	make run-container
@@ -27,7 +31,15 @@ dev:
 	make -j 2 dev-fe dev-be
 
 scrape:
+	bash -c "rm movies.json"
 	go run ./cmd -scrape
 
 bench:
 	go test ./cmd -bench=.
+
+copy-movies:
+	bash -c "scp -i $(KEY) ./movies.json $(REMOTE_DIR) && ssh -i $(KEY) $(SERVERHOST) \"cd zamunda-scrapper && make prod\""
+
+update-movies:
+	make scrape
+	make copy-movies
