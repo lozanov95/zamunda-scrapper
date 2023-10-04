@@ -196,7 +196,7 @@ a:hover {
 }
 
 .bg-4 {
-  background: linear-gradient(var(--secondary-color), var(--quinary-color));
+  background: linear-gradient(var(--secondary-color), var(--thertiary-color));
 }
 
 .bg-5 {

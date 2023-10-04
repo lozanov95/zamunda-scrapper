@@ -73,8 +73,8 @@ export function Torrent({ torrent }: { torrent: TorrentType }) {
         <div className='grid-cont bg-5 fit-content pad-05 br-12px marg-05 slide-in-top h-min-5 w-min-7'>
             <TextField header='Размер' text={torrent.size} />
             <div><span className='text-header'>Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
-            {torrent.bg_audio && <Tag className='bg-4 ' value="БГ Аудио" />}
-            {torrent.bg_subs && <Tag className='bg-2 ' value="БГ Субтитри" />}
+            {torrent.bg_audio && <Tag className='bg-4' value="БГ Аудио" />}
+            {torrent.bg_subs && <Tag className='bg-2' value="БГ Субс" />}
         </div >
     )
 }
