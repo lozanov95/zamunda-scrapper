@@ -31,7 +31,7 @@ dev:
 	make -j 2 dev-fe dev-be
 
 scrape:
-	bash -c "rm movies.json"
+	bash -c "rm -f movies.json"
 	go run ./cmd -scrape
 
 bench:
