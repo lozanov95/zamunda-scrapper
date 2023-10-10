@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus, faMinus, faCaretDown } from "@fortawesome/free-solid-svg-icons"
-import { useRef, useEffect, useState, useMemo } from "react"
+import { useRef, useEffect, useState } from "react"
+import useOnScreen from "../hooks/useOnScreen"
 
 export function TextField({ header, text, className }: { header: string, text: string, className?: string }) {
 
@@ -101,20 +102,4 @@ export function ToggleablePanel({ label, children, onChange, className }:
             </div>
         </div>
     )
-}
-
-function useOnScreen(ref: any, rootMargin: string) {
-    const [isIntersecting, setIntersecting] = useState(false)
-
-    const observer = useMemo(() => new IntersectionObserver(
-        ([entry]) => setIntersecting(entry.isIntersecting)
-        , { rootMargin }), [ref])
-
-
-    useEffect(() => {
-        observer.observe(ref.current)
-        return () => observer.disconnect()
-    }, [])
-
-    return isIntersecting
 }
