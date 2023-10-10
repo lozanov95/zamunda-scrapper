@@ -152,7 +152,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
         handleChangeValue(e)
     }
 
-    const dropdownVisible = () => { return suggestions.length > 0 && value.length > 2 && value !== suggestions[0] }
+    const isDropdownVisible = suggestions.length > 0 && value.length > 2 && value !== suggestions[0]
 
     return (
         <div className="flex-cont flex-col">
@@ -160,7 +160,7 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
                 {labelString}
             </label>
             <input type="text" value={value} onChange={handleChangeValue} />
-            {dropdownVisible() &&
+            {isDropdownVisible &&
                 <div className="flex-cont flex-col dropdown">
                     {suggestions.map((suggestion: any, idx) => {
                         return <option className="drop-item" value={suggestion} onClick={onClick} key={idx}>{suggestion}</option>
