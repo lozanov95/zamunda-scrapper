@@ -2,6 +2,7 @@ import { useState, useEffect, SetStateAction, KeyboardEvent } from "react"
 import { InputWithLabel, NumberWithLabel, ToggleablePanel } from "./common"
 import { SortingCriteria } from "./types"
 import useFetch from "../hooks/useFetch"
+import InputWithPredictions from "./InputWithPredictions"
 
 export function FilterSection({ domain, setFilterParams, hidden }: { setFilterParams: React.Dispatch<SetStateAction<string>>, domain: string, hidden: boolean }) {
     const [actor, setActor] = useState<string>("")
@@ -93,67 +94,40 @@ function SortingPanel({ setSortCriteria }: any) {
 }
 
 function ActorsPanel({ domain, actor, setActor }: { domain: string, actor: string, setActor: React.Dispatch<SetStateAction<string>> }) {
-    const [actors, setActors] = useState<string[]>([])
+    const { data } = useFetch(`${domain}/actors?contains=${actor}`)
 
-    useEffect(() => {
-        const controller = new AbortController()
-        fetch(`${domain}/actors?contains=${actor}`, { signal: controller.signal })
-            .then((data) => {
-                return data.json()
-            }).then((actors) => {
-                setActors(actors ?? [])
-            }).catch((err) => {
-                console.log(err)
-            })
-
-        return () => controller.abort()
-    }, [actor])
-
+    function handlePredictionClick(val: string) {
+        setActor(val)
+    }
 
     return (
-        <InputWithSuggestions labelString="С участието на " value={actor} handleChangeValue={(e: any) => setActor(e.target.value)} suggestions={actors} />
+        <label className="text-header">
+            С участието на
+            <InputWithPredictions
+                predictions={data ?? []}
+                value={actor}
+                handlePredictionClick={handlePredictionClick}
+                onChange={(e) => setActor(e.target.value)}
+            />
+        </label>
     )
 }
 
 function DirectorsPanel({ domain, director, setDirector }: { domain: string, director: string, setDirector: React.Dispatch<SetStateAction<string>> }) {
-    const { data, error, loading } = useFetch(`${domain}/directors?contains=${director}`)
+    const { data } = useFetch(`${domain}/directors?contains=${director}`)
+    function handlePredictionClick(val: string) {
+        setDirector(val)
+    }
 
     return (
-        <InputWithSuggestions
-            labelString="Режисьор"
-            value={director}
-            handleChangeValue={(e: any) => setDirector(e.target.value)}
-            suggestions={data ?? []} />
-    )
-}
-
-function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
-    { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
-
-
-    const isDropdownVisible = suggestions.length > 0 && value.length > 2 && value !== suggestions[0]
-
-    return (
-        <div className="flex-cont flex-col">
-            <label className='text-header'>
-                {labelString}
-            </label>
-            <input type="text" value={value} onChange={handleChangeValue} />
-            {isDropdownVisible &&
-                <div className="flex-cont flex-col dropdown">
-                    {suggestions.map((suggestion: string, idx) => {
-                        return <option
-                            tabIndex={0}
-                            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleChangeValue(e)}
-                            className="drop-item"
-                            value={suggestion}
-                            onClick={handleChangeValue}
-                            key={idx}>
-                            {suggestion}
-                        </option>
-                    })}
-                </div>
-            }
-        </div>
+        <label className="text-header">
+            Режисьор
+            <InputWithPredictions
+                predictions={data ?? []}
+                value={director}
+                handlePredictionClick={handlePredictionClick}
+                onChange={(e) => setDirector(e.target.value)}
+            />
+        </label>
     )
 }

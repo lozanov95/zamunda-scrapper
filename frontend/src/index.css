@@ -238,7 +238,7 @@ a:hover {
   margin: 1rem;
   min-width: 25%;
   border-radius: 50px;
-  min-height: 30px;
+  min-height: 2.3rem;
   border-color: var(--primary-color);
 }
 
@@ -269,36 +269,25 @@ input {
   flex-direction: column;
 }
 
-div:focus-within>.dropdown {
-  visibility: initial;
-}
-
-.dropdown {
-  visibility: hidden;
-  position: absolute;
-  background-color: var(--quinary-color);
-  margin-top: 3.4rem;
-  border-radius: 6px;
+.suggestions {
+  display: fixed;
   padding: 0.5rem;
-  cursor: pointer;
-  z-index: 2000;
-  transition: visibility 100ms 100ms;
-  left: 50%;
-  transform: translate(-50%, 0);
+  border-radius: 0.5rem;
+  background-color: var(--quinary-color)
 }
 
-.drop-item {
-  padding: 4px;
-  border-bottom: solid black 1px;
+.suggestions>div {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
-.drop-item:last-of-type {
-  border-bottom: none;
+.suggestions>div:hover {
+  background-color: var(--primary-color);
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
-.drop-item:hover {
-  background-color: var(--secondary-color);
-}
 
 .gap-5px {
   gap: 5px;
