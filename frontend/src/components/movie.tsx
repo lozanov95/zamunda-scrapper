@@ -1,14 +1,53 @@
-import { memo, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { TriggerOnVisible, TextField, Tag } from "./common"
 import { MovieType, TorrentType } from "./types"
 
-export function MoviesSection({ movies, movieCount, setPage, areMorePagesAvailable, hidden }:
-    {
-        movies: MovieType[], movieCount: number,
-        setPage: React.Dispatch<React.SetStateAction<number>>,
-        areMorePagesAvailable: boolean,
-        hidden: boolean,
-    }) {
+export function MoviesSection({ domain, hidden, filterParams, title }: { domain: string, title: string, filterParams: string, hidden: boolean }) {
+    const [areMorePagesAvailable, setAreMorePagesAvailable] = useState<boolean>(true)
+    const [movies, setMovies] = useState<MovieType[]>([])
+    const [movieCount, setMovieCount] = useState<number>(0)
+    const [page, setPage] = useState<number>(0)
+
+    const URL = `${domain}/movies?contains=${title}&${filterParams}`
+
+    useEffect(() => {
+        setPage(0)
+        const controller = new AbortController();
+        fetch(URL,
+            { signal: controller.signal })
+            .then((data) => {
+                return data.json()
+            }).then(({ value, count }) => {
+                setMovies(value)
+                setMovieCount(count)
+            }).catch((err) => {
+                console.log(err)
+            })
+
+        return () => { controller.abort() }
+    }, [URL])
+
+    useEffect(() => {
+        if (page == 0) {
+            return
+        }
+        const controller = new AbortController();
+        fetch(`${URL}&page=${page}`,
+            { signal: controller.signal })
+            .then((data) => {
+                return data.json()
+            }).then(({ value, count }) => {
+                if (value.length == 0) {
+                    setAreMorePagesAvailable(false)
+                }
+                setMovies((v) => [...v, ...value])
+                setMovieCount(count)
+            }).catch((err) => {
+                console.log(err)
+            })
+
+        return () => { controller.abort() }
+    }, [page])
 
     return (
         <div className={`movies-section grid-cont ${hidden ? "slide-out-right" : "slide-in-right-sm"}`} onTransitionEnd={(e) => { hidden && e.currentTarget.classList.add("hidden-sm") }}>

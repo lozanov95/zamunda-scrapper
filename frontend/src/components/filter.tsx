@@ -1,6 +1,7 @@
 import { useState, useEffect, SetStateAction, KeyboardEvent } from "react"
 import { InputWithLabel, NumberWithLabel, ToggleablePanel } from "./common"
 import { SortingCriteria } from "./types"
+import useFetch from "../hooks/useFetch"
 
 export function FilterSection({ domain, setFilterParams, hidden }: { setFilterParams: React.Dispatch<SetStateAction<string>>, domain: string, hidden: boolean }) {
     const [actor, setActor] = useState<string>("")
@@ -56,17 +57,7 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
 }
 
 function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelectedGenres: React.Dispatch<SetStateAction<string[]>> }) {
-    const [genres, setGenres] = useState<string[]>([])
-
-    useEffect(() => {
-        fetch(`${domain}/genres`).then((data) => {
-            return data.json()
-        }).then((newMovies) => {
-            setGenres(newMovies)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }, [])
+    const { data, loading } = useFetch(`${domain}/genres`)
 
     function HandleSelectGenres(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.checked) {
@@ -77,9 +68,10 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
     }
     return (
         <ToggleablePanel label="Жанрове (комбинирано)" className="grid-cols-2">
-            {genres.map((val, idx) => {
-                return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
-            })}
+            {loading ? <div>loading...</div> :
+                data && data.map((val: string, idx: number) => {
+                    return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
+                })}
         </ToggleablePanel>
     )
 }
@@ -124,33 +116,20 @@ function ActorsPanel({ domain, actor, setActor }: { domain: string, actor: strin
 }
 
 function DirectorsPanel({ domain, director, setDirector }: { domain: string, director: string, setDirector: React.Dispatch<SetStateAction<string>> }) {
-    const [directors, setDirectors] = useState<string[]>([])
-
-    useEffect(() => {
-        const controller = new AbortController()
-        fetch(`${domain}/directors?contains=${director}`, { signal: controller.signal })
-            .then((data) => {
-                return data.json()
-            }).then((directors) => {
-                setDirectors(directors ?? [])
-            }).catch((err) => {
-                console.log(err)
-            })
-
-        return () => controller.abort()
-    }, [director])
+    const { data, error, loading } = useFetch(`${domain}/directors?contains=${director}`)
 
     return (
-        <InputWithSuggestions labelString="Режисьор" value={director} handleChangeValue={(e: any) => setDirector(e.target.value)} suggestions={directors} />
+        <InputWithSuggestions
+            labelString="Режисьор"
+            value={director}
+            handleChangeValue={(e: any) => setDirector(e.target.value)}
+            suggestions={data ?? []} />
     )
 }
 
 function InputWithSuggestions({ labelString, value, handleChangeValue, suggestions }:
     { labelString: string, value: string, handleChangeValue: any, suggestions: string[] }) {
 
-    function onClick(e: React.MouseEvent<HTMLElement>) {
-        handleChangeValue(e)
-    }
 
     const isDropdownVisible = suggestions.length > 0 && value.length > 2 && value !== suggestions[0]
 
@@ -162,8 +141,16 @@ function InputWithSuggestions({ labelString, value, handleChangeValue, suggestio
             <input type="text" value={value} onChange={handleChangeValue} />
             {isDropdownVisible &&
                 <div className="flex-cont flex-col dropdown">
-                    {suggestions.map((suggestion: any, idx) => {
-                        return <option className="drop-item" value={suggestion} onClick={onClick} key={idx}>{suggestion}</option>
+                    {suggestions.map((suggestion: string, idx) => {
+                        return <option
+                            tabIndex={0}
+                            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleChangeValue(e)}
+                            className="drop-item"
+                            value={suggestion}
+                            onClick={handleChangeValue}
+                            key={idx}>
+                            {suggestion}
+                        </option>
                     })}
                 </div>
             }
