@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 
-export function HeaderSection({ title, setTitle, displayFilter, displayMovies, setDisplayFilter, setDisplayMovies, URL }:
+export function HeaderSection({ title, setTitle, displayFilter, displayMovies, setDisplayFilter, setDisplayMovies, URL, isMobile }:
     {
         title: string,
+        isMobile: boolean,
         setTitle: React.Dispatch<React.SetStateAction<string>>,
         displayFilter: boolean,
         displayMovies: boolean,
@@ -30,6 +31,9 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
 
 
     function handleToggleFilter() {
+        if (!isMobile) {
+            return
+        }
         setDisplayFilter((displayFilter) => !displayFilter)
         setDisplayMovies((displayMovies) => !displayMovies)
         if (!displayFilter) {
