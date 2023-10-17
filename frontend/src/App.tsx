@@ -20,7 +20,7 @@ function App() {
   }, [])
 
   return (
-    <div className='main-section grid grid-row-3'>
+    <div className='text-gray-800 bg-gray-200'>
       <HeaderSection title={title} setTitle={setTitle}
         setDisplayFilter={setDisplayFilter}
         displayMovies={displayMovies}
@@ -29,15 +29,17 @@ function App() {
         URL={URL}
         isMobile={isMobile}
       />
-      <FilterSection
-        setFilterParams={setFilterParams}
-        domain={domain}
-        hidden={!displayFilter} />
-      <MoviesSection
-        hidden={!displayMovies}
-        title={title}
-        filterParams={filterParams}
-        domain={domain} />
+      <div className='flex justify-center gap-4 py-4'>
+        <FilterSection
+          setFilterParams={setFilterParams}
+          domain={domain}
+          hidden={!displayFilter} />
+        <MoviesSection
+          hidden={!displayMovies}
+          title={title}
+          filterParams={filterParams}
+          domain={domain} />
+      </div>
     </div>
   )
 }

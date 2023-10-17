@@ -50,7 +50,7 @@ export function MoviesSection({ domain, hidden, filterParams, title }: { domain:
     }, [page])
 
     return (
-        <div className={`movies-section grid-cont ${hidden ? "slide-out-right" : "slide-in-right-sm"}`} onTransitionEnd={(e) => { hidden && e.currentTarget.classList.add("hidden-sm") }}>
+        <div className="flex flex-col gap-2 items-center">
             <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )
@@ -62,7 +62,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
     return (
         <>
-            <div className='text-header bg-2 grid-cont shadowed w-90-md pad-x-1 pad-x-0-md'>{msg}</div>
+            <div className="border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">{msg}</div>
             {movies?.map((movie: MovieType) => {
                 return <Movie movie={movie} key={movie.title} />
             })
@@ -75,8 +75,8 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
 export const Movie = memo(function Movie({ movie }: { movie: MovieType }) {
 
     return (
-        <div className='movie grid-cont bg-2 w-90-md shadowed'>
-            <div className='title grid-row-1 grid-col-1 grid-col-end-3-md grid-col-start-2-md grid-row-start-1-md'>{movie.title}</div>
+        <div className="flex flex-col gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
+            <div className="text-xl font-semibold">{movie.title}</div>
             <MovieImage previewLink={movie.previewLink} />
             <ResumeSection movie={movie} />
             <TorrentSection movie={movie} />
@@ -94,9 +94,9 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
 
     return (
         <>
-            <div className={`grid-col-start-2-md grid-row-start-3-md `}>
+            <div>
                 <button className={btnClass} onClick={ToggleTorrent}>{displayTorrents ? "Скрий торентите" : "Покажи торентите"}</button>
-                <div className='torrent-section'>
+                <div >
                     {displayTorrents && movie.torrents?.map((torrent, idx) => {
                         return <Torrent torrent={torrent} key={idx} />
                     })}
@@ -109,18 +109,18 @@ export function TorrentSection({ movie }: { movie: MovieType }) {
 
 export function Torrent({ torrent }: { torrent: TorrentType }) {
     return (
-        <div className='grid-cont bg-5 fit-content pad-05 br-12px marg-05 slide-in-top h-min-5 w-min-7'>
+        <div >
             <TextField header='Размер' text={torrent.size} />
-            <div><span className='text-header'>Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
-            {torrent.bg_audio && <Tag className='bg-4' value="БГ Аудио" />}
-            {torrent.bg_subs && <Tag className='bg-2' value="БГ Субс" />}
+            <div><span >Линк: </span><a href={"https://zamunda.net" + torrent.link} target="_blank">тук</a></div>
+            {torrent.bg_audio && <Tag value="БГ Аудио" />}
+            {torrent.bg_subs && <Tag value="БГ Субс" />}
         </div >
     )
 }
 
 export function ResumeSection({ movie }: { movie: MovieType }) {
     return (
-        <div className="flex marg-2px grid-col-start-2-md grid-row-start-2-md text-align-justify pad-05">
+        <div >
             <TextField header='Жанр' text={movie.genres?.join(", ")} />
             <TextField header='Режисьор' text={movie.directors?.join(", ")} />
             <TextField header='Актьори' text={movie.actors?.join(", ")} />
@@ -133,11 +133,11 @@ export function ResumeSection({ movie }: { movie: MovieType }) {
 }
 
 function MovieImage({ previewLink }: { previewLink: string }) {
-    const imageElement = previewLink.startsWith("http") ?
-        <img className='br-12px img-cover grid-row-start-1-md grid-row-end-3-md' src={previewLink}></img> :
-        <img className='br-12px img-cover grid-row-start-1-md grid-row-end-3-md' src={"https://zamunda.net" + previewLink}></img>
+    const src = previewLink.startsWith("http")
+        ? previewLink
+        : "https://zamunda.net" + previewLink
 
     return (
-        imageElement
+        <img src={src} className="" />
     )
 }

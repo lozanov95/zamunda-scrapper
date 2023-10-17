@@ -27,14 +27,20 @@ export default function InputWithPredictions({ predictions, onChange, value, han
 
 
     return (
-        <div onFocus={onFocus} onBlur={onBlur}>
-            <input value={value} onChange={onChange} required={required} />
+        <div onFocus={onFocus} onBlur={onBlur} className="flex gap-2 justify-center">
+            <input
+                value={value}
+                onChange={onChange}
+                required={required}
+                className="text-center px-10 py-1 rounded-lg border-2 border-blue-200"
+            />
             {displayPredictions ?
-                <div className="suggestions bg-3">
+                <div className="absolute translate-y-9 bg-blue-200 rounded-lg border-2 border-blue-200 shadow-sm shadow-blue-300">
                     {predictions
                         .slice(0, maxPredictions ?? 5)
                         .map((pred, i) =>
-                            <div className=""
+                            <div
+                                className="hover:bg-blue-300 px-3 py-1 rounded-lg"
                                 key={i}
                                 onClick={() => handlePredictionClick(pred)}
                                 onKeyDown={(e) => e.key === "Enter" && handlePredictionClick(pred)}

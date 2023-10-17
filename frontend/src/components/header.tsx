@@ -42,20 +42,25 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
     }
 
     return (
-        <div className='header-section grid-row-start-1 inline-flex'>
+        <div className="flex justify-evenly bg-blue-100 py-2">
             <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
-            <input className='header-search' placeholder='търси по заглавие' value={title} onChange={(e) => setTitle(e.target.value)} />
-            <div className='flex-1'></div>
+            <input
+                className="text-center px-10 py-1 rounded-lg border-2 border-blue-200"
+                placeholder='търси по заглавие'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+            />
+            <div></div>
         </div >
     )
 }
 
 function ToggleFilter({ handleClick, toggled }: { handleClick: VoidFunction, toggled: boolean }) {
     return (
-        <div onClick={handleClick} className={`hamburger flex-1${toggled ? " toggled" : ""}`}>
-            <div></div>
-            <div></div>
-            <div></div>
+        <div className="flex flex-col gap-1 place-content-center" onClick={handleClick}>
+            <div className="lg:hidden w-8 h-[5px] bg-gray-600"></div>
+            <div className="lg:hidden w-8 h-[5px] bg-gray-600"></div>
+            <div className="lg:hidden w-8 h-[5px] bg-gray-600"></div>
         </div>
     )
 }

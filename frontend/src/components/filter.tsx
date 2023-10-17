@@ -38,17 +38,17 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     }
 
     return (
-        <div className={`grid-cont filter ${hidden ? "slide-out-left" : "slide-in-left-sm"}`} onTransitionEnd={(e) => hidden && e.currentTarget.classList.add("hidden-sm")}>
+        <div className="flex flex-col items-center gap-2 rounded-lg w-[100%] lg:w-max">
             <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
-            <div className='grid-cont grid-cols-2 bg-2 shadowed w-90-md justify-items-right justify-content-space-around'>
+            <div className="flex gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
                 <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
-            <div className='grid-cont bg-2 shadowed w-90-md'>
-                <NumberWithLabel className='grid' labelVal='Година' value={fromYear} onChange={handleYearChange} setValue={setFromYear} />
-                <NumberWithLabel className='grid' labelVal='Минимален рейтинг' value={minRating} onChange={handleRatingChange} setValue={setMinRating} />
+            <div className="flex flex-col gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
+                <NumberWithLabel labelVal='Година' value={fromYear} onChange={handleYearChange} setValue={setFromYear} />
+                <NumberWithLabel labelVal='Минимален рейтинг' value={minRating} onChange={handleRatingChange} setValue={setMinRating} />
             </div>
-            <div className='grid-cont bg-2 shadowed w-90-md'>
+            <div className="flex flex-col gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
                 <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
                 <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
             </div>
@@ -68,11 +68,13 @@ function GenresPanel({ domain, setSelectedGenres }: { domain: string, setSelecte
         setSelectedGenres((g) => g.filter((v) => v != e.target.value))
     }
     return (
-        <ToggleablePanel label="Жанрове (комбинирано)" className="grid-cols-2">
-            {loading ? <div>loading...</div> :
-                data && data.map((val: string, idx: number) => {
-                    return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
-                })}
+        <ToggleablePanel label="Жанрове (комбинирано)" >
+            <div className="grid grid-cols-2 justify-evenly">
+                {loading ? <div>loading...</div> :
+                    data && data.map((val: string, idx: number) => {
+                        return <InputWithLabel labelVal={val} type="checkbox" key={idx} value={val} onChange={HandleSelectGenres} />
+                    })}
+            </div>
         </ToggleablePanel>
     )
 }
@@ -101,7 +103,7 @@ function ActorsPanel({ domain, actor, setActor }: { domain: string, actor: strin
     }
 
     return (
-        <label className="text-header">
+        <label className="flex flex-col gap-1 text-center">
             С участието на
             <InputWithPredictions
                 predictions={data ?? []}
@@ -120,7 +122,7 @@ function DirectorsPanel({ domain, director, setDirector }: { domain: string, dir
     }
 
     return (
-        <label className="text-header">
+        <label className="flex flex-col gap-1 text-center">
             Режисьор
             <InputWithPredictions
                 predictions={data ?? []}

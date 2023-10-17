@@ -9,7 +9,7 @@ export function TextField({ header, text, className }: { header: string, text: s
         <>
             {text?.length > 0 ?
                 <div className={className}>
-                    <span className="text-header">{header}: </span>
+                    <span >{header}: </span>
                     <span>{text}</span>
                 </div> :
                 <></>
@@ -24,14 +24,23 @@ export function InputWithLabel({ labelVal, type, name, value, checked, onChange,
         checked?: boolean, onChange?: any, defaultValue?: string | number, defaultChecked?: boolean, className?: string
     }) {
     return (
-        <label className={["text-header", className].join(" ")}>
+        <label className="flex gap-1 justify-end">
             {labelVal}
-            <input type={type} name={name} value={value} checked={checked} onChange={onChange} defaultValue={defaultValue} defaultChecked={defaultChecked} />
+            <input
+                type={type}
+                name={name}
+                value={value}
+                checked={checked}
+                onChange={onChange}
+                defaultValue={defaultValue}
+                defaultChecked={defaultChecked}
+            />
         </label>
     )
 }
 
-export function NumberWithLabel({ labelVal, value, onChange, className, setValue }: { labelVal: string, value: number, className: string, onChange: any, setValue: React.Dispatch<React.SetStateAction<number>> }) {
+export function NumberWithLabel({ labelVal, value, onChange, className, setValue }:
+    { labelVal: string, value: number, className?: string, onChange: any, setValue: React.Dispatch<React.SetStateAction<number>> }) {
     function decrement() {
         setValue((val) => val - 1)
     }
@@ -40,12 +49,12 @@ export function NumberWithLabel({ labelVal, value, onChange, className, setValue
     }
 
     return (
-        <label className={["text-header", className].join(" ")}>
+        <label className="flex flex-col text-center gap-1">
             {labelVal}
-            <span>
-                <FontAwesomeIcon icon={faMinus} onClick={decrement} className="marg-r-025" />
-                <input type="number" value={value} onChange={onChange} />
-                <FontAwesomeIcon icon={faPlus} onClick={increment} className="marg-l-025" />
+            <span className="flex gap-2 justify-center items-center">
+                <FontAwesomeIcon icon={faMinus} onClick={decrement} />
+                <input className="text-center py-1 rounded-lg border-2 border-blue-200" type="number" value={value} onChange={onChange} />
+                <FontAwesomeIcon icon={faPlus} onClick={increment} />
             </span>
         </label>
     )
@@ -86,7 +95,7 @@ export function TriggerOnVisible({ setPage }: { setPage: React.Dispatch<React.Se
 }
 
 export function ToggleablePanel({ label, children, onChange, className }:
-    { label: string, children: React.ReactElement[], onChange?: any, className?: string }) {
+    { label: string, children: React.ReactElement[] | React.ReactElement, onChange?: any, className?: string }) {
     const [toggled, setToggled] = useState<boolean>(true)
 
     function Toggle() {
@@ -94,10 +103,10 @@ export function ToggleablePanel({ label, children, onChange, className }:
     }
 
     return (
-        <div className='grid-cont bg-2 shadowed w-90-md'>
-            <label className='text-header'>{label} <FontAwesomeIcon onClick={Toggle} icon={faCaretDown} className={toggled ? "rotated" : ""} /></label>
+        <div className="flex flex-col items-center gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%]">
+            <div className="text-lg font-semibold text-center border-b-2 border-blue-200">{label} <FontAwesomeIcon onClick={Toggle} icon={faCaretDown} className={toggled ? "rotated" : ""} /></div>
             <HR />
-            <div className={[`grid-cont pad-0 marg-0 justify-items-right ${toggled ? "toggled-on" : "toggled-off"}`, className].join(" ")} onChange={onChange}>
+            <div onChange={onChange}>
                 {children}
             </div>
         </div>
