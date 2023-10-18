@@ -43,10 +43,10 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
 
     return (
         <div className="sticky top-0 left-0">
-            <div className="flex justify-evenly bg-blue-100 py-2 border-b-2 border-blue-200">
+            <div className="flex justify-evenly bg-gradient-to-r from-cyan-700 via-cyan-950 to-cyan-700 py-2 border-b-2 border-blue-200">
                 <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
                 <input
-                    className="text-center px-10 py-1 rounded-lg border-2 border-blue-200"
+                    className="text-center px-6 py-1 rounded-lg border-[3px] border-yellow-800 placeholder-cyan-800 bg-[#ece2c3] text-cyan-900 font-semibold"
                     placeholder='търси по заглавие'
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -60,9 +60,9 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
 function ToggleFilter({ handleClick, toggled }: { handleClick: VoidFunction, toggled: boolean }) {
     return (
         <div className="flex flex-col gap-1 place-content-center" onClick={handleClick}>
-            <div className={`lg:hidden h-[5px] bg-gray-600 ${toggled ? "w-8" : "w-8"} duration-300 ease-out`}></div>
-            <div className={`lg:hidden h-[5px] bg-gray-600 ${toggled ? "w-6" : "w-8"} duration-300 ease-out`}></div>
-            <div className={`lg:hidden h-[5px] bg-gray-600 ${toggled ? "w-5" : "w-8"} duration-300 ease-out`}></div>
+            <div className={`lg:hidden h-[5px] bg-yellow-600 ${toggled ? "w-8" : "w-8"} duration-300 ease-out`}></div>
+            <div className={`lg:hidden h-[5px] bg-yellow-700 ${toggled ? "w-6" : "w-8"} duration-300 ease-out`}></div>
+            <div className={`lg:hidden h-[5px] bg-yellow-700 ${toggled ? "w-5" : "w-8"} duration-300 ease-out`}></div>
         </div>
     )
 }
