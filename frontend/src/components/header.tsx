@@ -42,16 +42,18 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
     }
 
     return (
-        <div className="flex justify-evenly bg-blue-100 py-2 border-b-2 border-blue-200">
-            <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
-            <input
-                className="text-center px-10 py-1 rounded-lg border-2 border-blue-200"
-                placeholder='търси по заглавие'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-            />
-            <div></div>
-        </div >
+        <div className="sticky top-0 left-0">
+            <div className="flex justify-evenly bg-blue-100 py-2 border-b-2 border-blue-200">
+                <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
+                <input
+                    className="text-center px-10 py-1 rounded-lg border-2 border-blue-200"
+                    placeholder='търси по заглавие'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                <div></div>
+            </div>
+        </div>
     )
 }
 
