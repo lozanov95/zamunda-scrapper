@@ -34,6 +34,7 @@ export function InputWithLabel({ labelVal, type, name, value, checked, onChange,
                 onChange={onChange}
                 defaultValue={defaultValue}
                 defaultChecked={defaultChecked}
+                className="accent-yellow-500 outline-yellow-300"
             />
         </label>
     )
