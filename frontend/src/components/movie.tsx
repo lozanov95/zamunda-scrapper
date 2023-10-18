@@ -108,7 +108,7 @@ export function Movie({ movie }: { movie: MovieType }) {
                 <div className="font-semibold">{movie.title}</div>
                 <div className="text-sm text-gray-500 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
                 <div className="border-t-2 border-blue-200 indent-3">{movie.description}</div>
-                <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-blue-200`}>
+                <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-blue-200 gap-2`}>
                     <div className="flex flex-col gap-2">
                         {movie.directors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">Режисиран от {movie.directors.join(", ")}</div>}
                         {movie.actors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">С участието на {movie.actors.join(", ")}</div>}
