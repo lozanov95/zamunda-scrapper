@@ -38,17 +38,17 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     }
 
     return (
-        <div className={`flex flex-col items-center gap-2 rounded-lg w-[100%] lg:w-max ${hidden && 'hidden'}`}>
+        <div className={`flex flex-col font-semibold text-gray-200 items-center gap-2 rounded-lg w-[100%] lg:w-max ${hidden && 'hidden'}`}>
             <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
-            <div className="flex gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
+            <div className="flex gap-3 border-2 bg-gradient-to-r from-cyan-700 to-cyan-900 border-cyan-950 shadow-cyan-800 px-6 py-4 rounded-lg w-[100%] justify-center">
                 <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
-            <div className="flex flex-col gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
+            <div className="flex flex-col gap-3 border-2 bg-gradient-to-r from-cyan-700 to-cyan-900  border-cyan-950 shadow-cyan-800 px-6 py-4 rounded-lg w-[100%] justify-center">
                 <NumberWithLabel labelVal='Година' value={fromYear} onChange={handleYearChange} setValue={setFromYear} />
                 <NumberWithLabel labelVal='Минимален рейтинг' value={minRating} onChange={handleRatingChange} setValue={setMinRating} />
             </div>
-            <div className="flex flex-col gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
+            <div className="flex flex-col gap-3 border-2 bg-gradient-to-r from-cyan-700 to-cyan-900  border-cyan-950 shadow-cyan-800 px-6 py-4 rounded-lg w-[100%] justify-center">
                 <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
                 <DirectorsPanel domain={domain} director={director} setDirector={setDirector} />
             </div>

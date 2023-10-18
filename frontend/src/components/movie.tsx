@@ -64,7 +64,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
     return (
         <>
-            <div className="border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center text-center font-semibold">{msg}</div>
+            <div className="text-cyan-900 bg-gradient-to-t from-yellow-500 to-yellow-300 border-b-2 border-yellow-700 border-2 shadow-md px-6 py-4 rounded-lg w-[100%] justify-center text-center font-bold">{msg}</div>
             <div className="flex flex-wrap gap-2 justify-center">
                 {movies?.map((movie: MovieType) => {
                     return <Movie movie={movie} key={movie.title} />
@@ -91,7 +91,7 @@ export function Movie({ movie }: { movie: MovieType }) {
 
     return (
         <div
-            className="flex flex-col lg:flex-row gap-2 bg-blue-100 py-4 px-4 border-2 border-blue-200 shadow-md shadow-blue-300 rounded-lg min-w-full hover:border-blue-400 hover:shadow-blue-400 cursor-pointer"
+            className="flex flex-col lg:flex-row gap-2 bg-gradient-to-t from-yellow-50 to-[#fafaf1] py-4 px-4 border-2 border-yellow-400 shadow-sm shadow-yellow-300 rounded-lg min-w-full hover:border-cyan-700 hover:shadow-cyan-500 cursor-pointer"
             onClick={() => setToggled((value) => !value)}
         >
             <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
@@ -99,15 +99,15 @@ export function Movie({ movie }: { movie: MovieType }) {
                     <MovieImage previewLink={movie.previewLink} />
                 </div>
                 <Rating rating={movie.rating} />
-                <div className="flex gap-1 justify-center">
-                    {subs && <div className="bg-teal-900 text-gray-200 shadow-lg px-2 py-1 rounded-lg font-semibold text-center">БГ Суб</div>}
-                    {audio && <div className="bg-lime-900 text-gray-200 shadow-lg px-2 py-1 rounded-lg font-semibold text-center">БГ Аудио</div>}
+                <div className="flex gap-1 justify-center text-gray-200 font-bold">
+                    {subs && <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Суб</div>}
+                    {audio && <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Аудио</div>}
                 </div>
             </div>
             <div className="px-1 flex flex-col gap-1">
-                <div className="font-semibold">{movie.title}</div>
+                <div className="font-semibold text-cyan-800">{movie.title}</div>
                 <div className="text-sm text-gray-500 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
-                <div className="border-t-2 border-blue-200 indent-3">{movie.description}</div>
+                <div className="border-t-2 border-cyan-600 indent-3 text-cyan-800">{movie.description}</div>
                 <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-blue-200 gap-2`}>
                     <div className="flex flex-col gap-2">
                         {movie.directors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">Режисиран от {movie.directors.join(", ")}</div>}

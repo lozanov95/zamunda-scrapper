@@ -53,7 +53,7 @@ export function NumberWithLabel({ labelVal, value, onChange, className, setValue
             {labelVal}
             <span className="flex gap-2 justify-center items-center">
                 <FontAwesomeIcon icon={faMinus} onClick={decrement} />
-                <input className="text-center py-1 rounded-lg border-2 border-blue-200" type="number" value={value} onChange={onChange} />
+                <input className="text-center py-1 rounded-lg border-2 border-cyan-950 placeholder-cyan-800 text-cyan-900" type="number" value={value} onChange={onChange} />
                 <FontAwesomeIcon icon={faPlus} onClick={increment} />
             </span>
         </label>
@@ -103,8 +103,8 @@ export function ToggleablePanel({ label, children, onChange, className }:
     }
 
     return (
-        <div className="flex flex-col items-center gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%]">
-            <div className="text-lg font-semibold text-center border-b-2 border-blue-200 px-4 flex justify-around items-center gap-2">{label}
+        <div className="flex flex-col items-center gap-2 border-2 bg-gradient-to-r from-cyan-700 to-cyan-900  border-cyan-950 shadow-cyan-800 shadow-md px-6 py-4 rounded-lg w-[100%]">
+            <div className="text-lg font-semibold text-center px-4 flex justify-around items-center gap-2">{label}
                 <FontAwesomeIcon
                     onClick={Toggle}
                     icon={faCaretDown}

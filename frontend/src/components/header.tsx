@@ -45,8 +45,9 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
         <div className="sticky top-0 left-0">
             <div className="flex justify-evenly bg-gradient-to-r from-cyan-700 via-cyan-950 to-cyan-700 py-2 border-b-2 border-cyan-900">
                 <ToggleFilter toggled={displayFilter} handleClick={handleToggleFilter} />
+                {/* bg-[#ece2c3] btn color */}
                 <input
-                    className="text-center px-6 py-1 rounded-lg border-[3px] border-yellow-700 placeholder-cyan-800 bg-[#ece2c3] text-cyan-900 font-semibold"
+                    className="text-center px-6 py-1 rounded-lg border-[3px] bg-gradient-to-t from-yellow-50 to-[#fafaf1] border-yellow-700 placeholder-cyan-800 text-cyan-900 font-semibold"
                     placeholder='търси по заглавие'
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}

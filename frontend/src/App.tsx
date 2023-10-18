@@ -20,7 +20,7 @@ function App() {
   }, [])
 
   return (
-    <div className='text-gray-800 bg-gray-200'>
+    <div className='text-gray-800 bg-gradient-to-t from-yellow-200 to-cyan-100'>
       <HeaderSection title={title} setTitle={setTitle}
         setDisplayFilter={setDisplayFilter}
         displayMovies={displayMovies}
