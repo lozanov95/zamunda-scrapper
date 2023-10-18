@@ -29,7 +29,7 @@ function App() {
         URL={URL}
         isMobile={isMobile}
       />
-      <div className='flex justify-center gap-4 py-4'>
+      <div className='flex justify-center gap-4 py-4 lg:max-w-[80%] justify-items-center m-auto'>
         <FilterSection
           setFilterParams={setFilterParams}
           domain={domain}
