@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import { TriggerOnVisible, TextField, Tag } from "./common"
 import { MovieType, TorrentType } from "./types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -77,9 +77,15 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
 })
 
 export function Movie({ movie }: { movie: MovieType }) {
-    const subs = movie.torrents.find((el) => el.bg_subs === true) !== undefined
-    const audio = movie.torrents.find((el) => el.bg_audio === true) !== undefined
-    console.log()
+    const subs = useMemo(
+        () => movie.torrents.find((el) => el.bg_subs === true) !== undefined,
+        [movie.torrents]
+    )
+    const audio = useMemo(
+        () => movie.torrents.find((el) => el.bg_audio === true) !== undefined,
+        [movie.torrents]
+    )
+
     return (
         <div className="flex flex-col lg:flex-row gap-2 bg-blue-100 py-4 px-4 border-2 border-blue-200 shadow-md shadow-blue-300 rounded-lg min-w-full hover:border-blue-400 hover:shadow-blue-400 cursor-pointer">
             <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
