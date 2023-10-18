@@ -52,7 +52,7 @@ export function MoviesSection({ domain, hidden, filterParams, title }: { domain:
     }, [page])
 
     return (
-        <div className="flex flex-col gap-2 items-center lg:w-[70%]">
+        <div className={`flex flex-col gap-2 items-center lg:w-[70%] ${hidden && 'hidden'}`}>
             <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )
@@ -82,8 +82,10 @@ export function Movie({ movie }: { movie: MovieType }) {
     console.log()
     return (
         <div className="flex flex-col lg:flex-row gap-2 bg-blue-100 py-4 px-4 border-2 border-blue-200 shadow-md shadow-blue-300 rounded-lg min-w-full hover:border-blue-400 hover:shadow-blue-400 cursor-pointer">
-            <div className="flex flex-col justify-items-center min-w-fit">
-                <MovieImage previewLink={movie.previewLink} />
+            <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
+                <div>
+                    <MovieImage previewLink={movie.previewLink} />
+                </div>
                 <div className="font-bold text-center flex gap-1 items-center justify-center">
                     <FontAwesomeIcon icon={faStar} className="text-yellow-500" />
                     <span>{movie.rating}</span>
@@ -95,8 +97,8 @@ export function Movie({ movie }: { movie: MovieType }) {
             </div>
             <div className="px-1 flex flex-col gap-1">
                 <div className="font-semibold">{movie.title}</div>
-                <div className="text-sm text-gray-500 font-semibold">{movie.year} {movie.genres.length > 0 && `- ${movie.genres.join(", ")}`} </div>
-                <div className="border-t-2 border-blue-200">{movie.description}</div>
+                <div className="text-sm text-gray-500 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
+                <div className="border-t-2 border-blue-200 indent-3">{movie.description}</div>
             </div>
         </div>
     )
@@ -116,6 +118,6 @@ function MovieImage({ previewLink }: { previewLink: string }) {
         : "https://zamunda.net" + previewLink
 
     return (
-        <img src={src} className="max-w-[200px] max-h-[200px]" />
+        <img src={src} className="max-w-[200px] max-h-[200px] rounded-lg" />
     )
 }

@@ -38,7 +38,7 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
     }
 
     return (
-        <div className="flex flex-col items-center gap-2 rounded-lg w-[100%] lg:w-max">
+        <div className={`flex flex-col items-center gap-2 rounded-lg w-[100%] lg:w-max ${hidden && 'hidden'}`}>
             <GenresPanel domain={domain} setSelectedGenres={setSelectedGenres} />
             <div className="flex gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%] justify-center">
                 <InputWithLabel labelVal='БГ Аудио' type='checkbox' checked={bgAudio} onChange={(e: any) => setBgAudio(e.target.checked)} />
