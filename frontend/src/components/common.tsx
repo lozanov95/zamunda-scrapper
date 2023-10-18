@@ -104,7 +104,13 @@ export function ToggleablePanel({ label, children, onChange, className }:
 
     return (
         <div className="flex flex-col items-center gap-3 border-2 bg-blue-100 border-blue-200 shadow-md shadow-blue-300 px-6 py-4 rounded-lg w-[100%]">
-            <div className="text-lg font-semibold text-center border-b-2 border-blue-200">{label} <FontAwesomeIcon onClick={Toggle} icon={faCaretDown} className={toggled ? "rotated" : ""} /></div>
+            <div className="text-lg font-semibold text-center border-b-2 border-blue-200 px-4 flex justify-around items-center gap-2">{label}
+                <FontAwesomeIcon
+                    onClick={Toggle}
+                    icon={faCaretDown}
+                    className={`duration-300 ${toggled ? "rotate-180" : "rotate-0"}`}
+                />
+            </div>
             <HR />
             <div className={`${toggled ? "flex flex-col" : "hidden"} `} onChange={onChange}>
                 {children}
