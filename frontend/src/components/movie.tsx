@@ -129,14 +129,16 @@ function Torrent({ torrent }: { torrent: TorrentType }) {
             onClick={() => { window.open(`https://zamunda.net${torrent.link}`) }}
         >
 
-            <div className="flex flex-col gap-2">
-                {torrent.bg_audio &&
-                    <div className="bg-lime-900 text-gray-200 shadow-sm shadow-teal-800 px-2 py-1 rounded-lg font-semibold text-center">БГ Аудио</div>
-                }
-                {torrent.bg_subs &&
-                    <div className="bg-teal-900 text-gray-200 shadow-sm shadow-teal-800 px-2 py-1 rounded-lg font-semibold text-center">БГ Субс</div>
-                }
-            </div>
+            {torrent.bg_audio || torrent.bg_subs &&
+                <div className="flex flex-col gap-2">
+                    {torrent.bg_audio &&
+                        <div className="bg-lime-900 text-gray-200 shadow-sm shadow-teal-800 px-2 py-1 rounded-lg font-semibold text-center">БГ Аудио</div>
+                    }
+                    {torrent.bg_subs &&
+                        <div className="bg-teal-900 text-gray-200 shadow-sm shadow-teal-800 px-2 py-1 rounded-lg font-semibold text-center">БГ Субс</div>
+                    }
+                </div>
+            }
             <div className="text-sm font-semibold text-gray-600">
                 {torrent.size}
             </div>
