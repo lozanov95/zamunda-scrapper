@@ -125,17 +125,17 @@ export function Movie({ movie }: { movie: MovieType }) {
 function Torrent({ torrent }: { torrent: TorrentType }) {
     return (
         <div
-            className="bg-blue-300 gap-2 max-w-fit px-4 py-2 rounded-lg place-items-center place-content-center flex flex-col cursor-pointer border-2 border-blue-300 hover:border-blue-400 shadow-sm shadow-blue-500"
+            className="gap-2 max-w-fit px-4 py-2 rounded-lg place-items-center place-content-center flex flex-col cursor-pointer border-2 hover:border-yellow-400 shadow hover:shadow-yellow-300 border-cyan-700 shadow-cyan-500"
             onClick={() => { window.open(`https://zamunda.net${torrent.link}`) }}
         >
 
-            {torrent.bg_audio || torrent.bg_subs &&
-                <div className="flex flex-col gap-2">
+            {(torrent.bg_audio || torrent.bg_subs) &&
+                <div className="flex flex-col gap-2 text-gray-200 font-bold">
                     {torrent.bg_audio &&
-                        <div className="bg-lime-900 text-gray-200 shadow-sm shadow-teal-800 px-2 py-1 rounded-lg font-semibold text-center">БГ Аудио</div>
+                        <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Аудио</div>
                     }
                     {torrent.bg_subs &&
-                        <div className="bg-teal-900 text-gray-200 shadow-sm shadow-teal-800 px-2 py-1 rounded-lg font-semibold text-center">БГ Субс</div>
+                        <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Субс</div>
                     }
                 </div>
             }
