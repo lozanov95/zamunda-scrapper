@@ -64,8 +64,8 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     const msg = `Има ${movieCount} ${movieCount == 1 ? "филм, който" : "филма, които"} отговарят на търсенето.`
     return (
         <>
-            <div className="text-cyan-900 bg-gradient-to-t from-yellow-500 to-yellow-300 border-b-2 border-yellow-700 border-2 shadow-md px-6 py-4 rounded-lg w-[100%] justify-center text-center font-bold">{msg}</div>
-            <div className="flex flex-wrap gap-2 justify-center bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-lg">
+            <div className="text-cyan-900 bg-gradient-to-t from-yellow-500 to-yellow-300 border-b-2 border-yellow-700 border-2 shadow-md px-6 py-4 rounded w-[100%] justify-center text-center font-bold">{msg}</div>
+            <div className="flex flex-wrap gap-2 justify-center bg-gradient-to-t from-yellow-500 to-yellow-300 rounded">
                 {movies?.map((movie: MovieType) => {
                     return <Movie movie={movie} key={movie.title} />
                 })
@@ -91,7 +91,7 @@ export function Movie({ movie }: { movie: MovieType }) {
 
     return (
         <div
-            className="flex flex-col lg:flex-row gap-2 bg-gradient-to-t from-yellow-50 to-[#fafaf1] py-4 px-4 border-2 shadow-sm shadow-yellow-300 rounded-lg min-w-full hover:border-cyan-700 hover:shadow-cyan-500 cursor-pointer"
+            className="flex flex-col lg:flex-row gap-2 bg-gradient-to-t from-yellow-50 to-[#fafaf1] py-4 px-4 border-2 shadow-sm shadow-yellow-300 rounded min-w-full hover:border-cyan-700 hover:shadow-cyan-500 cursor-pointer"
             onClick={() => setToggled((value) => !value)}
         >
             <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
@@ -100,8 +100,8 @@ export function Movie({ movie }: { movie: MovieType }) {
                 </div>
                 <Rating rating={movie.rating} />
                 <div className="flex gap-1 justify-center text-gray-200 font-bold">
-                    {subs && <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Суб</div>}
-                    {audio && <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Аудио</div>}
+                    {subs && <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded text-center">БГ Суб</div>}
+                    {audio && <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded text-center">БГ Аудио</div>}
                 </div>
             </div>
             <div className="px-1 flex flex-col gap-2">
@@ -125,17 +125,17 @@ export function Movie({ movie }: { movie: MovieType }) {
 function Torrent({ torrent }: { torrent: TorrentType }) {
     return (
         <div
-            className="gap-2 max-w-fit px-4 py-2 rounded-lg place-items-center place-content-center flex flex-col cursor-pointer border-2 hover:border-yellow-400 shadow hover:shadow-yellow-300 border-cyan-600 shadow-cyan-600"
+            className="gap-2 max-w-fit px-4 py-2 rounded place-items-center place-content-center flex flex-col cursor-pointer border-2 hover:border-yellow-400 shadow hover:shadow-yellow-300 border-cyan-600 shadow-cyan-600"
             onClick={() => { window.open(`https://zamunda.net${torrent.link}`) }}
         >
 
             {(torrent.bg_audio || torrent.bg_subs) &&
                 <div className="flex flex-col gap-2 text-gray-200 font-bold">
                     {torrent.bg_audio &&
-                        <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Аудио</div>
+                        <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded text-center">БГ Аудио</div>
                     }
                     {torrent.bg_subs &&
-                        <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Субс</div>
+                        <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded text-center">БГ Субс</div>
                     }
                 </div>
             }
@@ -152,7 +152,7 @@ function MovieImage({ previewLink }: { previewLink: string }) {
         : "https://zamunda.net" + previewLink
 
     return (
-        <img src={src} className="max-w-[200px] max-h-[200px] rounded-lg" />
+        <img src={src} className="max-w-[200px] max-h-[200px] rounded" />
     )
 }
 
