@@ -104,7 +104,7 @@ export function Movie({ movie }: { movie: MovieType }) {
                     {audio && <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded-lg text-center">БГ Аудио</div>}
                 </div>
             </div>
-            <div className="px-1 flex flex-col gap-1">
+            <div className="px-1 flex flex-col gap-2">
                 <div className="font-semibold text-cyan-800">{movie.title}</div>
                 <div className="text-sm text-gray-500 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
                 <div className="border-t-2 border-cyan-600 indent-3 text-cyan-800">{movie.description}</div>
