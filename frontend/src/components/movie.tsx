@@ -108,7 +108,7 @@ export function Movie({ movie }: { movie: MovieType }) {
                 <div className="font-semibold text-cyan-800">{movie.title}</div>
                 <div className="text-sm text-gray-500 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
                 <div className="border-t-2 border-cyan-600 indent-3 text-cyan-800">{movie.description}</div>
-                <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-blue-200 gap-2`}>
+                <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-cyan-600 gap-2`}>
                     <div className="flex flex-col gap-2">
                         {movie.directors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">Режисиран от {movie.directors.join(", ")}</div>}
                         {movie.actors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">С участието на {movie.actors.join(", ")}</div>}
@@ -125,7 +125,7 @@ export function Movie({ movie }: { movie: MovieType }) {
 function Torrent({ torrent }: { torrent: TorrentType }) {
     return (
         <div
-            className="gap-2 max-w-fit px-4 py-2 rounded-lg place-items-center place-content-center flex flex-col cursor-pointer border-2 hover:border-yellow-400 shadow hover:shadow-yellow-300 border-cyan-700 shadow-cyan-500"
+            className="gap-2 max-w-fit px-4 py-2 rounded-lg place-items-center place-content-center flex flex-col cursor-pointer border-2 hover:border-yellow-400 shadow hover:shadow-yellow-300 border-cyan-600 shadow-cyan-600"
             onClick={() => { window.open(`https://zamunda.net${torrent.link}`) }}
         >
 
