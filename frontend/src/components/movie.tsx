@@ -65,7 +65,7 @@ export const MoviesList = memo(function MoviesList({ movies, movieCount, setPage
     return (
         <>
             <div className="text-cyan-900 bg-gradient-to-t from-yellow-500 to-yellow-300 border-b-2 border-yellow-700 border-2 shadow-md px-6 py-4 rounded-lg w-[100%] justify-center text-center font-bold">{msg}</div>
-            <div className="flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-wrap gap-2 justify-center bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-lg">
                 {movies?.map((movie: MovieType) => {
                     return <Movie movie={movie} key={movie.title} />
                 })
@@ -91,7 +91,7 @@ export function Movie({ movie }: { movie: MovieType }) {
 
     return (
         <div
-            className="flex flex-col lg:flex-row gap-2 bg-gradient-to-t from-yellow-50 to-[#fafaf1] py-4 px-4 border-2 border-yellow-400 shadow-sm shadow-yellow-300 rounded-lg min-w-full hover:border-cyan-700 hover:shadow-cyan-500 cursor-pointer"
+            className="flex flex-col lg:flex-row gap-2 bg-gradient-to-t from-yellow-50 to-[#fafaf1] py-4 px-4 border-2 shadow-sm shadow-yellow-300 rounded-lg min-w-full hover:border-cyan-700 hover:shadow-cyan-500 cursor-pointer"
             onClick={() => setToggled((value) => !value)}
         >
             <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
