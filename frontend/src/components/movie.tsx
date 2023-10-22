@@ -96,7 +96,7 @@ export function Movie({ movie }: { movie: MovieType }) {
         >
             <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
                 <div>
-                    <MovieImage previewLink={movie.previewLink} />
+                    <MovieImage previewLink={movie.previewLink} alt={`Филмов постер на ${movie.title}`} />
                 </div>
                 <Rating rating={movie.rating} />
                 <div className="flex gap-1 justify-center text-gray-200 font-bold">
@@ -146,13 +146,13 @@ function Torrent({ torrent }: { torrent: TorrentType }) {
     )
 }
 
-function MovieImage({ previewLink }: { previewLink: string }) {
+function MovieImage({ previewLink, alt }: { previewLink: string, alt: string }) {
     const src = previewLink.startsWith("http")
         ? previewLink
         : "https://zamunda.net" + previewLink
 
     return (
-        <img src={src} className="max-w-[200px] max-h-[200px] rounded" />
+        <img src={src} alt={alt} className="max-w-[200px] max-h-[200px] rounded" />
     )
 }
 
