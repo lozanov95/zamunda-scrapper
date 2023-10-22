@@ -152,7 +152,7 @@ function MovieImage({ previewLink, alt }: { previewLink: string, alt: string }) 
         : "https://zamunda.net" + previewLink
 
     return (
-        <img src={src} alt={alt} className="max-w-[200px] max-h-[200px] rounded" />
+        <img src={src} alt={alt} className="max-w-[200px] max-h-[200px] min-w-[134px] min-h-[200px] rounded" />
     )
 }
 
