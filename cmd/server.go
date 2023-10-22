@@ -40,6 +40,7 @@ func NewServer(port int, cfg *Config) *Server {
 			return
 		}
 
+		w.Header().Add("Cache-Control", "max-age=3600")
 		SendJson(w, res)
 	})
 
@@ -55,6 +56,8 @@ func NewServer(port int, cfg *Config) *Server {
 			log.Println(err)
 			return
 		}
+
+		w.Header().Add("Cache-Control", "max-age=3600")
 		SendJson(w, res)
 	})
 
@@ -70,6 +73,8 @@ func NewServer(port int, cfg *Config) *Server {
 			log.Println(err)
 			return
 		}
+
+		w.Header().Add("Cache-Control", "max-age=3600")
 		SendJson(w, res)
 	})
 
@@ -79,6 +84,8 @@ func NewServer(port int, cfg *Config) *Server {
 			log.Println(err)
 			return
 		}
+
+		w.Header().Add("Cache-Control", "max-age=3600")
 		SendJson(w, payload)
 	})
 
