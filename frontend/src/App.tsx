@@ -6,7 +6,7 @@ import './App.css'
 
 
 function App() {
-  const domain = import.meta.env["VITE_DOMAIN"] ?? "http://maimunda.vloz.website"
+  const domain = import.meta.env["VITE_DOMAIN"] ?? "https://maimunda.vloz.website"
 
   const [filterParams, setFilterParams] = useState("")
   const [title, setTitle] = useState<string>("")
