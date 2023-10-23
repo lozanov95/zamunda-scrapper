@@ -41,6 +41,7 @@ func NewServer(port int, cfg *Config) *Server {
 		}
 
 		w.Header().Add("Cache-Control", "max-age=3600")
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		SendJson(w, res)
 	})
 
@@ -58,6 +59,7 @@ func NewServer(port int, cfg *Config) *Server {
 		}
 
 		w.Header().Add("Cache-Control", "max-age=3600")
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		SendJson(w, res)
 	})
 
@@ -74,6 +76,7 @@ func NewServer(port int, cfg *Config) *Server {
 			return
 		}
 
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Cache-Control", "max-age=3600")
 		SendJson(w, res)
 	})
@@ -85,6 +88,7 @@ func NewServer(port int, cfg *Config) *Server {
 			return
 		}
 
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Cache-Control", "max-age=3600")
 		SendJson(w, payload)
 	})
@@ -94,5 +98,8 @@ func NewServer(port int, cfg *Config) *Server {
 
 func (s *Server) ListenAndServe() {
 	log.Println("Serving on port", s.Port)
-	http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.mux)
+	err := http.ListenAndServeTLS(fmt.Sprintf(":%d", s.Port), "./tls/server.rsa.crt", "./tls/server.rsa.key", s.mux)
+	if err != nil {
+		log.Panicln(err)
+	}
 }

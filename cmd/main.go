@@ -38,7 +38,7 @@ type IconsResult struct {
 var (
 	scrape = flag.Bool("scrape", false, "Start scraping the movies")
 	serve  = flag.Bool("serve", false, "Serve the backend")
-	port   = flag.Int("port", 80, "The port of the server")
+	port   = flag.Int("port", 443, "The port of the server")
 )
 
 func main() {
