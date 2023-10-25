@@ -52,7 +52,7 @@ export function MoviesSection({ domain, hidden, filterParams, title }: { domain:
     }, [page])
 
     return (
-        <div className={`flex flex-col gap-2 items-center lg:w-[70%] ${hidden && 'hidden'}`}>
+        <div className={`flex flex-col gap-2 items-center max-w-full lg:max-w-min ${hidden && 'hidden'}`}>
             <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )
@@ -91,30 +91,37 @@ export function Movie({ movie }: { movie: MovieType }) {
 
     return (
         <div
-            className="flex flex-col lg:flex-row gap-2 bg-gradient-to-t from-yellow-50 to-[#fafaf1] py-4 px-4 border-2 shadow-sm shadow-yellow-300 rounded min-w-full hover:border-cyan-700 hover:shadow-cyan-500 cursor-pointer"
+            className="flex flex-col bg-gradient-to-t from-yellow-50 to-[#fafaf1] w-full lg:w-[40rem]
+              shadow-sm shadow-yellow-300 rounded hover:shadow-cyan-500 cursor-pointer"
             onClick={() => setToggled((value) => !value)}
         >
-            <div className="flex flex-col justify-items-center min-w-fit gap-1 place-items-center">
+            <div className="flex justify-between bg-cyan-800 px-2 py-2 border-yellow-500">
                 <div>
-                    <MovieImage previewLink={movie.previewLink} alt={`Филмов постер на ${movie.title}`} />
+                    <div className="font-semibold text-gray-50">{movie.title}</div>
+                    <div className="text-sm text-gray-400 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
                 </div>
                 <Rating rating={movie.rating} />
-                <div className="flex gap-1 justify-center text-gray-200 font-bold">
-                    {subs && <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded text-center">БГ Суб</div>}
-                    {audio && <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded text-center">БГ Аудио</div>}
-                </div>
             </div>
-            <div className="px-1 flex flex-col gap-2">
-                <div className="font-semibold text-cyan-800">{movie.title}</div>
-                <div className="text-sm text-gray-500 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
-                <div className="border-t-2 border-cyan-600 indent-3 text-cyan-800">{movie.description}</div>
-                <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-cyan-600 gap-2`}>
-                    <div className="flex flex-col gap-2">
-                        {movie.directors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">Режисиран от {movie.directors.join(", ")}</div>}
-                        {movie.actors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">С участието на {movie.actors.join(", ")}</div>}
+            <div className="flex flex-col gap-1 lg:flex-row px-2 py-2 border-2 border-t-0 border-yellow-500 hover:border-cyan-800">
+                <div className="flex flex-col justify-items-center min-w-fit gap-2 place-items-center">
+                    <div>
+                        <MovieImage previewLink={movie.previewLink} alt={`Филмов постер на ${movie.title}`} />
                     </div>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                        {movie.torrents.map((torrent, i) => <Torrent torrent={torrent} key={i} />)}
+                    <div className="flex gap-1 justify-center text-gray-200 font-bold">
+                        {subs && <div className="bg-cyan-800 shadow-lg px-2 py-1 rounded text-center">БГ Суб</div>}
+                        {audio && <div className="bg-yellow-800 shadow-lg px-2 py-1 rounded text-center">БГ Аудио</div>}
+                    </div>
+                </div>
+                <div className="px-1 flex flex-col gap-2 max-w-prose">
+                    <div className=" indent-3 text-cyan-800">{movie.description}</div>
+                    <div className={`${toggled ? "flex flex-col" : "hidden"} border-t-2 border-cyan-600 gap-2`}>
+                        <div className="flex flex-col gap-2">
+                            {movie.directors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">Режисиран от {movie.directors.join(", ")}</div>}
+                            {movie.actors.length > 0 && <div className="flex text-sm text-gray-500 font-bold">С участието на {movie.actors.join(", ")}</div>}
+                        </div>
+                        <div className="flex flex-wrap gap-2 justify-center">
+                            {movie.torrents.map((torrent, i) => <Torrent torrent={torrent} key={i} />)}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,7 +167,7 @@ function Rating({ rating }: { rating: string | number }) {
     return (
         <div className="font-bold text-center flex gap-1 items-center justify-center">
             <FontAwesomeIcon icon={faStar} className="text-yellow-500" />
-            <span>{rating}</span>
+            <span className="text-gray-50">{rating}</span>
         </div>
     )
 }
