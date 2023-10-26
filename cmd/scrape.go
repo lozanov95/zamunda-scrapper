@@ -109,6 +109,9 @@ func (s *Scrapper) Scrape() {
 		if len(existingMovie.Genres) < len(m.Genres) {
 			existingMovie.Genres = m.Genres
 		}
+		if existingMovie.Year < 1900 {
+			existingMovie.Year = m.Year
+		}
 		existingMovie.Torrents = append(existingMovie.Torrents, m.Torrents...)
 	}
 
