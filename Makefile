@@ -9,7 +9,7 @@ prod:
 run-container:
 	docker image build . -t maimunda
 	docker container rm -f c-maimunda
-	docker container run --restart always -dp 443:443 --name c-maimunda maimunda
+	docker container run --restart always -p 80:80 -dp 443:443 --name c-maimunda maimunda
 
 install:
 	echo {"username": "","password": "","workers": 1,"pageSize": 10} > config.json
