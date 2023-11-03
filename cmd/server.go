@@ -99,16 +99,8 @@ func NewServer(port int, cfg *Config) *Server {
 func (s *Server) ListenAndServe() {
 	log.Println("Serving on port", s.Port)
 
-	go func() {
-		err := http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.mux)
-		if err != nil {
-			log.Panicln(err)
-		}
-	}()
-
-	err := http.ListenAndServeTLS(":443", "./tls/server.rsa.crt", "./tls/server.rsa.key", s.mux)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.mux)
 	if err != nil {
 		log.Panicln(err)
 	}
-
 }
