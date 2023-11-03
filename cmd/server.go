@@ -20,10 +20,17 @@ type GetMoviesResponse struct {
 	Count int      `json:"count"`
 }
 
+func maxAgeHandler(seconds int, h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Cache-Control", fmt.Sprintf("max-age=%d, public, must-revalidate, proxy-revalidate", seconds))
+		h.ServeHTTP(w, r)
+	})
+}
+
 func NewServer(port int, cfg *Config) *Server {
 	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg}
 
-	srv.mux.Handle("/", http.FileServer(http.Dir("./ui")))
+	srv.mux.Handle("/", maxAgeHandler(3600, http.FileServer(http.Dir("./ui"))))
 
 	srv.mux.HandleFunc("/movies", func(w http.ResponseWriter, r *http.Request) {
 		query := r.URL.Query()
