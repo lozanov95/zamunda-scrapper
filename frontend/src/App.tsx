@@ -20,7 +20,7 @@ function App() {
   }, [])
 
   return (
-    <div className='text-gray-800 bg-gradient-to-t from-yellow-200 to-cyan-100'>
+    <div className='text-gray-800 bg-gradient-to-t from-yellow-200 to-cyan-100 flex flex-col gap-2'>
       <HeaderSection title={title} setTitle={setTitle}
         setDisplayFilter={setDisplayFilter}
         displayMovies={displayMovies}
@@ -29,7 +29,7 @@ function App() {
         URL={URL}
         isMobile={isMobile}
       />
-      <div className='flex justify-center gap-4 py-4 lg:max-w-[80%] justify-items-center m-auto'>
+      <div className='lg:grid grid-cols-5'>
         <FilterSection
           setFilterParams={setFilterParams}
           domain={domain}

@@ -52,7 +52,7 @@ export function MoviesSection({ domain, hidden, filterParams, title }: { domain:
     }, [page])
 
     return (
-        <div className={`flex flex-col gap-2 items-center max-w-full lg:max-w-min ${hidden && 'hidden'}`}>
+        <div className={`col-start-3 col-span-2 flex flex-col gap-2 items-center max-w-full lg:w-[40rem] ${hidden && 'hidden'}`}>
             <MoviesList movieCount={movieCount} movies={movies} setPage={setPage} areMorePagesAvailable={areMorePagesAvailable} />
         </div>
     )
