@@ -98,7 +98,7 @@ export function Movie({ movie }: { movie: MovieType }) {
             <div className="flex justify-between bg-cyan-800 px-2 py-2 border-yellow-500">
                 <div>
                     <div className="font-semibold text-gray-50">{movie.title}</div>
-                    <div className="text-sm text-gray-400 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
+                    <div className="text-sm text-gray-300 font-semibold">{movie.year}{movie.genres.length > 0 && ` - ${movie.genres.join(", ")}`} </div>
                 </div>
                 <Rating rating={movie.rating} />
             </div>
