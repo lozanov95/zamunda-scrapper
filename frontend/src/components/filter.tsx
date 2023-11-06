@@ -1,6 +1,7 @@
 import { useState, useEffect, SetStateAction, KeyboardEvent } from "react"
 import { InputWithLabel, NumberWithLabel, ToggleablePanel } from "./common"
 import { SortingCriteria } from "./types"
+import Slider from "./slider"
 import useFetch from "../hooks/useFetch"
 import InputWithPredictions from "./InputWithPredictions"
 
@@ -45,8 +46,8 @@ export function FilterSection({ domain, setFilterParams, hidden }: { setFilterPa
                 <InputWithLabel labelVal='БГ Субтитри' type='checkbox' checked={bgSubs} onChange={(e: any) => setBgSubs(e.target.checked)} />
             </div>
             <div className="flex flex-col gap-3 shadow-md border-2 bg-gradient-to-r from-cyan-700 to-cyan-900  border-cyan-950 shadow-cyan-800 px-6 py-4 rounded w-[100%] justify-center">
-                <NumberWithLabel labelVal='Година' value={fromYear} onChange={handleYearChange} setValue={setFromYear} />
-                <NumberWithLabel labelVal='Минимален рейтинг' value={minRating} onChange={handleRatingChange} setValue={setMinRating} />
+                <Slider label="Година" min={1900} max={2023} value={fromYear} onChange={handleYearChange} />
+                <Slider label="Минимален рейтинг" min={0} max={10} value={minRating} onChange={handleRatingChange} step={0.1} />
             </div>
             <div className="flex flex-col gap-3 shadow-md border-2 bg-gradient-to-r from-cyan-700 to-cyan-900  border-cyan-950 shadow-cyan-800 px-6 py-4 rounded w-[100%] justify-center">
                 <ActorsPanel domain={domain} actor={actor} setActor={setActor} />
