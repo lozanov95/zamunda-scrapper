@@ -234,6 +234,9 @@ func ParseDescription(s *goquery.Selection) *ExtractedMovieDescriptionResult {
 	if len(countries[0]) < 2 {
 		countries = []string{}
 	}
+	if year < 1900 {
+		year = 1900
+	}
 
 	for i, director := range directors {
 		directors[i] = ConvertToTitleCase(strings.Trim(director, " "))
