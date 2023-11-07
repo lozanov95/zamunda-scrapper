@@ -10,13 +10,12 @@ WORKDIR /usr/src/app
 COPY ./go.mod ./go.sum  ./
 RUN go mod download && go mod verify
 COPY ./cmd/ ./
-COPY ./tls/ ./tls/
 RUN go build -v -o ./maimunda ./...
 
 FROM ubuntu:23.10
 WORKDIR /usr/src/app
-COPY --from=be /usr/src/app .
+COPY --from=be /usr/src/app/maimunda /usr/bin/maimunda
 COPY --from=fe /fe/dist/ ./ui/
 COPY ./config.json ./movies.json ./
 
-CMD ["./maimunda","-serve"]
+CMD ["maimunda","-serve"]
