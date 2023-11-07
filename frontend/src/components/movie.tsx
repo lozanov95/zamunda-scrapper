@@ -13,20 +13,25 @@ export function MoviesSection({ domain, hidden, filterParams, title }: { domain:
     const URL = `${domain}/movies?contains=${title}&${filterParams}`
 
     useEffect(() => {
-        setPage(0)
         const controller = new AbortController();
-        fetch(URL,
-            { signal: controller.signal })
-            .then((data) => {
-                return data.json()
-            }).then(({ value, count }) => {
-                setMovies(value)
-                setMovieCount(count)
-            }).catch((err) => {
-                console.log(err)
-            })
+        const timeout = setTimeout(() => {
+            setPage(0)
+            fetch(URL,
+                { signal: controller.signal })
+                .then((data) => {
+                    return data.json()
+                }).then(({ value, count }) => {
+                    setMovies(value)
+                    setMovieCount(count)
+                }).catch((err) => {
+                    console.log(err)
+                })
+        }, 50);
 
-        return () => { controller.abort() }
+        return () => {
+            controller.abort();
+            clearTimeout(timeout);
+        }
     }, [URL])
 
     useEffect(() => {
