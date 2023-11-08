@@ -10,12 +10,12 @@ WORKDIR /usr/src/app
 COPY ./go.mod ./go.sum  ./
 RUN go mod download && go mod verify
 COPY ./cmd/ ./
-RUN go build -v -o ./maimunda ./...
+RUN CGO_ENABLED=0 go build -v -o ./maimunda ./...
 
-FROM ubuntu:23.10
+FROM scratch
 WORKDIR /usr/src/app
-COPY --from=be /usr/src/app/maimunda /usr/bin/maimunda
+COPY --from=be /usr/src/app/maimunda /go/bin/maimunda
 COPY --from=fe /fe/dist/ ./ui/
 COPY ./config.json ./movies.json ./
 
-CMD ["maimunda","-serve"]
+CMD ["/go/bin/maimunda","-serve"]
