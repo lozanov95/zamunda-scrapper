@@ -18,4 +18,4 @@ COPY --from=be /usr/src/app/maimunda /go/bin/maimunda
 COPY --from=fe /fe/dist/ ./ui/
 COPY ./config.json ./movies.json ./
 
-CMD ["/go/bin/maimunda","-serve"]
+CMD ["/go/bin/maimunda","-serve",">>","/var/log/maimunda.log"]
