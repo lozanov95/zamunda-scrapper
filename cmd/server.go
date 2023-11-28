@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -14,6 +15,7 @@ type Server struct {
 	db   *MovieDB
 	Port int
 	cfg  *Config
+	log  *log.Logger
 }
 
 type GetMoviesResponse struct {
@@ -51,8 +53,15 @@ func middleware(f func(http.ResponseWriter, *http.Request)) http.Handler {
 }
 
 func NewServer(port int, cfg *Config) *Server {
-	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg}
+	flags := os.O_APPEND | os.O_CREATE | os.O_WRONLY
+	file, err := os.OpenFile("/var/log/maimunda.log", flags, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	logger := log.New(file, "Info\t", log.Ldate|log.Ltime)
+
+	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg, log: logger}
 	srv.mux.Handle("/", setHeaders(http.FileServer(http.Dir("./ui"))))
 	srv.mux.Handle("/movies", middleware(srv.handleMovies))
 	srv.mux.Handle("/actors", middleware(srv.handleActors))
@@ -63,10 +72,10 @@ func NewServer(port int, cfg *Config) *Server {
 }
 
 func (s *Server) ListenAndServe() {
-	log.Println("Serving on port", s.Port)
+	s.log.Println("Serving on port", s.Port)
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.mux)
 	if err != nil {
-		log.Panicln(err)
+		s.log.Panicln(err)
 	}
 }
