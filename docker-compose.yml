@@ -1,0 +1,13 @@
+services:
+  maimunda:
+    build: .
+    volumes:
+      - v-logs:/var/log
+    ports:
+      - 80:80
+      - 443:443
+    restart: always    
+    container_name: c-maimunda
+
+volumes:
+  v-logs:

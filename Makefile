@@ -4,12 +4,15 @@ REMOTE_DIR=$(SERVERHOST):zamunda-scrapper/movies.json
 
 prod:
 	git pull
-	make run-container
+	make compose-up
 
 run-container:
 	docker image build . -t maimunda
 	docker container rm -f c-maimunda
 	docker container run --restart always -p 80:80 -dp 443:443 --name c-maimunda maimunda
+
+compose-up:
+	docker compose up -d --build
 
 install:
 	echo {"username": "","password": "","workers": 1,"pageSize": 10} > config.json
