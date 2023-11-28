@@ -47,6 +47,10 @@ update-movies:
 	make scrape
 	make copy-movies
 
+logs:
+	sudo docker cp c-maimunda:/var/log/maimunda.log /var/log/
+	cat /var/log/maimunda.log
+
 cert:
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout server.rsa.key -out server.rsa.crt -days 3650
 	ln -sf server.rsa.key server.key
