@@ -61,9 +61,9 @@ export function HeaderSection({ title, setTitle, displayFilter, displayMovies, s
 function ToggleFilter({ handleClick, toggled }: { handleClick: VoidFunction, toggled: boolean }) {
     return (
         <div className="flex flex-col gap-1 place-content-center" onClick={handleClick}>
-            <div className={`lg:hidden h-[5px] bg-yellow-600 ${toggled ? "w-8" : "w-8"} duration-300 ease-out`}></div>
-            <div className={`lg:hidden h-[5px] bg-yellow-700 ${toggled ? "w-6" : "w-8"} duration-300 ease-out`}></div>
-            <div className={`lg:hidden h-[5px] bg-yellow-700 ${toggled ? "w-5" : "w-8"} duration-300 ease-out`}></div>
+            <div className={`sm:hidden h-[5px] bg-yellow-600 ${toggled ? "w-8" : "w-8"} duration-300 ease-out`}></div>
+            <div className={`sm:hidden h-[5px] bg-yellow-700 ${toggled ? "w-6" : "w-8"} duration-300 ease-out`}></div>
+            <div className={`sm:hidden h-[5px] bg-yellow-700 ${toggled ? "w-5" : "w-8"} duration-300 ease-out`}></div>
         </div>
     )
 }

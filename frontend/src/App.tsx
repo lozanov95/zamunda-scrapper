@@ -12,11 +12,11 @@ function App() {
   const [title, setTitle] = useState<string>("")
   const [displayFilter, setDisplayFilter] = useState<boolean>(false)
   const [displayMovies, setDisplayMovies] = useState<boolean>(true)
-  const isMobile = window.innerWidth < 768
+  const isMobile = window.innerWidth < 640
   const URL = `${domain}/movies?contains=${title}&${filterParams}`
 
   useEffect(() => {
-    setDisplayFilter(() => window.innerWidth >= 1300 ? true : false)
+    setDisplayFilter(() => isMobile ? false : true)
   }, [])
 
   return (
