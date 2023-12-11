@@ -52,16 +52,19 @@ func middleware(f func(http.ResponseWriter, *http.Request)) http.Handler {
 	return setHeaders(http.HandlerFunc(f))
 }
 
-func NewServer(port int, cfg *Config) *Server {
+func getLogger() *log.Logger {
 	flags := os.O_APPEND | os.O_CREATE | os.O_WRONLY
 	file, err := os.OpenFile("/var/log/maimunda.log", flags, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err, "outputting the logs to stdout")
+		return log.New(os.Stdout, "Info\t", log.Ldate|log.Ltime)
 	}
 
-	logger := log.New(file, "Info\t", log.Ldate|log.Ltime)
+	return log.New(file, "Info\t", log.Ldate|log.Ltime)
+}
 
-	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg, log: logger}
+func NewServer(port int, cfg *Config) *Server {
+	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg, log: getLogger()}
 	srv.mux.Handle("/", setHeaders(http.FileServer(http.Dir("./ui"))))
 	srv.mux.Handle("/movies", middleware(srv.handleMovies))
 	srv.mux.Handle("/actors", middleware(srv.handleActors))
