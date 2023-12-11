@@ -29,7 +29,7 @@ function App() {
         URL={URL}
         isMobile={isMobile}
       />
-      <div className='2xl:grid grid-cols-5 flex justify-items-center gap-4 m-auto'>
+      <div className='2xl:grid grid-cols-5 flex justify-items-center gap-4 mx-1 lg:m-auto'>
         <FilterSection
           setFilterParams={setFilterParams}
           domain={domain}
