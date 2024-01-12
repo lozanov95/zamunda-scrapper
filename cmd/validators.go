@@ -9,7 +9,7 @@ import (
 
 // Checks if the movie validates all of the given query conditions
 func DoesMovieSatisfiesConditions(params url.Values, movie *Movie) bool {
-	if ValidateFromYear(&params, movie) &&
+	return ValidateFromYear(&params, movie) &&
 		ValidateTitle(&params, movie) &&
 		ValidateMinRating(&params, movie) &&
 		ValidateGenres(&params, movie) &&
@@ -17,11 +17,7 @@ func DoesMovieSatisfiesConditions(params url.Values, movie *Movie) bool {
 		ValidateActors(&params, movie) &&
 		ValidateCountries(&params, movie) &&
 		ValidateBGAudio(&params, movie) &&
-		ValidateBGSubs(&params, movie) {
-		return true
-	}
-
-	return false
+		ValidateBGSubs(&params, movie)
 }
 
 func ValidateTitle(params *url.Values, m *Movie) bool {
