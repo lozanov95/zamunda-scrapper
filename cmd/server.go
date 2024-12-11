@@ -54,7 +54,7 @@ func middleware(f func(http.ResponseWriter, *http.Request)) http.Handler {
 
 func getLogger() *log.Logger {
 	flags := os.O_APPEND | os.O_CREATE | os.O_WRONLY
-	file, err := os.OpenFile("/var/log/maimunda.log", flags, 0666)
+	file, err := os.OpenFile("/var/log/maimunda/maimunda.log", flags, 0666)
 	if err != nil {
 		log.Println(err, "outputting the logs to stdout")
 		return log.New(os.Stdout, "Info\t", log.Ldate|log.Ltime)
@@ -65,11 +65,10 @@ func getLogger() *log.Logger {
 
 func NewServer(port int, cfg *Config) *Server {
 	srv := Server{Port: port, mux: http.NewServeMux(), db: NewMovieDB(cfg.PageSize), cfg: cfg, log: getLogger()}
-	srv.mux.Handle("/", setHeaders(http.FileServer(http.Dir("./ui"))))
-	srv.mux.Handle("/movies", middleware(srv.handleMovies))
-	srv.mux.Handle("/actors", middleware(srv.handleActors))
-	srv.mux.Handle("/directors", middleware(srv.handleDirectors))
-	srv.mux.Handle("/genres", middleware(srv.handleGenres))
+	srv.mux.Handle("/api/movies", middleware(srv.handleMovies))
+	srv.mux.Handle("/api/actors", middleware(srv.handleActors))
+	srv.mux.Handle("/api/directors", middleware(srv.handleDirectors))
+	srv.mux.Handle("/api/genres", middleware(srv.handleGenres))
 
 	return &srv
 }

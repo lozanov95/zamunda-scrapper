@@ -1,11 +1,4 @@
-FROM node:23 AS fe
-WORKDIR /fe
-COPY frontend/package.json .
-RUN npm install
-COPY frontend ./
-RUN npm run build
-
-FROM golang:1.23.4 AS be
+FROM golang:1.23 AS be
 WORKDIR /usr/src/app
 COPY ./go.mod ./go.sum  ./
 RUN go mod download && go mod verify
@@ -13,14 +6,14 @@ COPY ./cmd/ ./
 RUN CGO_ENABLED=0 go build -v -o ./maimunda ./...
 
 FROM ubuntu:latest AS user
-RUN useradd -u 10001 user
+RUN useradd -u 1001 user
+RUN mkdir /var/log/maimunda
 
 FROM scratch
 WORKDIR /usr/src/app
 COPY --from=user /etc/passwd /etc/passwd
-COPY --from=be /usr/src/app/maimunda /go/bin/maimunda
-COPY --from=fe /fe/dist/ ./ui/
-COPY ./config.json ./movies.json ./
+COPY --from=user --chown=user /var/log/maimunda /var/log/maimunda
+COPY --from=be /usr/src/app/maimunda ./maimunda
 USER user
 
-CMD ["/go/bin/maimunda","-serve"]
+CMD ["./maimunda","-serve"]

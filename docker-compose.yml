@@ -1,13 +1,31 @@
 services:
-  maimunda:
+  backend:
     build: .
     volumes:
-      - v-logs:/var/log
+      - v-logs:/var/log/maimunda:rw
+      - ./config.json:/usr/src/app/config.json
+      - ./movies.json:/usr/src/app/movies.json
+    expose:
+      - "80"
+      - "443"
+    restart: always
+    container_name: backend
+    networks:
+      - prod
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
     ports:
-      - 80:80
-      - 443:443
-    restart: always    
-    container_name: c-maimunda
-
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - prod
 volumes:
   v-logs:
+networks:
+  prod:
+    driver: bridge
