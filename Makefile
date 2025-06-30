@@ -34,6 +34,7 @@ dev:
 	make -j 2 dev-fe dev-be
 
 scrape:
+	bash -c "mv movies.json movies.json.bak || true"
 	bash -c "rm -f movies.json"
 	go run ./cmd -scrape
 
